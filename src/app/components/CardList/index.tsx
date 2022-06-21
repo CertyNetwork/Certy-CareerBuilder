@@ -1,7 +1,9 @@
 // @mui
-import { Card, CardHeader, Stack } from '@mui/material';
+import { Box, Card, Stack } from '@mui/material';
 
-import Scrollbar from '../Scrollbar';
+import { LabelStyle } from '../LabelStyle';
+
+// import Scrollbar from '../Scrollbar';
 
 interface Props {
   title?: string;
@@ -19,13 +21,14 @@ export default function CardList({
 }: Props) {
   return (
     <Card>
-      <CardHeader title={title} subheader={subheader} />
-
-      {/* <Scrollbar> */}
-      <Stack spacing={3} sx={{ p: 3 }}>
-        {children}
-      </Stack>
-      {/* </Scrollbar> */}
+      <Box px={8} py={4}>
+        <Box mb={3}>
+          <LabelStyle>{title}</LabelStyle>
+        </Box>
+        {/* <Scrollbar> */}
+        <Stack spacing={3}>{children}</Stack>
+        {/* </Scrollbar> */}
+      </Box>
     </Card>
   );
 }

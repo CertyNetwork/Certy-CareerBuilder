@@ -1,18 +1,18 @@
 @font-face {
-  font-family: 'CircularStd';
+  font-family: 'Inter';
   font-weight: 400;
   font-style: normal;
-  src: local('CircularStd'), url('Inter-Regular.ttf') format('opentype');
+  src: local('Inter'), url('Inter-Regular.ttf') format('opentype');
 }
 @font-face {
-  font-family: 'CircularStd';
+  font-family: 'Inter';
   font-weight: 500;
   font-style: normal;
-  src: local('CircularStd'), url('CircularStd-Medium.otf') format('opentype');
+  src: local('Inter'), url('Inter-Medium.ttf') format('opentype');
 }
 @font-face {
-  font-family: 'CircularStd';
+  font-family: 'Inter';
   font-weight: 700;
   font-style: normal;
-  src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype');
+  src: local('Inter'), url('Inter-Bold.ttf') format('opentype');
 }

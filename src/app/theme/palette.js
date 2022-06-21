@@ -13,6 +13,7 @@ const PRIMARY = {
   main: '#00AB55',
   dark: '#007B55',
   darker: '#005249',
+  certification: 'rgba(42, 133, 255, 0.05)',
 };
 const SECONDARY = {
   lighter: '#D6E4FF',
@@ -114,15 +115,35 @@ const palette = {
   light: {
     ...COMMON,
     mode: 'light',
-    text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
-    background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
+    text: {
+      primary: GREY[800],
+      secondary: GREY[600],
+      disabled: GREY[500],
+      active: '#2A85FF',
+    },
+    background: {
+      paper: '#fff',
+      default: '#fff',
+      neutral: GREY[200],
+      certificate: PRIMARY['certification'],
+    },
     action: { active: GREY[600], ...COMMON.action },
   },
   dark: {
     ...COMMON,
     mode: 'dark',
-    text: { primary: '#fff', secondary: GREY[500], disabled: GREY[600] },
-    background: { paper: GREY[800], default: GREY[900], neutral: GREY[500_16] },
+    text: {
+      primary: '#fff',
+      secondary: GREY[500],
+      disabled: GREY[600],
+      active: '#2A85FF',
+    },
+    background: {
+      paper: GREY[800],
+      default: GREY[900],
+      neutral: GREY[500_16],
+      certificate: PRIMARY['certification'],
+    },
     action: { active: GREY[500], ...COMMON.action },
   },
 };

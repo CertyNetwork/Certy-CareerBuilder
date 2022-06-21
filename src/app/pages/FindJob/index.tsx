@@ -34,7 +34,7 @@ import Page from 'app/components/Page';
 import useSettings from 'app/hooks/useSettings';
 import styled from 'styled-components/macro';
 
-import { messages } from './messages';
+// import { messages } from './messages';
 
 interface Props {}
 
@@ -128,7 +128,13 @@ const FindJob = memo((props: Props) => {
                 </Box>
               </Card>
               <Box sx={{ p: 3 }}>
-                <Typography component="div" variant="h6">
+                <Typography
+                  component="div"
+                  sx={{
+                    fontSize: '20px',
+                    fontWeight: 600,
+                  }}
+                >
                   Recommended for you
                 </Typography>
                 <Typography component="div" variant="body2">
@@ -136,11 +142,11 @@ const FindJob = memo((props: Props) => {
                 </Typography>
               </Box>
 
-              <Box>
-                {_appRelated.map(app => (
+              {_appRelated.map(app => (
+                <Box mb={3}>
                   <CardJob key={app.id} app={app} />
-                ))}
-              </Box>
+                </Box>
+              ))}
             </Grid>
             <Grid item xs={12} md={4}>
               <Card sx={{ p: 3 }}>

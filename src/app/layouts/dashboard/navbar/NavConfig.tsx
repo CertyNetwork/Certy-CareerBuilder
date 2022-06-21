@@ -27,7 +27,11 @@ const navConfig = [
         icon: ICONS.dashboard,
       },
       { title: 'Find Job', path: '/individual/jobs', icon: ICONS.dashboard },
-      { title: 'Applied Job', path: '/dashboard/two', icon: ICONS.ecommerce },
+      {
+        title: 'Applied Job',
+        path: '/individual/applied-job',
+        icon: ICONS.ecommerce,
+      },
       { title: 'Saved Job', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },

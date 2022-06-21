@@ -7,8 +7,9 @@ import React, { memo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { Box, Card, Container, Divider, Grid, Typography } from '@mui/material';
+import { Box, Container, Divider, Grid } from '@mui/material';
 import { _appRelated } from 'app/_mock';
+import CardEducation from 'app/components/CardEducation';
 import CardExpire from 'app/components/CardExpire';
 import CardList from 'app/components/CardList';
 import Page from 'app/components/Page';
@@ -17,7 +18,8 @@ import useSettings from 'app/hooks/useSettings';
 import styled from 'styled-components/macro';
 
 import { ContactForm } from '../ContactForm';
-import { messages } from './messages';
+
+// import { messages } from './messages';
 
 interface Props {}
 
@@ -50,7 +52,7 @@ const IndividualProfile = memo((props: Props) => {
                 <CardList title="Education">
                   {_appRelated.map(app => (
                     <>
-                      <CardExpire key={app.id} app={app} />
+                      <CardEducation key={app.id} app={app} />
                       <Divider sx={{ borderStyle: 'solid' }} />
                     </>
                   ))}

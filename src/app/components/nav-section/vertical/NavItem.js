@@ -50,14 +50,26 @@ export function NavItemRoot({
     <>
       {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
       <ListItemTextStyle
-        disableTypography
-        primary={title}
+        // disableTypography
+        primary={
+          <Typography
+            noWrap
+            variant="string"
+            component="span"
+            sx={{
+              textTransform: 'initial',
+              color: active ? 'text' : 'text.primary',
+            }}
+          >
+            {title}
+          </Typography>
+        }
         secondary={
           <Tooltip title={caption || ''} arrow>
             <Typography
               noWrap
               variant="caption"
-              component="div"
+              component="span"
               sx={{ textTransform: 'initial', color: 'text.secondary' }}
             >
               {caption}

@@ -44,7 +44,7 @@ const typography = {
   h6: {
     fontWeight: 700,
     lineHeight: 28 / 18,
-    fontSize: pxToRem(17),
+    fontSize: pxToRem(16),
     ...responsiveFontSizes({ sm: 18, md: 18, lg: 18 }),
   },
   subtitle1: {
@@ -57,17 +57,24 @@ const typography = {
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
   },
+  string: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    fontSize: pxToRem(15),
+  },
   body1: {
     lineHeight: 1.5,
     fontSize: pxToRem(16),
   },
   body2: {
+    fontWeight: 400,
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
   },
   caption: {
     lineHeight: 1.5,
     fontSize: pxToRem(12),
+    fontWeight: 600,
   },
   overline: {
     fontWeight: 700,

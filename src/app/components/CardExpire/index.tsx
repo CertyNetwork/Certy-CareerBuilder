@@ -1,6 +1,5 @@
 // @mui
 import { Box, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 
 import Image from '../Image';
 
@@ -9,9 +8,7 @@ interface Props {
 }
 
 export default function CardExpire({ app }: Props) {
-  const theme = useTheme();
-
-  const { shortcut, system, price, rating, review, name } = app;
+  const { shortcut, system, name } = app;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
@@ -31,14 +28,20 @@ export default function CardExpire({ app }: Props) {
       </Box>
 
       <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-        <Typography variant="subtitle2">{name}</Typography>
+        <Typography variant="h6">{name}</Typography>
         <Stack
           direction="row"
           alignItems="center"
           sx={{ mt: 0.5, color: 'text.secondary' }}
         >
-          <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+          <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
             {system}
+          </Typography>
+          <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+            Full-time
+          </Typography>
+          <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+            2021 · Less than a year
           </Typography>
         </Stack>
       </Box>

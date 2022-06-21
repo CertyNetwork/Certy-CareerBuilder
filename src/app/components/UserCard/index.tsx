@@ -1,5 +1,5 @@
 import { Avatar, Box, Card, Divider, Stack, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import cssStyles from 'app/utils/cssStyles';
 
 // components
@@ -24,7 +24,7 @@ interface Props {
 export default function UserCard({ user }: Props) {
   //   const { name, cover, position, follower, totalPost, avatarUrl, following } =
   //     user;
-
+  const theme = useTheme();
   return (
     <Card sx={{ textAlign: 'center' }}>
       <Box sx={{ position: 'relative' }}>
@@ -68,46 +68,85 @@ export default function UserCard({ user }: Props) {
         />
       </Box>
 
-      <Typography variant="subtitle1" sx={{ mt: 6 }}>
-        {'test'}
+      <Typography variant="h6" sx={{ mt: 6 }}>
+        Tim Nguyen
       </Typography>
 
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {'position'}
+        Harvard | ex-BCG | Product & Strategy
       </Typography>
 
       <Stack alignItems="center">
         <SocialsButton initialColor sx={{ my: 2.5 }} />
       </Stack>
+      <Box sx={{ px: 3, textAlign: 'left' }}>
+        <Divider sx={{ borderStyle: 'dashed' }} />
+      </Box>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
-
-      <Box sx={{ p: 3, textAlign: 'left' }}>
+      <Box sx={{ px: 8, py: 5, textAlign: 'left' }}>
         <Typography
-          variant="caption"
+          variant="subtitle2"
           component="div"
           sx={{ mb: 0.75, color: 'text.disabled' }}
         >
           About Tim
         </Typography>
 
-        <Typography variant="subtitle1" component="p">
-          MBA at Harvard Business School. Building Technology product with
-          experience in product management and business strategy.
-        </Typography>
-        <ul style={{ paddingLeft: 15 }}>
-          <li>
-            Start up (E-commerce, SaaS, Education), Consulting (BCG), Launching
-            ventures (BCG Digital Ventures), Product Management (B2B & B2C)
-          </li>
-          <li>
-            Worked and lived across 3 continents (North America, Europe, Asia){' '}
-          </li>
-          <li>
-            Bachelor degree in Economics (Math and Psychology minor), graduated
-            Summa Cum Laude with Distinction honor
-          </li>
-        </ul>
+        <Box mt={3}>
+          <Typography
+            sx={{
+              fontSize: '1rem',
+              fontWeight: theme.typography.fontWeightRegular,
+              color: 'text.primary',
+            }}
+            component="p"
+          >
+            MBA at Harvard Business School. Building Technology product with
+            experience in product management and business strategy.
+          </Typography>
+          <ul style={{ marginTop: '16px', paddingLeft: 20 }}>
+            <li>
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: theme.typography.fontWeightRegular,
+                  color: 'text.primary',
+                }}
+                component="p"
+              >
+                Start up (E-commerce, SaaS, Education), Consulting (BCG),
+                Launching ventures (BCG Digital Ventures), Product Management
+                (B2B & B2C)
+              </Typography>
+            </li>
+            <li>
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: theme.typography.fontWeightRegular,
+                  color: 'text.primary',
+                }}
+                component="p"
+              >
+                Worked and lived across 3 continents (North America, Europe,
+                Asia){' '}
+              </Typography>
+            </li>
+            <li>
+              <Typography
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: theme.typography.fontWeightRegular,
+                  color: 'text.primary',
+                }}
+                component="p"
+              >
+                Bachelor degree in Economics (Math and Psychology minor),
+                graduated Summa Cum Laude with Distinction honor
+              </Typography>
+            </li>
+          </ul>
+        </Box>
       </Box>
     </Card>
   );

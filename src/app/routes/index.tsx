@@ -33,7 +33,7 @@ export default function Router() {
         { path: 'profile', element: <IndividualProfile /> },
         { path: 'jobs', element: <FindJob /> },
         { path: 'jobs/:id', element: <JobDetail /> },
-        { path: 'three', element: <PageThree /> },
+        { path: 'applied-job', element: <AppliedJob /> },
         {
           path: 'user',
           children: [
@@ -66,7 +66,7 @@ const IndividualProfile = Loadable(
 );
 const FindJob = Loadable(lazy(() => import('../pages/FindJob')));
 const JobDetail = Loadable(lazy(() => import('../pages/JobDetail')));
-const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
+const AppliedJob = Loadable(lazy(() => import('../pages/AppliedJob')));
 const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
 const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
 const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
