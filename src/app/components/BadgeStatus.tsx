@@ -2,9 +2,13 @@
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
-// ----------------------------------------------------------------------
+interface Props {
+  theme?: any;
+  ownerState: any;
+  other?: any;
+}
 
-const RootStyle = styled('span')(({ theme, ownerState }) => {
+const RootStyle = styled('span')(({ theme, ownerState, other }: Props) => {
   const { status, size } = ownerState;
 
   return {
@@ -83,5 +87,5 @@ export default function BadgeStatus({
   status = 'offline',
   ...other
 }) {
-  return <RootStyle ownerState={{ status, size }} {...other} />;
+  return <RootStyle ownerState={{ status, size }} other={{ ...other }} />;
 }

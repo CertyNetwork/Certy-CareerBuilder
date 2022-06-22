@@ -34,7 +34,7 @@ import Slider from './Slider';
 import Stepper from './Stepper';
 import SvgIcon from './SvgIcon';
 import Switch from './Switch';
-import Table from './Table';
+// import Table from './Table';
 import Tabs from './Tabs';
 import Timeline from './Timeline';
 import ToggleButton from './ToggleButton';
@@ -56,7 +56,7 @@ export default function ComponentsOverrides(theme) {
     Radio(theme),
     Badge(theme),
     Lists(theme),
-    Table(theme),
+    // Table(theme),
     Paper(theme),
     Alert(theme),
     Switch(theme),

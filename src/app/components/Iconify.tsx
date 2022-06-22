@@ -5,6 +5,8 @@ import { Box } from '@mui/material';
 interface Props {
   icon: any;
   sx?: any;
+  width?: number;
+  height?: number;
 }
 
 export default function Iconify({ icon, sx, ...other }: Props) {

@@ -1,20 +1,16 @@
 // @mui
 import { Box, Dialog, Paper } from '@mui/material';
 import { AnimatePresence, m } from 'framer-motion';
-import PropTypes from 'prop-types';
 
-//
 import { varFade } from './variants';
 
-// ----------------------------------------------------------------------
-
-DialogAnimate.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
-  sx: PropTypes.object,
-  variants: PropTypes.object,
-};
+interface Props {
+  children: any;
+  onClose: () => void;
+  open: boolean;
+  sx?: any;
+  variants?: any;
+}
 
 export default function DialogAnimate({
   open = false,
@@ -22,14 +18,13 @@ export default function DialogAnimate({
   onClose,
   children,
   sx,
-  ...other
-}) {
+}: Props) {
   return (
     <AnimatePresence>
       {open && (
         <Dialog
           fullWidth
-          maxWidth="xs"
+          maxWidth="sm"
           open={open}
           onClose={onClose}
           PaperComponent={props => (
@@ -59,7 +54,6 @@ export default function DialogAnimate({
               </Paper>
             </Box>
           )}
-          {...other}
         >
           {children}
         </Dialog>

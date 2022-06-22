@@ -25,6 +25,7 @@ import {
   Select,
   TextField,
   Typography,
+  styled,
 } from '@mui/material';
 import { _appRelated } from 'app/_mock';
 import CardJob from 'app/components/CardJob';
@@ -32,7 +33,6 @@ import Iconify from 'app/components/Iconify';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import useSettings from 'app/hooks/useSettings';
-import styled from 'styled-components/macro';
 
 // import { messages } from './messages';
 
@@ -283,4 +283,4 @@ const FindJob = memo((props: Props) => {
 
 export default FindJob;
 
-const Div = styled.div``;
+const Div = styled('div')({});

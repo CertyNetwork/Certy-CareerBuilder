@@ -29,7 +29,7 @@ export default function ThemeProvider({ children }) {
 
   const isLight = themeMode === 'light';
 
-  const themeOptions = useMemo(
+  const themeOptions: any = useMemo(
     () => ({
       palette: isLight ? palette.light : palette.dark,
       typography,

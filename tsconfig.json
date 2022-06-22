@@ -16,7 +16,8 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "noImplicitThis": false
   },
   "include": ["src", "internals/startingTemplate/**/*"],
   "ts-node": {

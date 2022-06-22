@@ -9,8 +9,6 @@ import * as React from 'react';
 
 import { Route, Routes } from 'react-router-dom';
 
-import { GlobalStyle } from 'styles/global-styles';
-
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 
@@ -21,7 +19,6 @@ export function App() {
         <Route path="/" element={HomePage} />
         <Route path="*" element={NotFoundPage} />
       </Routes>
-      <GlobalStyle />
     </>
   );
 }

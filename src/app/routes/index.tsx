@@ -23,28 +23,25 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <Navigate to="/individual/profile" replace />,
+      element: <Navigate to="/certy-career/individual/profile" replace />,
     },
     {
-      path: '/individual',
+      path: '/certy-career',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/individual/profile" replace />, index: true },
-        { path: 'profile', element: <IndividualProfile /> },
-        { path: 'jobs', element: <FindJob /> },
-        { path: 'jobs/:id', element: <JobDetail /> },
-        { path: 'applied-job', element: <AppliedJob /> },
         {
-          path: 'user',
-          children: [
-            {
-              element: <Navigate to="/dashboard/user/four" replace />,
-              index: true,
-            },
-            { path: 'four', element: <PageFour /> },
-            { path: 'five', element: <PageFive /> },
-            { path: 'six', element: <PageSix /> },
-          ],
+          element: <Navigate to="/certy-career/individual/profile" replace />,
+          index: true,
+        },
+        { path: 'individual/profile', element: <IndividualProfile /> },
+        { path: 'individual/jobs', element: <FindJob /> },
+        { path: 'individual/jobs/:id', element: <JobDetail /> },
+        { path: 'individual/applied-job', element: <AppliedJob /> },
+        { path: 'recruiter/management-posted-job', element: <PostedJob /> },
+        { path: 'recruiter/company-profile', element: <CompanyProfile /> },
+        {
+          path: 'recruiter/applicant-management',
+          element: <ApplicantManagement />,
         },
       ],
     },
@@ -67,7 +64,9 @@ const IndividualProfile = Loadable(
 const FindJob = Loadable(lazy(() => import('../pages/FindJob')));
 const JobDetail = Loadable(lazy(() => import('../pages/JobDetail')));
 const AppliedJob = Loadable(lazy(() => import('../pages/AppliedJob')));
-const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
-const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
-const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
+const PostedJob = Loadable(lazy(() => import('../pages/PostedJob')));
+const CompanyProfile = Loadable(lazy(() => import('../pages/CompanyProfile')));
+const ApplicantManagement = Loadable(
+  lazy(() => import('../pages/ApplicantManagement')),
+);
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

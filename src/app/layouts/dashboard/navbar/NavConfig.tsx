@@ -23,16 +23,20 @@ const navConfig = [
     items: [
       {
         title: 'Individual Profile',
-        path: '/individual/profile',
+        path: '/certy-career/individual/profile',
         icon: ICONS.dashboard,
       },
-      { title: 'Find Job', path: '/individual/jobs', icon: ICONS.dashboard },
+      {
+        title: 'Find Job',
+        path: '/certy-career/individual/jobs',
+        icon: ICONS.dashboard,
+      },
       {
         title: 'Applied Job',
-        path: '/individual/applied-job',
+        path: '/certy-career/individual/applied-job',
         icon: ICONS.ecommerce,
       },
-      { title: 'Saved Job', path: '/dashboard/three', icon: ICONS.analytics },
+      // { title: 'Saved Job', path: '/individual/three', icon: ICONS.analytics },
     ],
   },
 
@@ -43,18 +47,22 @@ const navConfig = [
     items: [
       {
         title: 'Company Profile',
-        path: '/dashboard/one',
+        path: '/certy-career/recruiter/company-profile',
         icon: ICONS.dashboard,
       },
       {
         title: 'Job Management',
-        path: '/dashboard/user',
         icon: ICONS.user,
-        children: [{ title: 'Four', path: '/dashboard/user/four' }],
+        children: [
+          {
+            title: 'Posted Job',
+            path: '/certy-career/recruiter/management-posted-job',
+          },
+        ],
       },
       {
         title: 'Applicant Management',
-        path: '/dashboard/one',
+        path: '/certy-career/recruiter/applicant-management',
         icon: ICONS.dashboard,
       },
     ],

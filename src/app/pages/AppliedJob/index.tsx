@@ -17,13 +17,13 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  styled,
 } from '@mui/material';
 import { _appRelated } from 'app/_mock';
 import CardJob from 'app/components/CardJob';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import useSettings from 'app/hooks/useSettings';
-import styled from 'styled-components/macro';
 
 // import { messages } from './messages';
 
@@ -104,4 +104,4 @@ const AppliedJob = memo((props: Props) => {
 
 export default AppliedJob;
 
-const Div = styled.div``;
+const Div = styled('div')({});

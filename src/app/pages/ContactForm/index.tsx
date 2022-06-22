@@ -8,13 +8,10 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Typography } from '@mui/material';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { BootstrapInput } from 'app/components/BootstrapInput';
+import { Box, Card, TextField, Typography, styled } from '@mui/material';
 import { LabelStyle } from 'app/components/LabelStyle';
-import styled from 'styled-components/macro';
 
-import { messages } from './messages';
+// import { messages } from './messages';
 
 interface Props {}
 
@@ -41,11 +38,36 @@ export const ContactForm = memo((props: Props) => {
 
         <Box mt={2}>
           <LabelStyle>From</LabelStyle>
-          <BootstrapInput placeholder="tus.ng09@gmail.com" />
+          <TextField
+            fullWidth
+            placeholder="Email"
+            sx={{
+              '& .MuiOutlinedInput-input': {
+                padding: '8px 14px !important',
+              },
+              '& fieldset': {
+                borderWidth: `1px !important`,
+                borderColor: theme =>
+                  `${theme.palette.grey[500_32]} !important`,
+              },
+            }}
+          />
         </Box>
         <Box mt={2}>
           <LabelStyle>Message</LabelStyle>
-          <TextareaAutosize minRows={3} style={{ width: '100%' }} />
+          <TextField
+            multiline
+            fullWidth
+            rows={4}
+            placeholder="Share what you are thinking here..."
+            sx={{
+              '& fieldset': {
+                borderWidth: `1px !important`,
+                borderColor: theme =>
+                  `${theme.palette.grey[500_32]} !important`,
+              },
+            }}
+          />
         </Box>
 
         <Box mt={3}>
@@ -58,4 +80,4 @@ export const ContactForm = memo((props: Props) => {
   );
 });
 
-const Div = styled.div``;
+const Div = styled('div')({});

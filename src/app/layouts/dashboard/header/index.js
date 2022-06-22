@@ -1,6 +1,9 @@
-import { AppBar, Box, Stack, Toolbar } from '@mui/material';
+import { useState } from 'react';
+
+import { AppBar, Box, Button, Stack, Toolbar } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
+import { DialogAnimate } from 'app/components/animate';
 import PropTypes from 'prop-types';
 
 import Iconify from '../../../components/Iconify';
@@ -12,6 +15,7 @@ import { HEADER, NAVBAR } from '../../../config';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
+import { PostJob } from '../../../pages/PostJob';
 // utils
 import cssStyles from '../../../utils/cssStyles';
 import AccountPopover from './AccountPopover';
@@ -68,6 +72,7 @@ export default function DashboardHeader({
     useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
 
   const isDesktop = useResponsive('up', 'lg');
+  const [openDialogPostJob, setOpenDialogPostJob] = useState(false);
 
   return (
     <RootStyle
@@ -104,7 +109,21 @@ export default function DashboardHeader({
           <NotificationsPopover />
           <ContactsPopover />
           <AccountPopover />
+          <Button
+            variant="contained"
+            sx={{ alignSelf: 'flex-end', maxWidth: 'max-content' }}
+            onClick={() => setOpenDialogPostJob(true)}
+          >
+            Post a Job
+          </Button>
         </Stack>
+
+        <DialogAnimate
+          open={openDialogPostJob}
+          onClose={() => setOpenDialogPostJob(false)}
+        >
+          <PostJob />
+        </DialogAnimate>
       </Toolbar>
     </RootStyle>
   );

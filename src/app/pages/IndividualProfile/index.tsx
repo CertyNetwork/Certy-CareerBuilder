@@ -7,7 +7,7 @@ import React, { memo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { Box, Container, Divider, Grid } from '@mui/material';
+import { Box, Container, Divider, Grid, styled } from '@mui/material';
 import { _appRelated } from 'app/_mock';
 import CardEducation from 'app/components/CardEducation';
 import CardExpire from 'app/components/CardExpire';
@@ -15,7 +15,6 @@ import CardList from 'app/components/CardList';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
 import useSettings from 'app/hooks/useSettings';
-import styled from 'styled-components/macro';
 
 import { ContactForm } from '../ContactForm';
 
@@ -72,4 +71,4 @@ const IndividualProfile = memo((props: Props) => {
 
 export default IndividualProfile;
 
-const Div = styled.div``;
+const Div = styled('div')({});

@@ -6,9 +6,9 @@
 }
 @font-face {
   font-family: 'Inter';
-  font-weight: 500;
+  font-weight: 600;
   font-style: normal;
-  src: local('Inter'), url('Inter-Medium.ttf') format('opentype');
+  src: local('Inter'), url('Inter-SemiBold.ttf') format('opentype');
 }
 @font-face {
   font-family: 'Inter';

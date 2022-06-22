@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 // @mui
 import { MenuItem, Stack } from '@mui/material';
-
 // components
-import Image from '../../../components/Image';
-import MenuPopover from '../../../components/MenuPopover';
-import { IconButtonAnimate } from '../../../components/animate';
+import Image from 'app/components/Image';
+import MenuPopover from 'app/components/MenuPopover';
+import { IconButtonAnimate } from 'app/components/animate';
+
 // config
 import { allLangs } from '../../../config';
 

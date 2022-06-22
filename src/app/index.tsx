@@ -2,7 +2,6 @@ import { Provider } from 'react-redux';
 
 // import { useTranslation } from 'react-i18next';
 import { configureAppStore } from 'store/configureStore';
-import { GlobalStyle } from 'styles/global-styles';
 
 import { ProgressBarStyle } from './components/ProgressBar';
 import ScrollToTop from './components/ScrollToTop';
@@ -26,7 +25,6 @@ export function App() {
           </ThemeSettings>
         </ThemeProvider>
       </MotionLazyContainer>
-      <GlobalStyle />
     </Provider>
   );
 }
