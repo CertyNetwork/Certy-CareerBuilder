@@ -1,7 +1,7 @@
 // form
+// @mui
 import { Controller, useFormContext } from 'react-hook-form';
 
-// @mui
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 
@@ -25,6 +25,7 @@ export default function RHFTextField({ name, ...other }) {
           error={!!error}
           helperText={error?.message}
           {...other}
+          size="small"
         />
       )}
     />

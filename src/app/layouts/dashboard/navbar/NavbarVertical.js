@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { useContext } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
 import { Drawer, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { NearContext } from 'app/contexts/NearContext';
 import PropTypes from 'prop-types';
 
 import Logo from '../../../components/Logo';
@@ -38,6 +40,8 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
+
+  const { account } = useContext(NearContext);
 
   const {
     isCollapse,
@@ -91,7 +95,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           )} */}
         </Stack>
 
-        <NavbarAccount isCollapse={isCollapse} />
+        {account && <NavbarAccount isCollapse={isCollapse} />}
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />

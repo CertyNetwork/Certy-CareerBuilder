@@ -1,3 +1,4 @@
+// _mock_
 import { useState } from 'react';
 
 // @mui
@@ -19,7 +20,6 @@ import {
 import { noCase } from 'change-case';
 import PropTypes from 'prop-types';
 
-// _mock_
 import { _notifications } from '../../../_mock';
 // components
 import Iconify from '../../../components/Iconify';

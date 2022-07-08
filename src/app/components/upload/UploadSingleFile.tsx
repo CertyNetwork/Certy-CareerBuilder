@@ -1,10 +1,10 @@
+//
 import { useDropzone } from 'react-dropzone';
 
 import { Box } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 
-//
 import Image from '../Image';
 import BlockContent from './BlockContent';
 import RejectionFiles from './RejectionFiles';

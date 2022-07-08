@@ -1,6 +1,9 @@
+import { useContext } from 'react';
+
 import { Avatar, Box, Link, Typography } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
+import { NearContext } from 'app/contexts/NearContext';
 import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
@@ -23,6 +26,8 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
+  const { account } = useContext(NearContext);
+
   return (
     <Link underline="none" color="inherit">
       <RootStyle
@@ -34,7 +39,7 @@ export default function NavbarAccount({ isCollapse }) {
       >
         <Avatar
           src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-          alt="Rayan Moran"
+          alt={account}
         />
 
         <Box
@@ -51,7 +56,7 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            Rayan Moran
+            {account}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
             user

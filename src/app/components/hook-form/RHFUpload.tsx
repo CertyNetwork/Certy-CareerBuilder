@@ -1,11 +1,11 @@
 // form
+// type
 import { Controller, useFormContext } from 'react-hook-form';
 
 // @mui
 import { FormHelperText } from '@mui/material';
 import PropTypes from 'prop-types';
 
-// type
 import { UploadAvatar, UploadMultiFile, UploadSingleFile } from '../upload';
 
 // ----------------------------------------------------------------------

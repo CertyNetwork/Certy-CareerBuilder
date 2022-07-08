@@ -1,8 +1,8 @@
+// hooks
 import { createContext, useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
-// hooks
 import useResponsive from '../hooks/useResponsive';
 
 // ----------------------------------------------------------------------

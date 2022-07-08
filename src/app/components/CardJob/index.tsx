@@ -11,7 +11,15 @@ interface Props {
 }
 
 export default function CardJob({ app, applied }: Props) {
-  const { shortcut, system, name } = app;
+  const {
+    shortcut,
+    system,
+    name,
+    title,
+    work_location_city,
+    work_location_country,
+    description,
+  } = app;
 
   return (
     <Card>
@@ -40,7 +48,7 @@ export default function CardJob({ app, applied }: Props) {
                 fontWeight: 600,
               }}
             >
-              {name}
+              {title}
             </Typography>
             <Stack
               direction="row"
@@ -51,10 +59,10 @@ export default function CardJob({ app, applied }: Props) {
                 {system}
               </Typography>
               <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-                Hanoi
+                {work_location_city}
               </Typography>
               <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-                Negotiation
+                {work_location_country}
               </Typography>
             </Stack>
           </Box>
@@ -67,9 +75,7 @@ export default function CardJob({ app, applied }: Props) {
         </Stack>
 
         <Typography component="div" variant="body2">
-          Archipelago is focused on changing how commercial real estate is
-          risked and insured by using AI to improve people’s data. Since our
-          public launch last August,
+          {description}
         </Typography>
 
         <Box display="flex" justifyContent="space-between">

@@ -7,6 +7,7 @@ import React, { memo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
+import { gql, useQuery } from '@apollo/client';
 import {
   Box,
   Card,
@@ -20,6 +21,7 @@ import {
   InputAdornment,
   InputLabel,
   MenuItem,
+  Pagination,
   Radio,
   RadioGroup,
   Select,
@@ -27,21 +29,53 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { _appRelated } from 'app/_mock';
 import CardJob from 'app/components/CardJob';
+import EmptyContent from 'app/components/EmptyContent';
 import Iconify from 'app/components/Iconify';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
+import { COUNTRIES } from 'app/constant/country';
+import { JOB_TYPE } from 'app/constant/jobType';
 import useSettings from 'app/hooks/useSettings';
 
 // import { messages } from './messages';
 
 interface Props {}
 
+const FIND_JOB = gql`
+  query Job {
+    jobs(first: 5) {
+      id
+      owner_id
+      extra
+      reference
+      reference_hash
+      reference_result
+      title
+      description
+      issued_at
+      updated_at
+      work_location_country
+      work_location_city
+      job_type
+      application_deadline
+      experience_minimum_years
+      salary_from
+      salary_to
+      tags
+    }
+  }
+`;
+
 const FindJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
+  const { loading, error, data } = useQuery(FIND_JOB);
+
+  if (loading) {
+    return <h3>Loading ...</h3>;
+  }
 
   return (
     <Page title="Find Job">
@@ -69,20 +103,20 @@ const FindJob = memo((props: Props) => {
                 />
                 <Box>
                   <FormControl sx={{ mt: 2, minWidth: 120 }} size="small">
-                    <InputLabel id="demo-select-small">Time</InputLabel>
+                    <InputLabel id="demo-select-small">Type</InputLabel>
                     <Select
                       labelId="demo-select-small"
                       id="demo-select-small"
-                      value={10}
                       label="Time"
-                      onChange={() => {}}
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {JOB_TYPE.map(type => (
+                        <MenuItem key={type.code} value={type.code}>
+                          {type.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                   <FormControl
@@ -93,19 +127,19 @@ const FindJob = memo((props: Props) => {
                     <Select
                       labelId="demo-select-small"
                       id="demo-select-small"
-                      value={10}
                       label="Country"
-                      onChange={() => {}}
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {COUNTRIES.map(c => (
+                        <MenuItem key={c.code} value={c.code}>
+                          {c.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
-                  <FormControl
+                  {/* <FormControl
                     sx={{ mt: 2, ml: 2, minWidth: 120 }}
                     size="small"
                   >
@@ -124,7 +158,7 @@ const FindJob = memo((props: Props) => {
                       <MenuItem value={20}>Twenty</MenuItem>
                       <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </Box>
               </Card>
               <Box sx={{ p: 3 }}>
@@ -142,11 +176,28 @@ const FindJob = memo((props: Props) => {
                 </Typography>
               </Box>
 
-              {_appRelated.map(app => (
-                <Box mb={3}>
-                  <CardJob key={app.id} app={app} />
+              {data && data?.jobs?.length ? (
+                data?.jobs.map(d => (
+                  <Box mb={3} key={d.id}>
+                    <CardJob app={d} />
+                  </Box>
+                ))
+              ) : (
+                <Box>
+                  <EmptyContent
+                    title="No Data"
+                    sx={{
+                      '& span.MuiBox-root': { height: 160 },
+                    }}
+                  />
                 </Box>
-              ))}
+              )}
+
+              {data && data?.jobs?.length && (
+                <Box display="flex" justifyContent="center">
+                  <Pagination count={5} color="primary" />
+                </Box>
+              )}
             </Grid>
             <Grid item xs={12} md={4}>
               <Card sx={{ p: 3 }}>

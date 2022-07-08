@@ -1,9 +1,9 @@
 // @mui
+//
 import { Box } from '@mui/material';
 import { m } from 'framer-motion';
 import PropTypes from 'prop-types';
 
-//
 import { varContainer } from '.';
 // hooks
 import useResponsive from '../../hooks/useResponsive';

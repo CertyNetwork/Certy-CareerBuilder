@@ -3,7 +3,7 @@
  * IndividualProfile
  *
  */
-import React, { memo } from 'react';
+import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,9 @@ import CardExpire from 'app/components/CardExpire';
 import CardList from 'app/components/CardList';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
+import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
+import { storage } from 'utils/util';
 
 import { ContactForm } from '../ContactForm';
 
@@ -26,6 +28,16 @@ const IndividualProfile = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
+
+  const { wallet, account } = useContext(NearContext);
+  const token = storage.get('Near_token_bearer');
+
+  if (!token && !account) {
+    return wallet?.requestSignIn(
+      'cecareer.certynetwork.testnet', // contract requesting access
+      'Certify',
+    );
+  }
 
   return (
     <Page title="Individual Profile">
@@ -39,10 +51,10 @@ const IndividualProfile = memo((props: Props) => {
               <Box mt={3}>
                 <CardList title="Experience">
                   {_appRelated.map(app => (
-                    <>
-                      <CardExpire key={app.id} app={app} />
-                      <Divider sx={{ borderStyle: 'solid' }} />
-                    </>
+                    <Box key={app.id}>
+                      <CardExpire app={app} />
+                      <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
+                    </Box>
                   ))}
                 </CardList>
               </Box>
@@ -50,10 +62,10 @@ const IndividualProfile = memo((props: Props) => {
               <Box mt={3}>
                 <CardList title="Education">
                   {_appRelated.map(app => (
-                    <>
-                      <CardEducation key={app.id} app={app} />
-                      <Divider sx={{ borderStyle: 'solid' }} />
-                    </>
+                    <Box key={app.id}>
+                      <CardEducation app={app} />
+                      <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
+                    </Box>
                   ))}
                 </CardList>
               </Box>

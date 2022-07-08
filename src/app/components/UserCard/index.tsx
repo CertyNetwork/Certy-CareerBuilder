@@ -1,8 +1,8 @@
+// components
 import { Avatar, Box, Card, Divider, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import cssStyles from 'app/utils/cssStyles';
 
-// components
 import Image from '../Image';
 import SocialsButton from '../SocialsButton';
 import SvgIconStyle from '../SvgIconStyle';

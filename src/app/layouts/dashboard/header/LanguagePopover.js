@@ -1,3 +1,4 @@
+// config
 import { useState } from 'react';
 
 // @mui
@@ -7,7 +8,6 @@ import Image from 'app/components/Image';
 import MenuPopover from 'app/components/MenuPopover';
 import { IconButtonAnimate } from 'app/components/animate';
 
-// config
 import { allLangs } from '../../../config';
 
 // ----------------------------------------------------------------------

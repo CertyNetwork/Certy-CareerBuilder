@@ -23,14 +23,14 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <Navigate to="/certy-career/individual/profile" replace />,
+      element: <Navigate to="/certy-career/individual/jobs" replace />,
     },
     {
       path: '/certy-career',
       element: <DashboardLayout />,
       children: [
         {
-          element: <Navigate to="/certy-career/individual/profile" replace />,
+          element: <Navigate to="/certy-career/individual/jobs" replace />,
           index: true,
         },
         { path: 'individual/profile', element: <IndividualProfile /> },

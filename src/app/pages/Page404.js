@@ -1,3 +1,4 @@
+// assets
 import { Link as RouterLink } from 'react-router-dom';
 
 import { Button, Container, Typography } from '@mui/material';
@@ -5,7 +6,6 @@ import { Button, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { m } from 'framer-motion';
 
-// assets
 import { PageNotFoundIllustration } from '../assets';
 // components
 import Page from '../components/Page';

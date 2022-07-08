@@ -39,6 +39,8 @@ const CompanyProfile = memo((props: Props) => {
   const { themeStretch } = useSettings();
   const theme = useTheme();
 
+  console.log();
+
   return (
     <Page title="Company Profile">
       <Container maxWidth={themeStretch ? false : 'xl'}>

@@ -1,3 +1,4 @@
+//
 import ReactQuill from 'react-quill';
 
 import { Box } from '@mui/material';
@@ -5,7 +6,6 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
-//
 import EditorToolbar, {
   formats,
   redoChange,

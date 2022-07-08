@@ -19,7 +19,11 @@
     "baseUrl": "./src",
     "noImplicitThis": false
   },
-  "include": ["src", "internals/startingTemplate/**/*"],
+  "include": [
+    "src",
+    "internals/startingTemplate/**/*",
+    "src/app/constant/.jobTypets"
+  ],
   "ts-node": {
     "compilerOptions": {
       "esModuleInterop": true,

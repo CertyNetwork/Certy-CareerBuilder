@@ -7,8 +7,8 @@ import { transformErrors } from './Utils';
 const AuthInterceptor = (
   config: AxiosRequestConfig | any,
 ): AxiosRequestConfig => {
-  const accessToken = storage.get('access-token');
-  if (accessToken) config.headers['access-token'] = accessToken;
+  const accessToken = storage.get('Near_token_bearer');
+  if (accessToken) config.headers['Authorization'] = accessToken;
   return config;
 };
 
@@ -65,7 +65,7 @@ const onResponseFailure = (error: any): Promise<any> => {
 };
 
 const instance: Readonly<AxiosInstance> = axios.create({
-  baseURL: process.env.REACT_APP_NFT,
+  baseURL: process.env.REACT_APP_CERTY_API,
 });
 
 instance.defaults.headers.get.Accepts = 'application/json';

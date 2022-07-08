@@ -3,7 +3,7 @@
  * AppliedJob
  *
  */
-import React, { memo } from 'react';
+import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -23,7 +23,9 @@ import { _appRelated } from 'app/_mock';
 import CardJob from 'app/components/CardJob';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
+import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
+import { storage } from 'utils/util';
 
 // import { messages } from './messages';
 
@@ -33,6 +35,16 @@ const AppliedJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
+
+  const { wallet, account } = useContext(NearContext);
+  const token = storage.get('Near_token_bearer');
+
+  if (!token && !account) {
+    return wallet?.requestSignIn(
+      'cecareer.certynetwork.testnet', // contract requesting access
+      'Certify',
+    );
+  }
 
   return (
     <Page title="Applied Job">
@@ -54,8 +66,8 @@ const AppliedJob = memo((props: Props) => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
               {_appRelated.map(app => (
-                <Box mb={3}>
-                  <CardJob key={app.id} app={app} applied={true} />
+                <Box mb={3} key={app.id}>
+                  <CardJob app={app} applied={true} />
                 </Box>
               ))}
             </Grid>

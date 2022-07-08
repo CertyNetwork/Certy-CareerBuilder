@@ -1,37 +1,30 @@
-import { useState } from 'react';
+/* eslint-disable prettier/prettier */
+import { useContext, useEffect, useState } from 'react';
 
 import { AppBar, Box, Button, Stack, Toolbar } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 import { DialogAnimate } from 'app/components/animate';
+import { NearContext } from 'app/contexts/NearContext';
 import PropTypes from 'prop-types';
 
 import Iconify from '../../../components/Iconify';
-// components
 import Logo from '../../../components/Logo';
 import { IconButtonAnimate } from '../../../components/animate';
-// config
 import { HEADER, NAVBAR } from '../../../config';
-// hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
 import { PostJob } from '../../../pages/PostJob';
-// utils
 import cssStyles from '../../../utils/cssStyles';
 import AccountPopover from './AccountPopover';
-import ContactsPopover from './ContactsPopover';
-import LanguagePopover from './LanguagePopover';
-import NotificationsPopover from './NotificationsPopover';
-//
 import Searchbar from './Searchbar';
-
-// ----------------------------------------------------------------------
 
 const RootStyle = styled(AppBar, {
   shouldForwardProp: prop =>
     prop !== 'isCollapse' && prop !== 'isOffset' && prop !== 'verticalLayout',
 })(({ isCollapse, isOffset, verticalLayout, theme }) => ({
   ...cssStyles(theme).bgBlur(),
+
   boxShadow: 'none',
   height: HEADER.MOBILE_HEIGHT,
   zIndex: theme.zIndex.appBar + 1,
@@ -74,6 +67,15 @@ export default function DashboardHeader({
   const isDesktop = useResponsive('up', 'lg');
   const [openDialogPostJob, setOpenDialogPostJob] = useState(false);
 
+  const { wallet, account } = useContext(NearContext);
+
+  const handleClick = async () => {
+    wallet.requestSignIn(
+      'cecareer.certynetwork.testnet', // contract requesting access
+      'Certify',
+    );
+  };
+
   return (
     <RootStyle
       isCollapse={isCollapse}
@@ -105,24 +107,36 @@ export default function DashboardHeader({
           alignItems="center"
           spacing={{ xs: 0.5, sm: 1.5 }}
         >
-          <LanguagePopover />
-          <NotificationsPopover />
-          <ContactsPopover />
-          <AccountPopover />
-          <Button
-            variant="contained"
-            sx={{ alignSelf: 'flex-end', maxWidth: 'max-content' }}
-            onClick={() => setOpenDialogPostJob(true)}
-          >
-            Post a Job
-          </Button>
+          {/* <LanguagePopover /> */}
+          {/* <NotificationsPopover /> */}
+          {/* <ContactsPopover /> */}
+          {account ? (
+            <>
+              <AccountPopover infoAccount={account} />
+              <Button
+                variant="contained"
+                sx={{ alignSelf: 'flex-end', maxWidth: 'max-content' }}
+                onClick={() => setOpenDialogPostJob(true)}
+              >
+                Post a Job
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{ alignSelf: 'flex-end', maxWidth: 'max-content' }}
+              onClick={handleClick}
+            >
+              Login with NEAR
+            </Button>
+          )}
         </Stack>
 
         <DialogAnimate
           open={openDialogPostJob}
           onClose={() => setOpenDialogPostJob(false)}
         >
-          <PostJob />
+          <PostJob close={() => setOpenDialogPostJob(false)} />
         </DialogAnimate>
       </Toolbar>
     </RootStyle>

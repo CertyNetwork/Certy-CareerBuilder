@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// components
+import { useContext, useState } from 'react';
 
 import {
   Avatar,
@@ -11,8 +12,9 @@ import {
 import Switch from '@mui/material/Switch';
 // @mui
 import { alpha } from '@mui/material/styles';
+import { NearContext } from 'app/contexts/NearContext';
+import { storage } from 'utils/util';
 
-// components
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import useSettings from '../../../hooks/useSettings';
@@ -21,12 +23,20 @@ export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const { themeMode, onToggleMode } = useSettings();
 
+  const { wallet, account, dispatchReset } = useContext(NearContext);
+
   const handleOpen = event => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = () => {
+    wallet.signOut();
+    storage.clear('Near_token_bearer');
+    dispatchReset();
   };
 
   return (
@@ -50,7 +60,7 @@ export default function AccountPopover() {
       >
         <Avatar
           src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-          alt="Rayan Moran"
+          alt={account}
         />
       </IconButtonAnimate>
 
@@ -70,10 +80,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            Rayan Moran
+            {account}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            rayan.moran@gmail.com
+            {account}
           </Typography>
         </Box>
 
@@ -102,7 +112,7 @@ export default function AccountPopover() {
             <Typography component="p">Edit Company Profile</Typography>
           </MenuItem>
           <Divider sx={{ borderStyle: 'dashed' }} />
-          <MenuItem>
+          <MenuItem onClick={handleLogout}>
             <Typography component="p">Logout</Typography>
           </MenuItem>
         </Stack>

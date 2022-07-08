@@ -1,8 +1,8 @@
+// config
 import { createContext, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 
-// config
 import { defaultSettings } from '../config';
 // hooks
 import useLocalStorage from '../hooks/useLocalStorage';
