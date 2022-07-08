@@ -7,7 +7,8 @@ import { getNonce, signCerty } from 'app/services/authService';
 import { WalletConnection, connect, keyStores } from 'near-api-js';
 import { storage } from 'utils/util';
 
-const nearConfig = getConfig(process.env.NODE_ENV || 'development');
+// const nearConfig = getConfig(process.env.NODE_ENV || 'development');
+const nearConfig = getConfig('development');
 
 nearConfig.keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
