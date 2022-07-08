@@ -31,9 +31,10 @@ function NearProvider({ children }) {
     const token = storage.get('Near_token_bearer');
 
     if (walletConnection.isSignedIn() && !token) {
-      const nonce = await getNonce(accountId).then(
-        result => result.data.data.nonce,
-      );
+      const nonce = await getNonce(accountId).then(result => {
+        console.log(result.data);
+        return result.data.data.nonce;
+      });
 
       const keyPair: any = await walletConnection._keyStore.getKey(
         'testnet',
