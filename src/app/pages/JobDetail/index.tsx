@@ -6,7 +6,10 @@
 import React, { memo, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
+import { gql, useQuery } from '@apollo/client';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -48,6 +51,31 @@ interface StyledTabProps {
   value: number;
 }
 
+const DETAIL_JOB = gql`
+  query Job($id: String!) {
+    job(id: $id) {
+      id
+      extra
+      experience_minimum_years
+      description
+      application_deadline
+      issued_at
+      job_type
+      reference
+      owner_id
+      reference_hash
+      reference_result
+      salary_from
+      salary_to
+      tags
+      title
+      updated_at
+      work_location_city
+      work_location_country
+    }
+  }
+`;
+
 const AntTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
 ))(({ theme }: any) => ({
@@ -68,6 +96,14 @@ const JobDetail = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
 
+  const { id } = useParams();
+
+  const { loading, error, data } = useQuery(DETAIL_JOB, {
+    variables: { id },
+  });
+
+  console.log(data);
+
   const [value, setValue] = React.useState(0);
   const [openDialogAppJob, setOpenDialogAppJob] = useState(false);
 
@@ -79,6 +115,10 @@ const JobDetail = memo((props: Props) => {
     setOpenDialogAppJob(true);
   };
 
+  if (loading) {
+    return <h3>Loading ...</h3>;
+  }
+
   return (
     <Page title="Job Detail">
       <Container maxWidth={themeStretch ? false : 'xl'}>
@@ -86,13 +126,14 @@ const JobDetail = memo((props: Props) => {
           {t('')}
           {/*  {t(...messages.someThing())}  */}
           <Box display="flex" columnGap="24px" alignItems="center">
-            <IconButton aria-label="back">
-              <ArrowBackIosNewIcon />
-            </IconButton>
+            <Link to="/certy-career/individual/jobs">
+              <IconButton aria-label="back">
+                <ArrowBackIosNewIcon />
+              </IconButton>
+            </Link>
+
             <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-              <Typography variant="h3">
-                Head Of User Experience and Design
-              </Typography>
+              <Typography variant="h3">{data?.job?.title}</Typography>
               <Stack
                 direction="row"
                 alignItems="center"

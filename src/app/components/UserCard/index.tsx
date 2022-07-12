@@ -18,12 +18,13 @@ const OverlayStyle = styled('div')(({ theme }: any) => ({
 }));
 
 interface Props {
-  user?: any;
+  user: any;
+  avatar: string;
 }
 
-export default function UserCard({ user }: Props) {
-  //   const { name, cover, position, follower, totalPost, avatarUrl, following } =
-  //     user;
+export default function UserCard(props: Props) {
+  const { user, avatar } = props;
+  console.log(user);
   const theme = useTheme();
   return (
     <Card sx={{ textAlign: 'center' }}>
@@ -45,7 +46,9 @@ export default function UserCard({ user }: Props) {
         <Avatar
           alt={'Certy'}
           src={
-            'https://minimal-assets-api-dev.vercel.app/assets/images/covers/cover_1.jpg'
+            avatar
+              ? avatar
+              : 'https://minimal-assets-api-dev.vercel.app/assets/images/covers/cover_1.jpg'
           }
           sx={{
             width: 64,

@@ -1,4 +1,6 @@
 // @mui
+import { Link } from 'react-router-dom';
+
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Box, Card, IconButton, Stack, Typography } from '@mui/material';
 
@@ -19,6 +21,7 @@ export default function CardJob({ app, applied }: Props) {
     work_location_city,
     work_location_country,
     description,
+    id,
   } = app;
 
   return (
@@ -41,15 +44,17 @@ export default function CardJob({ app, applied }: Props) {
           </Box>
 
           <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-            <Typography
-              component="div"
-              sx={{
-                fontSize: '20px',
-                fontWeight: 600,
-              }}
-            >
-              {title}
-            </Typography>
+            <Link to={`/certy-career/individual/jobs/${id}`}>
+              <Typography
+                component="div"
+                sx={{
+                  fontSize: '20px',
+                  fontWeight: 600,
+                }}
+              >
+                {title}
+              </Typography>
+            </Link>
             <Stack
               direction="row"
               alignItems="center"

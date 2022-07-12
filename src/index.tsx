@@ -1,12 +1,3 @@
-/* eslint-disable no-lone-blocks */
-
-/**
- * index.tsx
- *
- * This is the entry file for the application, only setup and boilerplate
- * code.
- */
-// Initialize languages
 import * as ReactDOM from 'react-dom';
 
 import 'react-app-polyfill/ie11';
@@ -14,8 +5,8 @@ import 'react-app-polyfill/stable';
 import { HelmetProvider } from 'react-helmet-async';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 // React Query Set up
-// import { QueryClient, QueryClientProvider } from 'react-query';
-// import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -33,16 +24,16 @@ import { configureAppStore } from 'store/configureStore';
 
 import './locales/i18n';
 
-// const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       refetchOnWindowFocus: false,
-//       refetchOnReconnect: false,
-//       retry: false,
-//       staleTime: 60 * 1000,
-//     },
-//   },
-// });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: 60 * 1000,
+    },
+  },
+});
 
 (window as any).Buffer = Buffer;
 
@@ -60,13 +51,13 @@ ReactDOM.render(
       <SettingsProvider>
         <NearProvider>
           <BrowserRouter>
-            {/* <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} /> */}
-            <ApolloProvider client={client}>
-              <App />
-              <ToastContainer autoClose={3000} />
-              {/* </QueryClientProvider> */}
-            </ApolloProvider>
+            <QueryClientProvider client={queryClient}>
+              <ReactQueryDevtools initialIsOpen={false} />
+              <ApolloProvider client={client}>
+                <App />
+                <ToastContainer autoClose={3000} />
+              </ApolloProvider>
+            </QueryClientProvider>
           </BrowserRouter>
         </NearProvider>
       </SettingsProvider>

@@ -1,8 +1,3 @@
-/**
- *
- * AppliedJob
- *
- */
 import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
@@ -19,11 +14,11 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { _appRelated } from 'app/_mock';
 import CardJob from 'app/components/CardJob';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import { NearContext } from 'app/contexts/NearContext';
+import { useAppliedJob } from 'app/hooks/AppliedJob/useAppliedJob';
 import useSettings from 'app/hooks/useSettings';
 import { storage } from 'utils/util';
 
@@ -39,11 +34,19 @@ const AppliedJob = memo((props: Props) => {
   const { wallet, account } = useContext(NearContext);
   const token = storage.get('Near_token_bearer');
 
+  const { dataAppliedJob, errorDataAppliedJob, loadingDataAppliedJob } =
+    useAppliedJob();
+
   if (!token && !account) {
     return wallet?.requestSignIn(
       'cecareer.certynetwork.testnet', // contract requesting access
       'Certify',
     );
+  }
+
+  console.log(dataAppliedJob);
+  if (loadingDataAppliedJob) {
+    return <h3>Loading ...</h3>;
   }
 
   return (
@@ -65,11 +68,22 @@ const AppliedJob = memo((props: Props) => {
           </Box>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              {_appRelated.map(app => (
-                <Box mb={3} key={app.id}>
-                  <CardJob app={app} applied={true} />
+              {dataAppliedJob && dataAppliedJob?.length > 0 ? (
+                dataAppliedJob.map(data => (
+                  <Box mb={3} key={data.id}>
+                    <CardJob app={data} applied={true} />
+                  </Box>
+                ))
+              ) : (
+                <Box
+                  mb={3}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <h3>No Data</h3>
                 </Box>
-              ))}
+              )}
             </Grid>
 
             <Grid item xs={12} md={4}>

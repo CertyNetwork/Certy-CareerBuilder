@@ -15,6 +15,7 @@ import CardList from 'app/components/CardList';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
 import { NearContext } from 'app/contexts/NearContext';
+import { useProfile, useProfileAvatar } from 'app/hooks/Profile/useProfile';
 import useSettings from 'app/hooks/useSettings';
 import { storage } from 'utils/util';
 
@@ -32,11 +33,18 @@ const IndividualProfile = memo((props: Props) => {
   const { wallet, account } = useContext(NearContext);
   const token = storage.get('Near_token_bearer');
 
+  const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
+  const { dataProfile, loadingDataProfile } = useProfile();
+
   if (!token && !account) {
     return wallet?.requestSignIn(
       'cecareer.certynetwork.testnet', // contract requesting access
       'Certify',
     );
+  }
+
+  if (loadingDataProfileAvatar || loadingDataProfile) {
+    return <h3>Loading ...</h3>;
   }
 
   return (
@@ -47,7 +55,10 @@ const IndividualProfile = memo((props: Props) => {
         <Div>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              <UserCard />
+              <UserCard
+                user={dataProfile}
+                avatar={dataProfileAvatar?.avatarUri}
+              />
               <Box mt={3}>
                 <CardList title="Experience">
                   {_appRelated.map(app => (
