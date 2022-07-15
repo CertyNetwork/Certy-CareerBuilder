@@ -3,13 +3,15 @@
  * FindJob
  *
  */
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
+import { InView } from 'react-intersection-observer';
 
 import { gql, useQuery } from '@apollo/client';
 import {
   Box,
+  Button,
   Card,
   Checkbox,
   Container,
@@ -43,8 +45,8 @@ import useSettings from 'app/hooks/useSettings';
 interface Props {}
 
 const FIND_JOB = gql`
-  query Job {
-    jobs(first: 5) {
+  query Job($first: Int, $skip: Int) {
+    jobs(first: $first, skip: $skip) {
       id
       owner_id
       extra
@@ -71,8 +73,11 @@ const FindJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
-  const { loading, error, data } = useQuery(FIND_JOB);
+  const { loading, error, data, fetchMore } = useQuery(FIND_JOB, {
+    variables: { first: 5, skip: 0 },
+  });
 
+  console.log(loading, 444);
   if (loading) {
     return <h3>Loading ...</h3>;
   }
@@ -176,7 +181,7 @@ const FindJob = memo((props: Props) => {
                 </Typography>
               </Box>
 
-              {data && data?.jobs?.length ? (
+              {data && data?.jobs?.length > 0 ? (
                 data?.jobs.map(d => (
                   <Box mb={3} key={d.id}>
                     <CardJob app={d} />
@@ -193,10 +198,20 @@ const FindJob = memo((props: Props) => {
                 </Box>
               )}
 
-              {data && data?.jobs?.length && (
-                <Box display="flex" justifyContent="center">
-                  <Pagination count={5} color="primary" />
-                </Box>
+              {data && (
+                <InView
+                  onChange={async inView => {
+                    const currentLength = data.jobs.length || 0;
+                    if (inView) {
+                      await fetchMore({
+                        variables: {
+                          first: currentLength,
+                          skip: currentLength,
+                        },
+                      });
+                    }
+                  }}
+                />
               )}
             </Grid>
             <Grid item xs={12} md={4}>

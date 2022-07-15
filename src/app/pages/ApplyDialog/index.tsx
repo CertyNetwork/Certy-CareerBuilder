@@ -3,14 +3,22 @@
  * ApplyDialog
  *
  */
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useContext, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Scrollbar from 'react-perfect-scrollbar';
+import { useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, TextField, styled } from '@mui/material';
+import {
+  Backdrop,
+  CircularProgress,
+  IconButton,
+  TextField,
+  styled,
+} from '@mui/material';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import ResumeFile from 'app/components/ReumeFile';
 import {
@@ -18,16 +26,28 @@ import {
   RHFTextField,
   RHFUploadSingleFile,
 } from 'app/components/hook-form';
+import { NearContext } from 'app/contexts/NearContext';
 import { ApplyJobSchema } from 'app/schema/applyJobSchema';
+import { applyJob } from 'app/services/jobs';
+import { handleErrorResponse, handleSuccessResponse } from 'app/utils/until';
 
 interface Props {
   onClose: () => void;
 }
 
+const StyledScrollBar = styled(Scrollbar)(() => ({
+  paddingLeft: '1rem',
+  paddingRight: '1rem',
+  maxHeight: '500px',
+}));
+
 export const ApplyDialog = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { onClose } = props;
+  const { id } = useParams();
+  const { account } = useContext(NearContext);
+  const [loading, setLoading] = useState(false);
 
   const methods = useForm({
     resolver: yupResolver(ApplyJobSchema),
@@ -39,6 +59,7 @@ export const ApplyDialog = memo((props: Props) => {
     // control,
     setValue,
     // getValues,
+    register,
     handleSubmit,
     // formState: { isSubmitting },
   } = methods;
@@ -59,14 +80,26 @@ export const ApplyDialog = memo((props: Props) => {
     [setValue],
   );
 
-  const onSubmit = async () => {
+  const onSubmit = async data => {
+    setLoading(true);
+    const params = {
+      jobId: id,
+      recruiterAccountId: account,
+      contactEmail: data.contactEmail,
+      contactNumber: data.contactNumber,
+      resumeUrl: data.resumeUrl,
+      coverLetter: data.coverLetter,
+    };
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await applyJob(params);
+      setLoading(false);
+      onClose();
       reset();
-      // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      // navigate(PATH_DASHBOARD.eCommerce.list);
+      handleSuccessResponse('Apply job success!');
     } catch (error) {
-      console.error(error);
+      setLoading(false);
+      handleErrorResponse(error);
     }
   };
 
@@ -98,58 +131,71 @@ export const ApplyDialog = memo((props: Props) => {
             <CloseIcon />
           </IconButton>
         </Stack>
-        {/* <Scrollbar sx={{ p: 1.5, pt: 0, maxHeight: 80 * 8 }}> */}
-        <Box py={1} px={3}>
-          <Typography variant="subtitle1" component="div">
-            Contact info
-          </Typography>
-          <Box mt={2}>
-            <Typography variant="subtitle2" component="div" sx={{ mb: '10px' }}>
-              Email address
+        <StyledScrollBar>
+          <Box py={1} px={3}>
+            <Typography variant="subtitle1" component="div">
+              Contact info
             </Typography>
-            <RHFTextField name="email" />
-          </Box>
-          <Box mt={2}>
-            <Typography variant="subtitle2" component="div" sx={{ mb: '10px' }}>
-              Mobile phone number
-            </Typography>
-            <RHFTextField name="mobile" />
-          </Box>
-          <Box mt={2} mb={1}>
-            <Typography variant="subtitle2" component="div">
-              Resume
-            </Typography>
-            <ResumeFile
-              name="resume"
-              options={[{ value: 'test 1' }, { value: 'tesst2' }]}
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Email address
+              </Typography>
+              <RHFTextField name="contactEmail" />
+            </Box>
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Mobile phone number
+              </Typography>
+              <RHFTextField name="contactNumber" />
+            </Box>
+            <Box mt={2} mb={1}>
+              <Typography variant="subtitle2" component="div">
+                Resume
+              </Typography>
+              {/* <ResumeFile
+                name="resumeUrl"
+                options={[{ value: 'test 1' }, { value: 'test 2' }]}
+              /> */}
+            </Box>
+            <RHFUploadSingleFile
+              name="cover"
+              accept="image/*"
+              maxSize={3145728}
+              onDrop={handleDrop}
             />
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Cover Letter
+              </Typography>
+              <TextField
+                multiline
+                fullWidth
+                rows={4}
+                placeholder="Share what you are thinking here..."
+                {...register('coverLetter')}
+                sx={{
+                  '& fieldset': {
+                    borderWidth: `1px !important`,
+                    borderColor: theme =>
+                      `${theme.palette.grey[500_32]} !important`,
+                  },
+                }}
+              />
+            </Box>
           </Box>
-          <RHFUploadSingleFile
-            name="cover"
-            accept="image/*"
-            maxSize={3145728}
-            onDrop={handleDrop}
-          />
-          <Box mt={2}>
-            <Typography variant="subtitle2" component="div" sx={{ mb: '10px' }}>
-              Cover Letter
-            </Typography>
-            <TextField
-              multiline
-              fullWidth
-              rows={4}
-              placeholder="Share what you are thinking here..."
-              sx={{
-                '& fieldset': {
-                  borderWidth: `1px !important`,
-                  borderColor: theme =>
-                    `${theme.palette.grey[500_32]} !important`,
-                },
-              }}
-            />
-          </Box>
-        </Box>
-        {/* </Scrollbar> */}
+        </StyledScrollBar>
         <Box
           display="flex"
           alignItems="center"
@@ -163,16 +209,27 @@ export const ApplyDialog = memo((props: Props) => {
 
           <Button
             type="submit"
-            size="small"
+            size="large"
             variant="contained"
-            sx={{ alignSelf: 'flex-end', maxWidth: 'max-content' }}
+            sx={{ alignSelf: 'flex-end', width: '270px' }}
           >
             Apply for this position
           </Button>
         </Box>
       </FormProvider>
+
+      {loading && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
     </Div>
   );
 });
 
-const Div = styled('div')({});
+const Div = styled('div')({
+  overflow: 'hidden',
+});

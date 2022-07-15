@@ -59,6 +59,7 @@ function NearProvider({ children }) {
 
       console.log(tokenAccess);
       storage.set('Near_token_bearer', tokenAccess.accessToken);
+      storage.set('REFRESH_TOKEN', tokenAccess.refreshToken);
     }
   };
 

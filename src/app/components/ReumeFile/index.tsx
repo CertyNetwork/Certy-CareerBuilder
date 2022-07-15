@@ -26,7 +26,7 @@ export default function ResumeFile({ name, options }: Props) {
         <div>
           <RadioGroup {...field} row>
             {options.map(option => (
-              <Card sx={{ margin: '5px 0', width: '100%' }}>
+              <Card key={option.value} sx={{ margin: '5px 0', width: '100%' }}>
                 <Box
                   display="flex"
                   justifyContent="space-between"

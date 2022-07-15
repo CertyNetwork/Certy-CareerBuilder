@@ -37,12 +37,12 @@ export default function Router() {
         { path: 'individual/jobs', element: <FindJob /> },
         { path: 'individual/jobs/:id', element: <JobDetail /> },
         { path: 'individual/applied-job', element: <AppliedJob /> },
-        { path: 'recruiter/management-posted-job', element: <PostedJob /> },
-        { path: 'recruiter/company-profile', element: <CompanyProfile /> },
-        {
-          path: 'recruiter/applicant-management',
-          element: <ApplicantManagement />,
-        },
+        // { path: 'recruiter/management-posted-job', element: <PostedJob /> },
+        // { path: 'recruiter/company-profile', element: <CompanyProfile /> },
+        // {
+        //   path: 'recruiter/applicant-management',
+        //   element: <ApplicantManagement />,
+        // },
       ],
     },
     {

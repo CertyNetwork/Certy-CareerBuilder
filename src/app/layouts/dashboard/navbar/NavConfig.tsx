@@ -42,31 +42,31 @@ const navConfig = [
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
-  {
-    subheader: 'Recruiter Features',
-    items: [
-      {
-        title: 'Company Profile',
-        path: '/certy-career/recruiter/company-profile',
-        icon: ICONS.dashboard,
-      },
-      {
-        title: 'Job Management',
-        icon: ICONS.user,
-        children: [
-          {
-            title: 'Posted Job',
-            path: '/certy-career/recruiter/management-posted-job',
-          },
-        ],
-      },
-      {
-        title: 'Applicant Management',
-        path: '/certy-career/recruiter/applicant-management',
-        icon: ICONS.dashboard,
-      },
-    ],
-  },
+  // {
+  //   subheader: 'Recruiter Features',
+  //   items: [
+  //     {
+  //       title: 'Company Profile',
+  //       path: '/certy-career/recruiter/company-profile',
+  //       icon: ICONS.dashboard,
+  //     },
+  //     {
+  //       title: 'Job Management',
+  //       icon: ICONS.user,
+  //       children: [
+  //         {
+  //           title: 'Posted Job',
+  //           path: '/certy-career/recruiter/management-posted-job',
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: 'Applicant Management',
+  //       path: '/certy-career/recruiter/applicant-management',
+  //       icon: ICONS.dashboard,
+  //     },
+  //   ],
+  // },
 ];
 
 export default navConfig;

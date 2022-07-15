@@ -7,3 +7,7 @@ export const getNonce = accountId => {
 export const signCerty = params => {
   return BaseApi.post('auth', params);
 };
+
+export const refreshAccessToken = (token: string) => {
+  return BaseApi.post('auth/refresh-token', { refreshToken: token });
+};

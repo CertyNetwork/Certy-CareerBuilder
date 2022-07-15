@@ -1,8 +1,12 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { storage } from 'utils/util';
 
 import HttpStatusCodes from './HttpStatusCodes';
 import { transformErrors } from './Utils';
+
+const instance: any = axios.create({
+  baseURL: process.env.REACT_APP_CERTY_API,
+});
 
 const AuthInterceptor = (
   config: AxiosRequestConfig | any,
@@ -23,17 +27,29 @@ const onResponseSuccess = (
   return response;
 };
 
+const handleAccessTokenExpire = async err => {
+  const originalConfig = err.config;
+  const refreshToken = storage.get('REFRESH_TOKEN');
+  if (refreshToken) {
+    try {
+      const rs = await instance.post('auth/refresh-token', {
+        refreshToken,
+      });
+      const { accessToken } = rs.data;
+      storage.set('Near_token_bearer', accessToken);
+      return instance(originalConfig);
+    } catch (_error) {
+      return Promise.reject(_error);
+    }
+  }
+};
+
 const onResponseFailure = (error: any): Promise<any> => {
   const httpStatus = error?.response?.status;
   const errors = transformErrors(error?.response?.data);
   switch (httpStatus) {
     case HttpStatusCodes.UNAUTHORIZED:
-      storage.clear('access-token');
-      storage.set(
-        'returnURL',
-        window.location.pathname + window.location.search,
-      );
-      window.location.replace(`${process.env.PUBLIC_URL}/session/signin`);
+      handleAccessTokenExpire(error);
       break;
     case HttpStatusCodes.NOT_FOUND:
       console.log(
@@ -63,10 +79,6 @@ const onResponseFailure = (error: any): Promise<any> => {
   }
   return Promise.reject(errors);
 };
-
-const instance: Readonly<AxiosInstance> = axios.create({
-  baseURL: process.env.REACT_APP_CERTY_API,
-});
 
 instance.defaults.headers.get.Accepts = 'application/json';
 instance.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
