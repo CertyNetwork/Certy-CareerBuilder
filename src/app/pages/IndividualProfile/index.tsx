@@ -42,6 +42,8 @@ const IndividualProfile = memo((props: Props) => {
     useProfileBackground();
   const { dataProfile, loadingDataProfile } = useProfile();
 
+  console.log(dataProfile);
+
   if (!token && !account) {
     return wallet?.requestSignIn(
       'cecareer.certynetwork.testnet', // contract requesting access
@@ -66,16 +68,21 @@ const IndividualProfile = memo((props: Props) => {
                 avatar={dataProfileAvatar?.src}
                 bgImg={dataProfileBackground?.src}
               />
-              <Box mt={3}>
-                <CardList title="Experience">
-                  {_appRelated.map(app => (
-                    <Box key={app.id}>
-                      <CardExpire app={app} />
-                      <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
-                    </Box>
-                  ))}
-                </CardList>
-              </Box>
+
+              {dataProfile &&
+                dataProfile?.experiences &&
+                dataProfile?.experiences?.length > 0 && (
+                  <Box mt={3}>
+                    <CardList title="Experience">
+                      {dataProfile?.experiences.map(exp => (
+                        <Box key={exp.id}>
+                          <CardExpire experience={exp} />
+                          <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
+                        </Box>
+                      ))}
+                    </CardList>
+                  </Box>
+                )}
 
               <Box mt={3}>
                 <CardList title="Education">

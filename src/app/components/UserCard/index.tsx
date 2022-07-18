@@ -27,7 +27,6 @@ export default function UserCard(props: Props) {
   const { user, avatar, bgImg } = props;
   const theme = useTheme();
 
-  console.log(user);
   return (
     <Card sx={{ textAlign: 'center' }}>
       <Box sx={{ position: 'relative' }}>

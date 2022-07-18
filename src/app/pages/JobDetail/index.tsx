@@ -284,7 +284,7 @@ const JobDetail = memo((props: Props) => {
                       </Box>
                     </Card>
 
-                    <Box mt={3}>
+                    {/* <Box mt={3}>
                       <CardList title="Related Jobs">
                         {_appRelated.map(app => (
                           <>
@@ -293,7 +293,7 @@ const JobDetail = memo((props: Props) => {
                           </>
                         ))}
                       </CardList>
-                    </Box>
+                    </Box> */}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <ViewDetailJob />

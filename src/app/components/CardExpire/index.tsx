@@ -1,18 +1,19 @@
 // @mui
 import { Box, Stack, Typography } from '@mui/material';
+import moment from 'moment';
 
 import Image from '../Image';
 
 interface Props {
-  app: any;
+  experience: any;
 }
 
-export default function CardExpire({ app }: Props) {
-  const { shortcut, system, name } = app;
-
+export default function CardExpire(props: Props) {
+  const { experience } = props;
+  console.log(experience);
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Box
+      {/* <Box
         sx={{
           width: 48,
           height: 48,
@@ -25,23 +26,26 @@ export default function CardExpire({ app }: Props) {
         }}
       >
         <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
-      </Box>
+      </Box> */}
 
       <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">{experience?.companyName}</Typography>
         <Stack
           direction="row"
           alignItems="center"
           sx={{ mt: 0.5, color: 'text.secondary' }}
         >
           <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
-            {system}
+            {experience?.companyName}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ ml: 0.5, mr: 1, textTransform: 'capitalize' }}
+          >
+            {experience?.employmentType}
           </Typography>
           <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-            Full-time
-          </Typography>
-          <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-            2021 · Less than a year
+            {moment(experience?.startDate).format('DD/MM/YYYY')}
           </Typography>
         </Stack>
       </Box>
