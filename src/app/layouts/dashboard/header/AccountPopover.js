@@ -35,7 +35,8 @@ export default function AccountPopover() {
 
   const handleLogout = () => {
     wallet.signOut();
-    storage.clear('Near_token_bearer');
+    localStorage.removeItem('Near_token_bearer');
+    localStorage.removeItem('REFRESH_TOKEN');
     dispatchReset();
   };
 

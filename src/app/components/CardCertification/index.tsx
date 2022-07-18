@@ -5,11 +5,11 @@ import { useTheme } from '@mui/material/styles';
 import Image from '../Image';
 
 interface Props {
-  app: any;
+  dataCert: any;
 }
 
-export default function CardCertification({ app }: Props) {
-  const { shortcut, name } = app;
+export default function CardCertification(props: Props) {
+  const { dataCert } = props;
   const theme: any = useTheme();
 
   return (
@@ -34,11 +34,15 @@ export default function CardCertification({ app }: Props) {
             bgcolor: 'background.neutral',
           }}
         >
-          <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
+          <Image
+            src={dataCert?.media}
+            alt={dataCert?.title}
+            sx={{ width: 24, height: 24 }}
+          />
         </Box>
 
         <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-          <Typography variant="subtitle1">{name}</Typography>
+          <Typography variant="subtitle1">{dataCert?.title}</Typography>
           <Stack
             direction="row"
             alignItems="center"

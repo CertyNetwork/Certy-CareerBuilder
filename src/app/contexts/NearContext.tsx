@@ -58,8 +58,8 @@ const NearProvider = ({ children }) => {
       }).then(res => res.data.data);
 
       console.log(tokenAccess);
-      storage.set('Near_token_bearer', tokenAccess.accessToken);
-      storage.set('REFRESH_TOKEN', tokenAccess.refreshToken);
+      localStorage.setItem('Near_token_bearer', tokenAccess.accessToken);
+      localStorage.setItem('REFRESH_TOKEN', tokenAccess.refreshToken);
     }
   };
 

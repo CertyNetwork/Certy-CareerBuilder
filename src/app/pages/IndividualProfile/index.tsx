@@ -7,6 +7,7 @@ import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
+import { gql, useQuery } from '@apollo/client';
 import { Box, Container, Divider, Grid, styled } from '@mui/material';
 import { _appRelated } from 'app/_mock';
 import CardEducation from 'app/components/CardEducation';
@@ -29,6 +30,24 @@ import { ContactForm } from '../ContactForm';
 
 interface Props {}
 
+const CERTIFICATES = gql`
+  query certificate($arrayId: [ID]) {
+    certs(where: { id_in: $arrayId }) {
+      id
+      title
+      owner_id
+      media
+      media_hash
+      issued_at
+      description
+      extra
+      reference_result
+      reference_hash
+      reference
+    }
+  }
+`;
+
 const IndividualProfile = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
@@ -42,7 +61,13 @@ const IndividualProfile = memo((props: Props) => {
     useProfileBackground();
   const { dataProfile, loadingDataProfile } = useProfile();
 
-  console.log(dataProfile);
+  const { data, loading, error, refetch } = useQuery(CERTIFICATES, {
+    variables: {
+      arrayId: dataProfile?.certificates?.map(c => c.id),
+    },
+  });
+
+  console.log(data);
 
   if (!token && !account) {
     return wallet?.requestSignIn(
@@ -84,16 +109,20 @@ const IndividualProfile = memo((props: Props) => {
                   </Box>
                 )}
 
-              <Box mt={3}>
-                <CardList title="Education">
-                  {_appRelated.map(app => (
-                    <Box key={app.id}>
-                      <CardEducation app={app} />
-                      <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
-                    </Box>
-                  ))}
-                </CardList>
-              </Box>
+              {dataProfile &&
+                dataProfile?.educations &&
+                dataProfile?.educations?.length > 0 && (
+                  <Box mt={3}>
+                    <CardList title="Education">
+                      {dataProfile?.educations.map(edu => (
+                        <Box key={edu.id}>
+                          <CardEducation education={edu} certificates={data} />
+                          <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
+                        </Box>
+                      ))}
+                    </CardList>
+                  </Box>
+                )}
             </Grid>
 
             <Grid item xs={12} md={4}>

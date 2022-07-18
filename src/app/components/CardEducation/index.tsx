@@ -1,19 +1,21 @@
 // @mui
 import { Box, Stack, Typography } from '@mui/material';
+import moment from 'moment';
 
 import CardCertification from '../CardCertification';
 import Image from '../Image';
 
 interface Props {
-  app: any;
+  education: any;
+  certificates: any;
 }
 
-export default function CardEducation({ app }: Props) {
-  const { shortcut, system, name } = app;
+export default function CardEducation(props: Props) {
+  const { education, certificates } = props;
   return (
     <Box>
       <Stack direction="row" alignItems="center" spacing={2}>
-        <Box
+        {/* <Box
           sx={{
             width: 48,
             height: 48,
@@ -26,22 +28,22 @@ export default function CardEducation({ app }: Props) {
           }}
         >
           <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
-        </Box>
+        </Box> */}
         <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-          <Typography variant="h6">{name}</Typography>
+          <Typography variant="h6">{education?.school}</Typography>
           <Stack
             direction="row"
             alignItems="center"
             sx={{ mt: 0.5, color: 'text.secondary' }}
           >
             <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
-              {system}
+              {education?.degree}
             </Typography>
             <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-              Full-time
+              {education?.fieldOfStudy}
             </Typography>
             <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-              2021 · Less than a year
+              {moment(education?.startDate).format('DD/MM/YYYY')}
             </Typography>
           </Stack>
         </Box>
@@ -75,9 +77,15 @@ export default function CardEducation({ app }: Props) {
               </Typography>
             </li>
           </ul>
-          <Box mt={2}>
-            <CardCertification app={app} />
-          </Box>
+
+          {certificates &&
+            certificates.certs &&
+            certificates.certs.length > 0 &&
+            certificates.certs.map(cert => (
+              <Box mt={2} key={cert.id}>
+                <CardCertification dataCert={cert} />
+              </Box>
+            ))}
         </Box>
       </Stack>
     </Box>
