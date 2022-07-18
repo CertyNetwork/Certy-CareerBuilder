@@ -31,7 +31,7 @@ const IndividualProfile = memo((props: Props) => {
   const { themeStretch } = useSettings();
 
   const { wallet, account } = useContext(NearContext);
-  const token = storage.get('Near_token_bearer');
+  const token = localStorage.getItem('Near_token_bearer');
 
   const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
   const { dataProfile, loadingDataProfile } = useProfile();

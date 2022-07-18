@@ -189,13 +189,9 @@ const JobDetail = memo((props: Props) => {
                       <Box px={8} py={4}>
                         <LabelStyle>Job Description</LabelStyle>
                         <Typography variant="body1" component="div">
-                          Snapshot Labs is dedicated to creating a voting
-                          framework to facilitate decision making for
-                          decentralized organizations. Currently, thousands of
-                          DAOs are using Snapshot, including leading Ethereum
-                          protocols.
+                          {data?.job?.description}
                         </Typography>
-                        <Typography variant="body1" component="div">
+                        {/* <Typography variant="body1" component="div">
                           We are a small team looking for a rockstar UX/UI
                           designer to build an easy and intuitive graphical
                           interface for digital governance. As a senior
@@ -284,7 +280,7 @@ const JobDetail = memo((props: Props) => {
                               User Experience Design (UED)
                             </Typography>
                           </Label>
-                        </Box>
+                        </Box> */}
                       </Box>
                     </Card>
 
@@ -321,7 +317,10 @@ const JobDetail = memo((props: Props) => {
           open={openDialogAppJob}
           onClose={() => setOpenDialogAppJob(false)}
         >
-          <ApplyDialog onClose={() => setOpenDialogAppJob(false)} />
+          <ApplyDialog
+            recruiter={data?.job?.owner_id}
+            onClose={() => setOpenDialogAppJob(false)}
+          />
         </DialogAnimate>
       </Container>
     </Page>

@@ -8,7 +8,7 @@ export const useAppliedJob = () => {
     async () => await getAppliedJob(),
   );
   return {
-    dataAppliedJob: data?.data,
+    dataAppliedJob: data?.data?.data,
     refetchDataAppliedJob: refetch,
     loadingDataAppliedJob: isLoading,
     errorDataAppliedJob: error,

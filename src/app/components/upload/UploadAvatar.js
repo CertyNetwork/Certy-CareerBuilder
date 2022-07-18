@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 // @mui
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 
 import Iconify from '../Iconify';
 //
@@ -40,7 +41,7 @@ const DropZoneStyle = styled('div')({
   },
 });
 
-const PlaceholderStyle = styled('div')(({ theme }: any) => ({
+const PlaceholderStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
@@ -57,13 +58,12 @@ const PlaceholderStyle = styled('div')(({ theme }: any) => ({
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  error: boolean;
-  file: any;
-  helperText?: any;
-  sx?: any;
-  other?: any;
-}
+UploadAvatar.propTypes = {
+  error: PropTypes.bool,
+  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  helperText: PropTypes.node,
+  sx: PropTypes.object,
+};
 
 export default function UploadAvatar({
   error,
@@ -71,7 +71,7 @@ export default function UploadAvatar({
   helperText,
   sx,
   ...other
-}: Props) {
+}) {
   const {
     getRootProps,
     getInputProps,

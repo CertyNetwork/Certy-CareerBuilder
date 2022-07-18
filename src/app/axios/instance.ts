@@ -11,7 +11,7 @@ const instance: any = axios.create({
 const AuthInterceptor = (
   config: AxiosRequestConfig | any,
 ): AxiosRequestConfig => {
-  const accessToken = storage.get('Near_token_bearer');
+  const accessToken = localStorage.getItem('Near_token_bearer');
   if (accessToken) config.headers['Authorization'] = accessToken;
   return config;
 };
@@ -29,14 +29,14 @@ const onResponseSuccess = (
 
 const handleAccessTokenExpire = async err => {
   const originalConfig = err.config;
-  const refreshToken = storage.get('REFRESH_TOKEN');
+  const refreshToken = localStorage.getItem('REFRESH_TOKEN');
   if (refreshToken) {
     try {
       const rs = await instance.post('auth/refresh-token', {
         refreshToken,
       });
-      const { accessToken } = rs.data;
-      storage.set('Near_token_bearer', accessToken);
+      const { accessToken } = rs.data.data;
+      localStorage.setItem('Near_token_bearer', accessToken);
       return instance(originalConfig);
     } catch (_error) {
       return Promise.reject(_error);

@@ -1,9 +1,9 @@
-// utils
 import { Box, Paper, Typography } from '@mui/material';
 // @mui
 import { alpha } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
+// utils
 import { fData } from '../../utils/formatNumber';
 import getFileData from '../../utils/getFileData';
 

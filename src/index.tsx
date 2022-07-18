@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { offsetLimitPagination } from '@apollo/client/utilities';
 import { App } from 'app';
 import { NearProvider } from 'app/contexts/NearContext';
 import { SettingsProvider } from 'app/contexts/SettingsContext';
@@ -37,9 +38,25 @@ const queryClient = new QueryClient({
 
 (window as any).Buffer = Buffer;
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        jobs: {
+          keyArgs: ['jobs'],
+          merge(existing = [], incoming: any[]) {
+            console.log(existing, incoming, 777);
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+  },
+});
+
 const client = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/edricngo/certy-network',
-  cache: new InMemoryCache(),
+  cache,
 });
 
 const store = configureAppStore();

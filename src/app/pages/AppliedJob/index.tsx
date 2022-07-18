@@ -1,7 +1,8 @@
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
+import { gql, useQuery } from '@apollo/client';
 import {
   Box,
   Card,
@@ -26,16 +27,53 @@ import { storage } from 'utils/util';
 
 interface Props {}
 
+const FIND_JOB_APPLY = gql`
+  query JobApply($arrayId: [ID]) {
+    jobApply: jobs(where: { id_in: $arrayId }) {
+      id
+      owner_id
+      extra
+      reference
+      reference_hash
+      reference_result
+      title
+      description
+      issued_at
+      updated_at
+      work_location_country
+      work_location_city
+      job_type
+      application_deadline
+      experience_minimum_years
+      salary_from
+      salary_to
+      tags
+    }
+  }
+`;
+
 const AppliedJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
 
   const { wallet, account } = useContext(NearContext);
-  const token = storage.get('Near_token_bearer');
+  const token = localStorage.getItem('Near_token_bearer');
 
   const { dataAppliedJob, errorDataAppliedJob, loadingDataAppliedJob } =
     useAppliedJob();
+
+  const { data, loading, networkStatus, error, fetchMore, variables, refetch } =
+    useQuery(FIND_JOB_APPLY, {
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        arrayId: dataAppliedJob,
+      },
+      fetchPolicy: 'no-cache',
+      nextFetchPolicy: 'no-cache',
+    });
+
+  console.log(data);
 
   if (!token && !account) {
     return wallet?.requestSignIn(
@@ -44,8 +82,7 @@ const AppliedJob = memo((props: Props) => {
     );
   }
 
-  console.log(dataAppliedJob);
-  if (loadingDataAppliedJob) {
+  if (loadingDataAppliedJob || loading) {
     return <h3>Loading ...</h3>;
   }
 
@@ -68,8 +105,8 @@ const AppliedJob = memo((props: Props) => {
           </Box>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              {dataAppliedJob && dataAppliedJob?.length > 0 ? (
-                dataAppliedJob.map(data => (
+              {data && data.jobApply && data.jobApply.length > 0 ? (
+                data.jobApply.map(data => (
                   <Box mb={3} key={data.id}>
                     <CardJob app={data} applied={true} />
                   </Box>

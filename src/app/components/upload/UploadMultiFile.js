@@ -1,23 +1,21 @@
-//
 import { useDropzone } from 'react-dropzone';
 
-import { Box } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
 
-import Image from '../Image';
+//
 import BlockContent from './BlockContent';
+import MultiFilePreview from './MultiFilePreview';
 import RejectionFiles from './RejectionFiles';
 
 // ----------------------------------------------------------------------
 
-const DropZoneStyle = styled('div')(({ theme }: any) => ({
+const DropZoneStyle = styled('div')(({ theme }) => ({
   outline: 'none',
-  overflow: 'hidden',
-  position: 'relative',
   padding: theme.spacing(5, 1),
   borderRadius: theme.shape.borderRadius,
-  transition: theme.transitions.create('padding'),
   backgroundColor: theme.palette.background.neutral,
   border: `1px dashed ${theme.palette.grey[500_32]}`,
   '&:hover': { opacity: 0.72, cursor: 'pointer' },
@@ -25,21 +23,28 @@ const DropZoneStyle = styled('div')(({ theme }: any) => ({
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  error: boolean;
-  file: any;
-  helperText?: any;
-  sx?: any;
-  accept: any;
-}
+UploadMultiFile.propTypes = {
+  files: PropTypes.array.isRequired,
+  error: PropTypes.bool,
+  showPreview: PropTypes.bool,
+  onUpload: PropTypes.func,
+  onRemove: PropTypes.func,
+  onRemoveAll: PropTypes.func,
+  helperText: PropTypes.node,
+  sx: PropTypes.object,
+};
 
-export default function UploadSingleFile({
-  error = false,
-  file,
+export default function UploadMultiFile({
+  error,
+  showPreview = false,
+  files,
+  onUpload,
+  onRemove,
+  onRemoveAll,
   helperText,
   sx,
-  accept,
-}: Props) {
+  ...other
+}) {
   const {
     getRootProps,
     getInputProps,
@@ -47,8 +52,7 @@ export default function UploadSingleFile({
     isDragReject,
     fileRejections,
   } = useDropzone({
-    multiple: false,
-    accept,
+    ...other,
   });
 
   return (
@@ -62,33 +66,32 @@ export default function UploadSingleFile({
             borderColor: 'error.light',
             bgcolor: 'error.lighter',
           }),
-          ...(file && {
-            padding: '12% 0',
-          }),
         }}
       >
         <input {...getInputProps()} />
 
         <BlockContent />
-
-        {file && (
-          <Image
-            alt="file preview"
-            src={typeof file === 'string' ? file : file.preview}
-            sx={{
-              top: 8,
-              left: 8,
-              borderRadius: 1,
-              position: 'absolute',
-              width: 'calc(100% - 16px)',
-              height: 'calc(100% - 16px)',
-            }}
-          />
-        )}
       </DropZoneStyle>
 
       {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />
+      )}
+
+      <MultiFilePreview
+        files={files}
+        showPreview={showPreview}
+        onRemove={onRemove}
+      />
+
+      {files.length > 0 && (
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Button color="inherit" size="small" onClick={onRemoveAll}>
+            Remove all
+          </Button>
+          <Button size="small" variant="contained" onClick={onUpload}>
+            Upload files
+          </Button>
+        </Stack>
       )}
 
       {helperText && helperText}

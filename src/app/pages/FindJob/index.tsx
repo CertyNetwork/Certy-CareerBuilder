@@ -8,7 +8,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InView } from 'react-intersection-observer';
 
-import { gql, useQuery } from '@apollo/client';
+import { NetworkStatus, gql, useQuery } from '@apollo/client';
 import {
   Box,
   Button,
@@ -45,8 +45,8 @@ import useSettings from 'app/hooks/useSettings';
 interface Props {}
 
 const FIND_JOB = gql`
-  query Job($first: Int, $skip: Int) {
-    jobs(first: $first, skip: $skip) {
+  query Job($first: Int!, $skip: Int!) {
+    jobs: jobs(first: $first, skip: $skip) {
       id
       owner_id
       extra
@@ -73,12 +73,20 @@ const FindJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
-  const { loading, error, data, fetchMore } = useQuery(FIND_JOB, {
-    variables: { first: 5, skip: 0 },
-  });
+  const [fullyLoaded, setFullyLoaded] = useState(false);
+  const { data, networkStatus, error, fetchMore, variables } = useQuery(
+    FIND_JOB,
+    {
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        skip: 0,
+        first: 5,
+      },
+    },
+  );
 
-  console.log(loading, 444);
-  if (loading) {
+  // console.log(data, variables, 444);
+  if (networkStatus === NetworkStatus.loading) {
     return <h3>Loading ...</h3>;
   }
 
@@ -198,21 +206,23 @@ const FindJob = memo((props: Props) => {
                 </Box>
               )}
 
-              {data && (
-                <InView
-                  onChange={async inView => {
-                    const currentLength = data.jobs.length || 0;
-                    if (inView) {
-                      await fetchMore({
-                        variables: {
-                          first: currentLength,
-                          skip: currentLength,
-                        },
-                      });
-                    }
-                  }}
-                />
-              )}
+              {networkStatus !== NetworkStatus.fetchMore &&
+                variables &&
+                data.jobs.length % variables.first === 0 &&
+                !fullyLoaded && (
+                  <InView
+                    onChange={async inView => {
+                      if (inView) {
+                        const result = await fetchMore({
+                          variables: {
+                            skip: data.jobs.length,
+                          },
+                        });
+                        setFullyLoaded(!result.data.jobs.length);
+                      }
+                    }}
+                  />
+                )}
             </Grid>
             <Grid item xs={12} md={4}>
               <Card sx={{ p: 3 }}>

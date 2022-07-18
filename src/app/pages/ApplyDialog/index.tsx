@@ -33,6 +33,7 @@ import { handleErrorResponse, handleSuccessResponse } from 'app/utils/until';
 
 interface Props {
   onClose: () => void;
+  recruiter: string;
 }
 
 const StyledScrollBar = styled(Scrollbar)(() => ({
@@ -44,7 +45,7 @@ const StyledScrollBar = styled(Scrollbar)(() => ({
 export const ApplyDialog = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
-  const { onClose } = props;
+  const { onClose, recruiter } = props;
   const { id } = useParams();
   const { account } = useContext(NearContext);
   const [loading, setLoading] = useState(false);
@@ -64,13 +65,29 @@ export const ApplyDialog = memo((props: Props) => {
     // formState: { isSubmitting },
   } = methods;
 
-  const handleDrop = useCallback(
+  const handleDropResum = useCallback(
     acceptedFiles => {
       const file = acceptedFiles[0];
 
       if (file) {
         setValue(
-          'cover',
+          'resume',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        );
+      }
+    },
+    [setValue],
+  );
+
+  const handleDropCoverLetter = useCallback(
+    acceptedFiles => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        setValue(
+          'coverLetter',
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           }),
@@ -82,17 +99,23 @@ export const ApplyDialog = memo((props: Props) => {
 
   const onSubmit = async data => {
     setLoading(true);
-    const params = {
-      jobId: id,
-      recruiterAccountId: account,
-      contactEmail: data.contactEmail,
-      contactNumber: data.contactNumber,
-      resumeUrl: data.resumeUrl,
-      coverLetter: data.coverLetter,
-    };
+
+    let formData = new FormData();
+    formData.append('jobId', id || '');
+    formData.append('recruiterAccountId', recruiter);
+    formData.append('contactEmail', data.contactEmail);
+    formData.append('contactNumber', data.contactNumber);
+
+    if (data.resume) {
+      formData.append('resume', data.resume);
+    }
+
+    if (data.coverLetter) {
+      formData.append('coverLetter', data.coverLetter);
+    }
 
     try {
-      await applyJob(params);
+      await applyJob(formData);
       setLoading(false);
       onClose();
       reset();
@@ -160,17 +183,14 @@ export const ApplyDialog = memo((props: Props) => {
               <Typography variant="subtitle2" component="div">
                 Resume
               </Typography>
-              {/* <ResumeFile
-                name="resumeUrl"
-                options={[{ value: 'test 1' }, { value: 'test 2' }]}
-              /> */}
+              <RHFUploadSingleFile
+                name="resume"
+                accept="image/*,application/pdf"
+                maxSize={3145728}
+                onDrop={handleDropResum}
+              />
             </Box>
-            <RHFUploadSingleFile
-              name="cover"
-              accept="image/*"
-              maxSize={3145728}
-              onDrop={handleDrop}
-            />
+
             <Box mt={2}>
               <Typography
                 variant="subtitle2"
@@ -179,19 +199,11 @@ export const ApplyDialog = memo((props: Props) => {
               >
                 Cover Letter
               </Typography>
-              <TextField
-                multiline
-                fullWidth
-                rows={4}
-                placeholder="Share what you are thinking here..."
-                {...register('coverLetter')}
-                sx={{
-                  '& fieldset': {
-                    borderWidth: `1px !important`,
-                    borderColor: theme =>
-                      `${theme.palette.grey[500_32]} !important`,
-                  },
-                }}
+              <RHFUploadSingleFile
+                name="coverLetter"
+                accept="image/*,application/pdf"
+                maxSize={3145728}
+                onDrop={handleDropCoverLetter}
               />
             </Box>
           </Box>

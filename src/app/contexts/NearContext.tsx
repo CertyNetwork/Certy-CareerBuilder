@@ -14,7 +14,7 @@ nearConfig.keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
 const NearContext = createContext<any>(undefined);
 
-function NearProvider({ children }) {
+const NearProvider = ({ children }) => {
   const [wallet, setWallet] = useState<any>(undefined);
   const [account, setAccount] = useState('');
 
@@ -28,7 +28,7 @@ function NearProvider({ children }) {
     setWallet(walletConnection);
     setAccount(accountId);
 
-    const token = storage.get('Near_token_bearer');
+    const token = localStorage.getItem('Near_token_bearer');
 
     if (walletConnection.isSignedIn() && !token) {
       const nonce = await getNonce(accountId).then(result => {
@@ -78,6 +78,6 @@ function NearProvider({ children }) {
       {children}
     </NearContext.Provider>
   );
-}
+};
 
 export { NearProvider, NearContext };

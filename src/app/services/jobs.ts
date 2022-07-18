@@ -9,5 +9,7 @@ export const getCandidates = (id: string) => {
 };
 
 export const applyJob = params => {
-  return BaseApi.post('job/apply', params);
+  return BaseApi.post('job/apply', params, {
+    headers: { 'Content-type': 'multipart/form-data' },
+  });
 };
