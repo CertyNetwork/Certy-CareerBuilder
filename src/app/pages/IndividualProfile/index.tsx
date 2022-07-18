@@ -15,7 +15,11 @@ import CardList from 'app/components/CardList';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
 import { NearContext } from 'app/contexts/NearContext';
-import { useProfile, useProfileAvatar } from 'app/hooks/Profile/useProfile';
+import {
+  useProfile,
+  useProfileAvatar,
+  useProfileBackground,
+} from 'app/hooks/Profile/useProfile';
 import useSettings from 'app/hooks/useSettings';
 import { storage } from 'utils/util';
 
@@ -34,6 +38,8 @@ const IndividualProfile = memo((props: Props) => {
   const token = localStorage.getItem('Near_token_bearer');
 
   const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
+  const { dataProfileBackground, loadingDataProfileBackground } =
+    useProfileBackground();
   const { dataProfile, loadingDataProfile } = useProfile();
 
   if (!token && !account) {
@@ -57,7 +63,8 @@ const IndividualProfile = memo((props: Props) => {
             <Grid item xs={12} md={8}>
               <UserCard
                 user={dataProfile}
-                avatar={dataProfileAvatar?.avatarUri}
+                avatar={dataProfileAvatar?.src}
+                bgImg={dataProfileBackground?.src}
               />
               <Box mt={3}>
                 <CardList title="Experience">

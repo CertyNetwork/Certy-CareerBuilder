@@ -20,12 +20,14 @@ const OverlayStyle = styled('div')(({ theme }: any) => ({
 interface Props {
   user: any;
   avatar: string;
+  bgImg: string;
 }
 
 export default function UserCard(props: Props) {
-  const { user, avatar } = props;
-  console.log(user);
+  const { user, avatar, bgImg } = props;
   const theme = useTheme();
+
+  console.log(user);
   return (
     <Card sx={{ textAlign: 'center' }}>
       <Box sx={{ position: 'relative' }}>
@@ -64,7 +66,9 @@ export default function UserCard(props: Props) {
         <OverlayStyle />
         <Image
           src={
-            'https://minimal-assets-api-dev.vercel.app/assets/images/covers/cover_1.jpg'
+            bgImg
+              ? bgImg
+              : 'https://minimal-assets-api-dev.vercel.app/assets/images/covers/cover_1.jpg'
           }
           alt={'cover'}
           ratio="16/9"
@@ -72,11 +76,11 @@ export default function UserCard(props: Props) {
       </Box>
 
       <Typography variant="h6" sx={{ mt: 6 }}>
-        Tim Nguyen
+        {user?.info?.displayName}
       </Typography>
 
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Harvard | ex-BCG | Product & Strategy
+        {`${user?.info?.location} | ${user?.info?.email}`}
       </Typography>
 
       <Stack alignItems="center">
@@ -92,7 +96,7 @@ export default function UserCard(props: Props) {
           component="div"
           sx={{ mb: 0.75, color: 'text.disabled' }}
         >
-          About Tim
+          About {user?.info?.displayName}
         </Typography>
 
         <Box mt={3}>
@@ -103,11 +107,11 @@ export default function UserCard(props: Props) {
               color: 'text.primary',
             }}
             component="p"
-          >
-            MBA at Harvard Business School. Building Technology product with
-            experience in product management and business strategy.
-          </Typography>
-          <ul style={{ marginTop: '16px', paddingLeft: 20 }}>
+            dangerouslySetInnerHTML={{
+              __html: user?.about,
+            }}
+          ></Typography>
+          {/* <ul style={{ marginTop: '16px', paddingLeft: 20 }}>
             <li>
               <Typography
                 sx={{
@@ -148,7 +152,7 @@ export default function UserCard(props: Props) {
                 graduated Summa Cum Laude with Distinction honor
               </Typography>
             </li>
-          </ul>
+          </ul> */}
         </Box>
       </Box>
     </Card>

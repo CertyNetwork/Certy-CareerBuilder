@@ -1,6 +1,11 @@
 import { useQuery } from 'react-query';
 
-import { getAvatar, getProfile, getProfileType } from 'app/services/profile';
+import {
+  getAvatar,
+  getBackground,
+  getProfile,
+  getProfileType,
+} from 'app/services/profile';
 
 export const useProfile = () => {
   const { data, refetch, error, isLoading } = useQuery(
@@ -25,6 +30,19 @@ export const useProfileAvatar = () => {
     refetchDataProfileAvatar: refetch,
     loadingDataProfileAvatar: isLoading,
     errorDataProfileAvatar: error,
+  };
+};
+
+export const useProfileBackground = () => {
+  const { data, refetch, error, isLoading } = useQuery(
+    ['getProfileBackground'],
+    async () => await getBackground(),
+  );
+  return {
+    dataProfileBackground: data?.data?.data,
+    refetchDataProfileBackground: refetch,
+    loadingDataProfileBackground: isLoading,
+    errorDataProfileBackground: error,
   };
 };
 
