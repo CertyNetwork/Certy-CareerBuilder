@@ -1,5 +1,6 @@
 // @mui
 import { Box, Stack, Typography } from '@mui/material';
+import experienceImg from 'app/assets/svg/experienceImg.png';
 import moment from 'moment';
 
 import Image from '../Image';
@@ -10,10 +11,9 @@ interface Props {
 
 export default function CardExpire(props: Props) {
   const { experience } = props;
-  console.log(experience);
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      {/* <Box
+      <Box
         sx={{
           width: 48,
           height: 48,
@@ -22,11 +22,15 @@ export default function CardExpire(props: Props) {
           borderRadius: 1.5,
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: 'background.neutral',
+          bgcolor: '#2A85FF',
         }}
       >
-        <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
-      </Box> */}
+        <Image
+          src={experienceImg}
+          alt={experience?.companyName}
+          sx={{ width: 24, height: 24 }}
+        />
+      </Box>
 
       <Box sx={{ flexGrow: 1, minWidth: 160 }}>
         <Typography variant="h6">{experience?.companyName}</Typography>

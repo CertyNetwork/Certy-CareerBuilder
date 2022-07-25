@@ -16,6 +16,10 @@ import getColorPresets, {
 
 const initialState = {
   ...defaultSettings,
+  recruiterMode: false,
+  // Recruiter
+  onRecruiterMode: () => {},
+
   // Mode
   onToggleMode: () => {},
   onChangeMode: () => {},
@@ -61,6 +65,7 @@ function SettingsProvider({ children }) {
     themeContrast: initialState.themeContrast,
     themeDirection: initialState.themeDirection,
     themeColorPresets: initialState.themeColorPresets,
+    recruiterMode: initialState.recruiterMode,
   });
 
   const isArabic = localStorage.getItem('i18nextLng') === 'ar';
@@ -71,6 +76,13 @@ function SettingsProvider({ children }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isArabic]);
+
+  const onRecruiterMode = () => {
+    setSettings({
+      ...settings,
+      recruiterMode: !settings.recruiterMode,
+    });
+  };
 
   // Mode
 
@@ -172,6 +184,7 @@ function SettingsProvider({ children }) {
       themeContrast: initialState.themeContrast,
       themeDirection: initialState.themeDirection,
       themeColorPresets: initialState.themeColorPresets,
+      recruiterMode: initialState.recruiterMode,
     });
   };
 
@@ -179,6 +192,9 @@ function SettingsProvider({ children }) {
     <SettingsContext.Provider
       value={{
         ...settings,
+
+        // Recruiter
+        onRecruiterMode,
 
         // Mode
         onToggleMode,

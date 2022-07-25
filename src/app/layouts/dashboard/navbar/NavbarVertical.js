@@ -16,6 +16,7 @@ import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
 import useResponsive from '../../../hooks/useResponsive';
 import cssStyles from '../../../utils/cssStyles';
 import navConfig from './NavConfig';
+import navConfigRecruiter from './NavConfigRecruiter.tsx';
 import NavbarAccount from './NavbarAccount';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -36,6 +37,7 @@ NavbarVertical.propTypes = {
 
 export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
   const theme = useTheme();
+  const token = localStorage.getItem('Near_token_bearer');
 
   const { pathname } = useLocation();
 
@@ -95,10 +97,14 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           )} */}
         </Stack>
 
-        {account && <NavbarAccount isCollapse={isCollapse} />}
+        {account && token && <NavbarAccount isCollapse={isCollapse} />}
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical
+        navConfig={navConfig}
+        navConfigRecruiter={navConfigRecruiter}
+        isCollapse={isCollapse}
+      />
     </Scrollbar>
   );
 

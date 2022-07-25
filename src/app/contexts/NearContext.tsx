@@ -1,11 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useEffect, useState } from 'react';
 
 import { Navigate } from 'react-router-dom';
 
 import getConfig from 'app/config';
+import {
+  useProfile,
+  useProfileAvatar,
+  useProfileBackground,
+} from 'app/hooks/Profile/useProfile';
 import { getNonce, signCerty } from 'app/services/authService';
 import { WalletConnection, connect, keyStores } from 'near-api-js';
-import { storage } from 'utils/util';
 
 // const nearConfig = getConfig(process.env.NODE_ENV || 'development');
 const nearConfig = getConfig('development');
@@ -17,6 +22,9 @@ const NearContext = createContext<any>(undefined);
 const NearProvider = ({ children }) => {
   const [wallet, setWallet] = useState<any>(undefined);
   const [account, setAccount] = useState('');
+  const { refetchDataProfileAvatar } = useProfileAvatar();
+  const { refetchDataProfileBackground } = useProfileBackground();
+  const { refetchDataProfile } = useProfile();
 
   // connect to NEAR
   const connectNear = async () => {
@@ -32,7 +40,6 @@ const NearProvider = ({ children }) => {
 
     if (walletConnection.isSignedIn() && !token) {
       const nonce = await getNonce(accountId).then(result => {
-        console.log(result.data);
         return result.data.data.nonce;
       });
 
@@ -56,10 +63,12 @@ const NearProvider = ({ children }) => {
         signature,
         publicKey: keyPair.getPublicKey().toString(),
       }).then(res => res.data.data);
-
-      console.log(tokenAccess);
       localStorage.setItem('Near_token_bearer', tokenAccess.accessToken);
       localStorage.setItem('REFRESH_TOKEN', tokenAccess.refreshToken);
+
+      refetchDataProfileAvatar();
+      refetchDataProfileBackground();
+      refetchDataProfile();
     }
   };
 

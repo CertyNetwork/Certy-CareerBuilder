@@ -39,7 +39,7 @@ interface Props {
 const StyledScrollBar = styled(Scrollbar)(() => ({
   paddingLeft: '1rem',
   paddingRight: '1rem',
-  maxHeight: '500px',
+  maxHeight: '420px',
 }));
 
 export const ApplyDialog = memo((props: Props) => {

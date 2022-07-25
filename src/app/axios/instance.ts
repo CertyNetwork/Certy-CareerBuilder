@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { storage } from 'utils/util';
 
 import HttpStatusCodes from './HttpStatusCodes';
 import { transformErrors } from './Utils';
@@ -39,7 +38,11 @@ const handleAccessTokenExpire = async err => {
       localStorage.setItem('Near_token_bearer', accessToken);
       return instance(originalConfig);
     } catch (_error) {
-      return Promise.reject(_error);
+      localStorage.removeItem('Near_token_bearer');
+      localStorage.removeItem('REFRESH_TOKEN');
+      window.location.replace(
+        `${process.env.PUBLIC_URL}/certy-career/individual/jobs`,
+      );
     }
   }
 };

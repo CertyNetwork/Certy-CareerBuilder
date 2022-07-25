@@ -34,15 +34,19 @@ export default function Router() {
           index: true,
         },
         { path: 'individual/profile', element: <IndividualProfile /> },
+        {
+          path: 'individual/profile/:id',
+          element: <IndividualProfileUser />,
+        },
         { path: 'individual/jobs', element: <FindJob /> },
         { path: 'individual/jobs/:id', element: <JobDetail /> },
         { path: 'individual/applied-job', element: <AppliedJob /> },
-        // { path: 'recruiter/management-posted-job', element: <PostedJob /> },
+        { path: 'recruiter/management-posted-job', element: <PostedJob /> },
         // { path: 'recruiter/company-profile', element: <CompanyProfile /> },
-        // {
-        //   path: 'recruiter/applicant-management',
-        //   element: <ApplicantManagement />,
-        // },
+        {
+          path: 'recruiter/applicant-management',
+          element: <ApplicantManagement />,
+        },
       ],
     },
     {
@@ -61,11 +65,14 @@ export default function Router() {
 const IndividualProfile = Loadable(
   lazy(() => import('../pages/IndividualProfile')),
 );
+const IndividualProfileUser = Loadable(
+  lazy(() => import('../pages/IndividualProfileUser')),
+);
 const FindJob = Loadable(lazy(() => import('../pages/FindJob')));
 const JobDetail = Loadable(lazy(() => import('../pages/JobDetail')));
 const AppliedJob = Loadable(lazy(() => import('../pages/AppliedJob')));
 const PostedJob = Loadable(lazy(() => import('../pages/PostedJob')));
-const CompanyProfile = Loadable(lazy(() => import('../pages/CompanyProfile')));
+// const CompanyProfile = Loadable(lazy(() => import('../pages/CompanyProfile')));
 const ApplicantManagement = Loadable(
   lazy(() => import('../pages/ApplicantManagement')),
 );

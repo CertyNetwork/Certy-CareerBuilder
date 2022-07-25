@@ -3,7 +3,7 @@
  * PostJob
  *
  */
-import { memo, useContext } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
-  Button,
+  MenuItem,
+  Slider,
   Stack,
   TextField,
   Typography,
@@ -22,10 +23,17 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { FormProvider, RHFTextField } from 'app/components/hook-form';
+import {
+  FormProvider,
+  RHFSelect,
+  RHFTextField,
+} from 'app/components/hook-form';
+import { COUNTRIES } from 'app/constant/country';
+import { JOB_TYPE } from 'app/constant/jobType';
 import { NearContext } from 'app/contexts/NearContext';
 import { PostJobSchema } from 'app/schema/postJobSchema';
 import { upload } from 'app/services/uploadFileService';
+import { handleErrorResponse } from 'app/utils/until';
 import { Contract } from 'near-api-js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -33,6 +41,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   close: () => void;
+  isEdit?: boolean;
+  jobData: any;
 }
 
 const StyledScrollBar = styled(Scrollbar)(() => ({
@@ -41,24 +51,49 @@ const StyledScrollBar = styled(Scrollbar)(() => ({
   maxHeight: '500px',
 }));
 
+function valuetext(value: number) {
+  return `${value}°C`;
+}
+
 export const PostJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
 
-  const { close } = props;
+  const { close, jobData, isEdit } = props;
 
   const { wallet, account } = useContext(NearContext);
 
+  const [value, setValue] = useState<number[]>([20, 37]);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+
+  const defaultValues = useMemo(
+    () => {
+      if (jobData) {
+        setValue([jobData?.salary_from, jobData?.salary_to]);
+        return {
+          title: jobData.title || '',
+          location: jobData.work_location_country || '',
+          description: jobData.description || '',
+          jobType: jobData.job_type || '',
+          deadline: new Date(jobData.application_deadline) || new Date(),
+        };
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [jobData],
+  );
+
   const methods = useForm({
     resolver: yupResolver(PostJobSchema),
+    defaultValues,
   });
 
   const {
     reset,
-    // watch,
     control,
-    // setValue,
-    // getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -69,30 +104,54 @@ export const PostJob = memo((props: Props) => {
       'cecareer.certynetwork.testnet',
       {
         viewMethods: ['getJob'],
-        changeMethods: ['job_create'],
+        changeMethods: ['job_create', 'job_update'],
       },
     );
 
-    try {
-      const obj = {
-        title: data.title,
-        salary_from: 5,
-        salary_to: 10,
-        work_location_country: 'Viet Nam',
-        work_location_city: 'Ha Noi',
-        description: data.description,
-        job_type: 'Full time',
-      };
+    const obj = {
+      title: data.title,
+      salary_from: value[0],
+      salary_to: value[1],
+      work_location_country: data.location,
+      description: data.description,
+      job_type: data.jobType,
+      application_deadline: new Date(data.deadline).getTime(),
+    };
 
+    if (isEdit) {
+      try {
+        const fileName = `${account}-${jobData.id}.json`;
+        const jsn = JSON.stringify(obj);
+        const blob = new Blob([jsn], { type: 'application/json' });
+        const file = new File([blob], fileName);
+        const { rootCid } = await upload(file).then(res => res.data.data);
+
+        await contract.job_update(
+          {
+            metadata: {
+              reference: `https://${rootCid}.ipfs.dweb.link/${fileName}`,
+            },
+            job_id: jobData.id,
+          },
+          '300000000000000',
+          '1000000000000000000000000',
+        );
+        reset();
+      } catch (error) {
+        handleErrorResponse(error);
+      }
+
+      return false;
+    }
+
+    try {
       const fileName = `${account}-${uuidv4().json}`;
       const jsn = JSON.stringify(obj);
       const blob = new Blob([jsn], { type: 'application/json' });
       const file = new File([blob], fileName);
       const { rootCid } = await upload(file).then(res => res.data.data);
 
-      console.log(213, rootCid);
-
-      const res = await contract.job_create(
+      await contract.job_create(
         {
           job_id: uuidv4(),
           metadata: {
@@ -102,11 +161,9 @@ export const PostJob = memo((props: Props) => {
         '300000000000000',
         '1000000000000000000000000',
       );
-
-      console.log(213, res);
       reset();
     } catch (error) {
-      console.error(error);
+      handleErrorResponse(error);
     }
   };
 
@@ -131,7 +188,7 @@ export const PostJob = memo((props: Props) => {
               }}
             ></Box>
             <Typography variant="h6" component="div">
-              Post a Job
+              {isEdit ? 'Edit a Job' : 'Post a Job'}
             </Typography>
           </Box>
         </Stack>
@@ -170,7 +227,53 @@ export const PostJob = memo((props: Props) => {
               >
                 Work Location
               </Typography>
-              <RHFTextField name="location" />
+
+              <RHFSelect
+                name="location"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                SelectProps={{
+                  native: false,
+                  sx: { textTransform: 'capitalize' },
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {COUNTRIES.map(c => (
+                  <MenuItem key={c.code} value={c.code}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+            </Box>
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Job type
+              </Typography>
+
+              <RHFSelect
+                name="jobType"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                SelectProps={{
+                  native: false,
+                  sx: { textTransform: 'capitalize' },
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {JOB_TYPE.map(type => (
+                  <MenuItem key={type.code} value={type.code}>
+                    {type.name}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
             </Box>
             <Box mt={2}>
               <Typography
@@ -180,7 +283,16 @@ export const PostJob = memo((props: Props) => {
               >
                 Salary (Optional)
               </Typography>
-              <RHFTextField name="salary" />
+              <Box>
+                <Slider
+                  value={value}
+                  onChange={handleChange}
+                  valueLabelDisplay="auto"
+                  getAriaValueText={valuetext}
+                  min={0}
+                  max={200}
+                />
+              </Box>
             </Box>
             <Box mt={2}>
               <Typography
@@ -254,7 +366,7 @@ export const PostJob = memo((props: Props) => {
             sx={{ alignSelf: 'flex-end', minWidth: 'fit-content' }}
             loading={isSubmitting}
           >
-            Post Job
+            {isEdit ? 'Update Job' : 'Post Job'}
           </LoadingButton>
         </Box>
       </FormProvider>

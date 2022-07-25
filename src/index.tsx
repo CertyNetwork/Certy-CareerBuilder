@@ -13,7 +13,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { offsetLimitPagination } from '@apollo/client/utilities';
 import { App } from 'app';
 import { NearProvider } from 'app/contexts/NearContext';
 import { SettingsProvider } from 'app/contexts/SettingsContext';
@@ -45,7 +44,6 @@ const cache = new InMemoryCache({
         jobs: {
           keyArgs: ['jobs'],
           merge(existing = [], incoming: any[]) {
-            console.log(existing, incoming, 777);
             return [...existing, ...incoming];
           },
         },
@@ -66,17 +64,17 @@ ReactDOM.render(
   <Provider store={store}>
     <HelmetProvider>
       <SettingsProvider>
-        <NearProvider>
-          <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
-              <ReactQueryDevtools initialIsOpen={false} />
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <NearProvider>
               <ApolloProvider client={client}>
                 <App />
                 <ToastContainer autoClose={3000} />
               </ApolloProvider>
-            </QueryClientProvider>
-          </BrowserRouter>
-        </NearProvider>
+            </NearProvider>
+          </QueryClientProvider>
+        </BrowserRouter>
       </SettingsProvider>
     </HelmetProvider>
   </Provider>,

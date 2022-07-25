@@ -6,27 +6,20 @@
 import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router';
 
 import { gql, useQuery } from '@apollo/client';
-import {
-  Box,
-  Container,
-  Divider,
-  Grid,
-  Typography,
-  styled,
-} from '@mui/material';
+import { Box, Container, Divider, Grid, styled } from '@mui/material';
 import CardEducation from 'app/components/CardEducation';
 import CardExpire from 'app/components/CardExpire';
 import CardList from 'app/components/CardList';
-import Label from 'app/components/Label';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
 import { NearContext } from 'app/contexts/NearContext';
 import {
-  useProfile,
   useProfileAvatar,
   useProfileBackground,
+  useProfileUser,
 } from 'app/hooks/Profile/useProfile';
 import useSettings from 'app/hooks/useSettings';
 
@@ -54,10 +47,12 @@ const CERTIFICATES = gql`
   }
 `;
 
-const IndividualProfile = memo((props: Props) => {
+const IndividualProfileUser = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
+
+  const { id } = useParams();
 
   const { wallet, account } = useContext(NearContext);
   const token = localStorage.getItem('Near_token_bearer');
@@ -65,11 +60,12 @@ const IndividualProfile = memo((props: Props) => {
   const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
   const { dataProfileBackground, loadingDataProfileBackground } =
     useProfileBackground();
-  const { dataProfile, loadingDataProfile } = useProfile();
+  // const { dataProfile, loadingDataProfile } = useProfile();
+  const { dataProfileUser, loadingDataUser } = useProfileUser(id || '');
 
   const { data } = useQuery(CERTIFICATES, {
     variables: {
-      arrayId: dataProfile?.certificates?.map(c => c.id),
+      arrayId: dataProfileUser?.certificates?.map(c => c.id),
     },
   });
 
@@ -82,7 +78,7 @@ const IndividualProfile = memo((props: Props) => {
 
   if (
     loadingDataProfileAvatar ||
-    loadingDataProfile ||
+    loadingDataUser ||
     loadingDataProfileBackground
   ) {
     return <h3>Loading ...</h3>;
@@ -97,17 +93,17 @@ const IndividualProfile = memo((props: Props) => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
               <UserCard
-                user={dataProfile}
+                user={dataProfileUser}
                 avatar={dataProfileAvatar?.src}
                 bgImg={dataProfileBackground?.src}
               />
 
-              {dataProfile &&
-                dataProfile?.experiences &&
-                dataProfile?.experiences?.length > 0 && (
+              {dataProfileUser &&
+                dataProfileUser?.experiences &&
+                dataProfileUser?.experiences?.length > 0 && (
                   <Box mt={3}>
                     <CardList title="Experience">
-                      {dataProfile?.experiences.map(exp => (
+                      {dataProfileUser?.experiences.map(exp => (
                         <Box key={exp.id}>
                           <CardExpire experience={exp} />
                           <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
@@ -117,44 +113,17 @@ const IndividualProfile = memo((props: Props) => {
                   </Box>
                 )}
 
-              {dataProfile &&
-                dataProfile?.educations &&
-                dataProfile?.educations?.length > 0 && (
+              {dataProfileUser &&
+                dataProfileUser?.educations &&
+                dataProfileUser?.educations?.length > 0 && (
                   <Box mt={3}>
                     <CardList title="Education">
-                      {dataProfile?.educations.map(edu => (
+                      {dataProfileUser?.educations.map(edu => (
                         <Box key={edu.id}>
                           <CardEducation education={edu} certificates={data} />
                           <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
                         </Box>
                       ))}
-                    </CardList>
-                  </Box>
-                )}
-
-              {dataProfile &&
-                dataProfile?.skills &&
-                dataProfile?.skills?.length > 0 && (
-                  <Box mt={3}>
-                    <CardList title="Skills">
-                      <Box display="flex" flexWrap="wrap" columnGap={2}>
-                        {dataProfile?.skills.map(skill => (
-                          <Box key={skill}>
-                            <Label>
-                              <Typography
-                                variant="subtitle2"
-                                sx={{
-                                  ml: 0.5,
-                                  mr: 1,
-                                  textTransform: 'capitalize',
-                                }}
-                              >
-                                {skill}
-                              </Typography>
-                            </Label>
-                          </Box>
-                        ))}
-                      </Box>
                     </CardList>
                   </Box>
                 )}
@@ -170,6 +139,6 @@ const IndividualProfile = memo((props: Props) => {
   );
 });
 
-export default IndividualProfile;
+export default IndividualProfileUser;
 
 const Div = styled('div')({});

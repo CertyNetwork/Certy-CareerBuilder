@@ -1,5 +1,6 @@
 // @mui
 import { Box, Stack, Typography } from '@mui/material';
+import educationImg from 'app/assets/svg/educationImg.png';
 import moment from 'moment';
 
 import CardCertification from '../CardCertification';
@@ -15,7 +16,7 @@ export default function CardEducation(props: Props) {
   return (
     <Box>
       <Stack direction="row" alignItems="center" spacing={2}>
-        {/* <Box
+        <Box
           sx={{
             width: 48,
             height: 48,
@@ -24,11 +25,15 @@ export default function CardEducation(props: Props) {
             borderRadius: 1.5,
             alignItems: 'center',
             justifyContent: 'center',
-            bgcolor: 'background.neutral',
+            bgcolor: '#2A85FF',
           }}
         >
-          <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
-        </Box> */}
+          <Image
+            src={educationImg}
+            alt={education?.school}
+            sx={{ width: 24, height: 24 }}
+          />
+        </Box>
         <Box sx={{ flexGrow: 1, minWidth: 160 }}>
           <Typography variant="h6">{education?.school}</Typography>
           <Stack

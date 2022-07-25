@@ -1,6 +1,7 @@
 import { Box, List, ListSubheader } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
+import useSettings from 'app/hooks/useSettings';
 import PropTypes from 'prop-types';
 
 //
@@ -26,13 +27,16 @@ export const ListSubheaderStyle = styled(props => (
 NavSectionVertical.propTypes = {
   isCollapse: PropTypes.bool,
   navConfig: PropTypes.array,
+  navConfigRecruiter: PropTypes.array,
 };
 
 export default function NavSectionVertical({
   navConfig,
+  navConfigRecruiter,
   isCollapse = false,
   ...other
 }) {
+  const { recruiterMode } = useSettings();
   return (
     <Box {...other}>
       {navConfig.map(group => (
@@ -46,7 +50,6 @@ export default function NavSectionVertical({
           >
             {group.subheader}
           </ListSubheaderStyle>
-
           {group.items.map(list => (
             <NavListRoot
               key={list.title + list.path}
@@ -56,6 +59,28 @@ export default function NavSectionVertical({
           ))}
         </List>
       ))}
+
+      {recruiterMode &&
+        navConfigRecruiter.map(group => (
+          <List key={group.subheader} disablePadding sx={{ px: 2 }}>
+            <ListSubheaderStyle
+              sx={{
+                ...(isCollapse && {
+                  opacity: 0,
+                }),
+              }}
+            >
+              {group.subheader}
+            </ListSubheaderStyle>
+            {group.items.map(list => (
+              <NavListRoot
+                key={list.title + list.path}
+                list={list}
+                isCollapse={isCollapse}
+              />
+            ))}
+          </List>
+        ))}
     </Box>
   );
 }

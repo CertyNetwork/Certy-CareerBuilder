@@ -14,7 +14,6 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard'),
   home: getIcon('ic_home'),
 };
-
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
@@ -39,34 +38,6 @@ const navConfig = [
       // { title: 'Saved Job', path: '/individual/three', icon: ICONS.analytics },
     ],
   },
-
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
-  // {
-  //   subheader: 'Recruiter Features',
-  //   items: [
-  //     {
-  //       title: 'Company Profile',
-  //       path: '/certy-career/recruiter/company-profile',
-  //       icon: ICONS.dashboard,
-  //     },
-  //     {
-  //       title: 'Job Management',
-  //       icon: ICONS.user,
-  //       children: [
-  //         {
-  //           title: 'Posted Job',
-  //           path: '/certy-career/recruiter/management-posted-job',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: 'Applicant Management',
-  //       path: '/certy-career/recruiter/applicant-management',
-  //       icon: ICONS.dashboard,
-  //     },
-  //   ],
-  // },
 ];
 
 export default navConfig;

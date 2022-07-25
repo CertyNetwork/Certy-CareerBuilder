@@ -5,6 +5,7 @@ import {
   getBackground,
   getProfile,
   getProfileType,
+  getProfileUser,
 } from 'app/services/profile';
 
 export const useProfile = () => {
@@ -56,5 +57,19 @@ export const useProfileType = () => {
     refetchDataProfileAType: refetch,
     loadingDataProfileType: isLoading,
     errorDataProfileType: error,
+  };
+};
+
+export const useProfileUser = (id: string) => {
+  const { data, refetch, error, isLoading } = useQuery(
+    ['getProfileUser'],
+    async () => await getProfileUser(id),
+    { enabled: !!id },
+  );
+  return {
+    dataProfileUser: data?.data?.data,
+    refetchDataUser: refetch,
+    loadingDataUser: isLoading,
+    errorDataUser: error,
   };
 };

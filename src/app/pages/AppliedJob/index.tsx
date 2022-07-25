@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect } from 'react';
+import { memo, useContext } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +21,6 @@ import Page from 'app/components/Page';
 import { NearContext } from 'app/contexts/NearContext';
 import { useAppliedJob } from 'app/hooks/AppliedJob/useAppliedJob';
 import useSettings from 'app/hooks/useSettings';
-import { storage } from 'utils/util';
 
 // import { messages } from './messages';
 
@@ -60,20 +59,16 @@ const AppliedJob = memo((props: Props) => {
   const { wallet, account } = useContext(NearContext);
   const token = localStorage.getItem('Near_token_bearer');
 
-  const { dataAppliedJob, errorDataAppliedJob, loadingDataAppliedJob } =
-    useAppliedJob();
+  const { dataAppliedJob, loadingDataAppliedJob } = useAppliedJob();
 
-  const { data, loading, networkStatus, error, fetchMore, variables, refetch } =
-    useQuery(FIND_JOB_APPLY, {
-      notifyOnNetworkStatusChange: true,
-      variables: {
-        arrayId: dataAppliedJob,
-      },
-      fetchPolicy: 'no-cache',
-      nextFetchPolicy: 'no-cache',
-    });
-
-  console.log(data);
+  const { data, loading } = useQuery(FIND_JOB_APPLY, {
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      arrayId: dataAppliedJob,
+    },
+    fetchPolicy: 'no-cache',
+    nextFetchPolicy: 'no-cache',
+  });
 
   if (!token && !account) {
     return wallet?.requestSignIn(

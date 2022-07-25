@@ -3,7 +3,7 @@
  * JobDetail
  *
  */
-import React, { memo, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -18,7 +18,6 @@ import {
   Button,
   Card,
   Container,
-  Divider,
   Grid,
   IconButton,
   Stack,
@@ -27,14 +26,11 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { _appRelated } from 'app/_mock';
 import { ReactComponent as IconOutSvg } from 'app/assets//button/out_going.svg';
-import CardExpire from 'app/components/CardExpire';
-import CardList from 'app/components/CardList';
-import Label from 'app/components/Label';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
+import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
 
 import { ApplyDialog } from '../ApplyDialog';
@@ -102,7 +98,7 @@ const JobDetail = memo((props: Props) => {
     variables: { id },
   });
 
-  console.log(data);
+  const { account } = useContext(NearContext);
 
   const [value, setValue] = React.useState(0);
   const [openDialogAppJob, setOpenDialogAppJob] = useState(false);
@@ -154,9 +150,12 @@ const JobDetail = memo((props: Props) => {
               </Stack>
             </Box>
             <Box display="flex" columnGap="12px" alignItems="center">
-              <Button variant="contained" onClick={handleOpenApplyJob}>
-                Apply For This Position
-              </Button>
+              {data?.job?.owner_id !== account && (
+                <Button variant="contained" onClick={handleOpenApplyJob}>
+                  Apply For This Position
+                </Button>
+              )}
+
               <IconButton aria-label="delete">
                 <IconOutSvg fill="currentcolor" />
               </IconButton>

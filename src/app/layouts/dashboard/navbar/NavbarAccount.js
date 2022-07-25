@@ -1,9 +1,10 @@
 import { useContext } from 'react';
 
-import { Avatar, Box, Link, Typography } from '@mui/material';
+import { Avatar, Box, Link, Skeleton, Typography } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 import { NearContext } from 'app/contexts/NearContext';
+import { useProfileAvatar } from 'app/hooks/Profile/useProfile';
 import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
@@ -27,6 +28,7 @@ NavbarAccount.propTypes = {
 
 export default function NavbarAccount({ isCollapse }) {
   const { account } = useContext(NearContext);
+  const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
 
   return (
     <Link underline="none" color="inherit">
@@ -37,10 +39,11 @@ export default function NavbarAccount({ isCollapse }) {
           }),
         }}
       >
-        <Avatar
-          src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-          alt={account}
-        />
+        {loadingDataProfileAvatar ? (
+          <Skeleton variant="circular" width={40} height={40} />
+        ) : (
+          <Avatar src={dataProfileAvatar?.src} alt={account} />
+        )}
 
         <Box
           sx={{

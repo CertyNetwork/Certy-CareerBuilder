@@ -6,6 +6,7 @@ import {
   Box,
   Divider,
   MenuItem,
+  Skeleton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -13,7 +14,7 @@ import Switch from '@mui/material/Switch';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { NearContext } from 'app/contexts/NearContext';
-import { storage } from 'utils/util';
+import { useProfileAvatar } from 'app/hooks/Profile/useProfile';
 
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
@@ -21,9 +22,11 @@ import useSettings from '../../../hooks/useSettings';
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-  const { themeMode, onToggleMode } = useSettings();
+  const { recruiterMode, onRecruiterMode } = useSettings();
 
   const { wallet, account, dispatchReset } = useContext(NearContext);
+
+  const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
 
   const handleOpen = event => {
     setOpen(event.currentTarget);
@@ -59,10 +62,11 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar
-          src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-          alt={account}
-        />
+        {loadingDataProfileAvatar ? (
+          <Skeleton variant="circular" width={40} height={40} />
+        ) : (
+          <Avatar src={dataProfileAvatar?.src} alt={account} />
+        )}
       </IconButtonAnimate>
 
       <MenuPopover
@@ -98,10 +102,7 @@ export default function AccountPopover() {
               alignItems="center"
             >
               <Typography component="p">Recruiter Mode</Typography>
-              <Switch
-                checked={themeMode === 'light' ? true : false}
-                onChange={onToggleMode}
-              />
+              <Switch checked={recruiterMode} onChange={onRecruiterMode} />
             </Box>
           </MenuItem>
           <Divider sx={{ borderStyle: 'dashed' }} />

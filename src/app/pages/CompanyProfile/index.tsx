@@ -11,16 +11,15 @@ import {
   Box,
   Card,
   Container,
-  Divider,
   Grid,
   Stack,
   Typography,
   styled,
   useTheme,
 } from '@mui/material';
-import { _appRelated } from 'app/_mock';
-import CardExpire from 'app/components/CardExpire';
-import CardList from 'app/components/CardList';
+// import { _appRelated } from 'app/_mock';
+// import CardExpire from 'app/components/CardExpire';
+// import CardList from 'app/components/CardList';
 import Image from 'app/components/Image';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
@@ -38,8 +37,6 @@ const CompanyProfile = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const theme = useTheme();
-
-  console.log();
 
   return (
     <Page title="Company Profile">

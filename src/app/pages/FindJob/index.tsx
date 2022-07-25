@@ -3,7 +3,7 @@
  * FindJob
  *
  */
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { InView } from 'react-intersection-observer';
@@ -11,7 +11,6 @@ import { InView } from 'react-intersection-observer';
 import { NetworkStatus, gql, useQuery } from '@apollo/client';
 import {
   Box,
-  Button,
   Card,
   Checkbox,
   Container,
@@ -23,7 +22,6 @@ import {
   InputAdornment,
   InputLabel,
   MenuItem,
-  Pagination,
   Radio,
   RadioGroup,
   Select,
@@ -74,18 +72,14 @@ const FindJob = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
-  const { data, networkStatus, error, fetchMore, variables } = useQuery(
-    FIND_JOB,
-    {
-      notifyOnNetworkStatusChange: true,
-      variables: {
-        skip: 0,
-        first: 5,
-      },
+  const { data, networkStatus, fetchMore, variables } = useQuery(FIND_JOB, {
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      skip: 0,
+      first: 5,
     },
-  );
+  });
 
-  // console.log(data, variables, 444);
   if (networkStatus === NetworkStatus.loading) {
     return <h3>Loading ...</h3>;
   }

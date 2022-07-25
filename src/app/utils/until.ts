@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 
 export const handleErrorResponse = error => {
-  console.log(error.message, 111);
   const mes = error?.message;
   return toast.error(mes, {
     position: 'bottom-right',
