@@ -52,7 +52,6 @@ const DETAIL_JOB = gql`
     job(id: $id) {
       id
       extra
-      experience_minimum_years
       description
       application_deadline
       issued_at
@@ -63,7 +62,7 @@ const DETAIL_JOB = gql`
       reference_result
       salary_from
       salary_to
-      tags
+      job_specialities
       title
       updated_at
       work_location_city

@@ -55,11 +55,10 @@ const POSTED_JOB = gql`
       title
       issued_at
       extra
-      experience_minimum_years
       application_deadline
       work_location_country
       work_location_city
-      tags
+      job_specialities
       salary_to
       salary_from
       reference_result

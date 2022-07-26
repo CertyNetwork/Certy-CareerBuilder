@@ -59,10 +59,9 @@ const FIND_JOB = gql`
       work_location_city
       job_type
       application_deadline
-      experience_minimum_years
       salary_from
       salary_to
-      tags
+      job_specialities
     }
   }
 `;
