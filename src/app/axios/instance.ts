@@ -40,9 +40,7 @@ const handleAccessTokenExpire = async err => {
     } catch (_error) {
       localStorage.removeItem('Near_token_bearer');
       localStorage.removeItem('REFRESH_TOKEN');
-      window.location.replace(
-        `${process.env.PUBLIC_URL}/certy-career/individual/jobs`,
-      );
+      window.location.replace(`${process.env.PUBLIC_URL}/jobs`);
     }
   }
 };

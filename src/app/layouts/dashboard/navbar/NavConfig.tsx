@@ -22,17 +22,17 @@ const navConfig = [
     items: [
       {
         title: 'Individual Profile',
-        path: '/certy-career/individual/profile',
+        path: '/profile',
         icon: ICONS.dashboard,
       },
       {
         title: 'Find Job',
-        path: '/certy-career/individual/jobs',
+        path: '/jobs',
         icon: ICONS.dashboard,
       },
       {
         title: 'Applied Job',
-        path: '/certy-career/individual/applied-job',
+        path: '/applied-job',
         icon: ICONS.ecommerce,
       },
       // { title: 'Saved Job', path: '/individual/three', icon: ICONS.analytics },

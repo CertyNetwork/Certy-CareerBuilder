@@ -45,10 +45,15 @@ const FIND_JOB_APPLY = gql`
       application_deadline
       salary_from
       salary_to
-      job_specialities
+      experience_level
+      job_specialities {
+        id
+        value
+      }
     }
   }
 `;
+// job_specialities
 
 const AppliedJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

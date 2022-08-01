@@ -32,13 +32,13 @@ const navConfigRecruiter = [
         children: [
           {
             title: 'Posted Job',
-            path: '/certy-career/recruiter/management-posted-job',
+            path: '/management-posted-job',
           },
         ],
       },
       {
         title: 'Applicant Management',
-        path: '/certy-career/recruiter/applicant-management',
+        path: '/applicant-management',
         icon: ICONS.dashboard,
       },
     ],

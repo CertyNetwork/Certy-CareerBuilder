@@ -226,9 +226,7 @@ const ApplicantManagement = memo((props: Props) => {
                                 {data.carbs ? data.carbs : '--'}
                               </TableCell>
                               <TableCell align="center">
-                                <Link
-                                  to={`/certy-career/individual/profile/${data}`}
-                                >
+                                <Link to={`/profile/${data}`}>
                                   <IconButton
                                     aria-label="delete"
                                     size="small"

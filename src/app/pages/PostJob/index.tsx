@@ -3,18 +3,18 @@
  * PostJob
  *
  */
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useContext, useMemo } from 'react';
 
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'react-perfect-scrollbar';
 
+import { gql, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
   MenuItem,
-  Slider,
   Stack,
   TextField,
   Typography,
@@ -25,10 +25,13 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
   FormProvider,
+  RHFAutocomplete,
+  RHFEditor,
   RHFSelect,
   RHFTextField,
 } from 'app/components/hook-form';
 import { COUNTRIES } from 'app/constant/country';
+import { EXPERIENCES } from 'app/constant/experience';
 import { JOB_TYPE } from 'app/constant/jobType';
 import { NearContext } from 'app/contexts/NearContext';
 import { PostJobSchema } from 'app/schema/postJobSchema';
@@ -51,9 +54,14 @@ const StyledScrollBar = styled(Scrollbar)(() => ({
   maxHeight: '500px',
 }));
 
-function valuetext(value: number) {
-  return `${value}°C`;
-}
+const SPECIALTIES = gql`
+  query JobSpecialties {
+    jobSpecialities {
+      id
+      value
+    }
+  }
+`;
 
 export const PostJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,24 +71,24 @@ export const PostJob = memo((props: Props) => {
 
   const { wallet, account } = useContext(NearContext);
 
-  const [value, setValue] = useState<number[]>([20, 37]);
-
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-  };
+  const { data } = useQuery(SPECIALTIES);
 
   const defaultValues = useMemo(
     () => {
-      if (jobData) {
-        setValue([jobData?.salary_from, jobData?.salary_to]);
-        return {
-          title: jobData.title || '',
-          location: jobData.work_location_country || '',
-          description: jobData.description || '',
-          jobType: jobData.job_type || '',
-          deadline: new Date(jobData.application_deadline) || new Date(),
-        };
-      }
+      return {
+        title: jobData?.title || '',
+        location: jobData?.work_location_country || '',
+        description: jobData?.description || '',
+        jobType: jobData?.job_type || '',
+        deadline: jobData?.application_deadline
+          ? new Date(jobData?.application_deadline)
+          : new Date(),
+        salaryFrom: jobData?.salary_from?.toString() || '',
+        salaryTo: jobData?.salary_to?.toString() || '',
+        specialties: jobData?.job_specialities || [],
+        locationCity: jobData?.work_location_city || '',
+        experiences: jobData?.experience_level || '',
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [jobData],
@@ -99,6 +107,7 @@ export const PostJob = memo((props: Props) => {
   } = methods;
 
   const onSubmit = async data => {
+    console.log(data);
     const contract: any = new Contract(
       wallet.account(),
       'cecareer.certynetwork.testnet',
@@ -110,13 +119,18 @@ export const PostJob = memo((props: Props) => {
 
     const obj = {
       title: data.title,
-      salary_from: value[0],
-      salary_to: value[1],
+      salary_from: Number(data?.salaryFrom),
+      salary_to: Number(data?.salaryTo),
       work_location_country: data.location,
       description: data.description,
       job_type: data.jobType,
-      application_deadline: new Date(data.deadline).getTime(),
+      application_deadline: Math.floor(data.deadline.getTime() / 1000),
+      job_specialities: data?.specialties || [],
+      work_location_city: data?.locationCity,
+      experience_level: data?.experiences,
     };
+
+    console.log(obj);
 
     if (isEdit) {
       try {
@@ -212,12 +226,49 @@ export const PostJob = memo((props: Props) => {
               >
                 Job Descripton
               </Typography>
-              <RHFTextField
-                name="description"
-                placeholder="Description"
-                multiline
-                rows={4}
-              />
+              <RHFEditor simple name="description" />
+            </Box>
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Specialties
+              </Typography>
+            </Box>
+            <RHFAutocomplete
+              name="specialties"
+              data={data}
+              defaultValue={jobData?.job_specialities || []}
+            />
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Experiences
+              </Typography>
+
+              <RHFSelect
+                name="experiences"
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                SelectProps={{
+                  native: false,
+                  sx: { textTransform: 'capitalize' },
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {EXPERIENCES.map(c => (
+                  <MenuItem key={c.value} value={c.value}>
+                    {c.title}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
             </Box>
             <Box mt={2}>
               <Typography
@@ -281,18 +332,19 @@ export const PostJob = memo((props: Props) => {
                 component="div"
                 sx={{ mb: '10px' }}
               >
-                Salary (Optional)
+                Salary From (Optional)
               </Typography>
-              <Box>
-                <Slider
-                  value={value}
-                  onChange={handleChange}
-                  valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
-                  min={0}
-                  max={200}
-                />
-              </Box>
+              <RHFTextField name="salaryFrom" />
+            </Box>
+            <Box mt={2}>
+              <Typography
+                variant="subtitle2"
+                component="div"
+                sx={{ mb: '10px' }}
+              >
+                Salary To (Optional)
+              </Typography>
+              <RHFTextField name="salaryTo" />
             </Box>
             <Box mt={2}>
               <Typography
@@ -302,7 +354,7 @@ export const PostJob = memo((props: Props) => {
               >
                 Department
               </Typography>
-              <RHFTextField name="department" />
+              <RHFTextField name="locationCity" />
             </Box>
             <Box mt={2}>
               <Typography

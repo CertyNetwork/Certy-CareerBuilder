@@ -44,7 +44,7 @@ export default function CardJob({ app, applied }: Props) {
           </Box>
 
           <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-            <Link to={`/certy-career/individual/jobs/${id}`}>
+            <Link to={`/jobs/${id}`}>
               <Typography
                 component="div"
                 sx={{
@@ -79,9 +79,12 @@ export default function CardJob({ app, applied }: Props) {
           </Box>
         </Stack>
 
-        <Typography component="div" variant="body2">
-          {description}
-        </Typography>
+        <Typography
+          component="div"
+          dangerouslySetInnerHTML={{
+            __html: description?.substr(0, 186) + '...' || '',
+          }}
+        />
 
         <Box display="flex" justifyContent="space-between">
           <Box display="flex" columnGap={2}>

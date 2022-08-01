@@ -7,9 +7,14 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 // React Query Set up
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+// eslint-disable-next-line prettier/prettier
+import './utils/highlight';
+// editor
+import 'react-quill/dist/quill.snow.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+//
 import 'react-toastify/dist/ReactToastify.css';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
@@ -23,6 +28,7 @@ import 'sanitize.css/sanitize.css';
 import { configureAppStore } from 'store/configureStore';
 
 import './locales/i18n';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {

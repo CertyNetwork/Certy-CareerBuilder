@@ -37,6 +37,7 @@ import Page from 'app/components/Page';
 import { COUNTRIES } from 'app/constant/country';
 import { JOB_TYPE } from 'app/constant/jobType';
 import useSettings from 'app/hooks/useSettings';
+import _ from 'lodash';
 
 // import { messages } from './messages';
 
@@ -61,16 +62,23 @@ const FIND_JOB = gql`
       application_deadline
       salary_from
       salary_to
-      job_specialities
+      experience_level
+      job_specialities {
+        id
+        value
+      }
     }
   }
 `;
+// job_specialities
 
 const FindJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
+  const [query, setQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState({});
   const { data, networkStatus, fetchMore, variables } = useQuery(FIND_JOB, {
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -78,6 +86,25 @@ const FindJob = memo((props: Props) => {
       first: 5,
     },
   });
+
+  const onChange = ({ target: { value } }) => {
+    setQuery(value);
+
+    const search = _.debounce(sendQuery, 300);
+
+    setSearchQuery((prevSearch: any) => {
+      if (prevSearch.cancel) {
+        prevSearch.cancel();
+      }
+      return search;
+    });
+
+    if (value) {
+      search(value);
+    }
+  };
+
+  const sendQuery = async value => {};
 
   if (networkStatus === NetworkStatus.loading) {
     return <h3>Loading ...</h3>;
@@ -219,57 +246,6 @@ const FindJob = memo((props: Props) => {
             </Grid>
             <Grid item xs={12} md={4}>
               <Card sx={{ p: 3 }}>
-                <Box marginBottom="20px">
-                  <LabelStyle>Specialties</LabelStyle>
-                  <FormControl component="fieldset">
-                    <FormGroup aria-label="position">
-                      <FormControlLabel
-                        value="animation"
-                        control={<Checkbox />}
-                        label="Animation"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="net"
-                        control={<Checkbox />}
-                        label=".NET Developer"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="ba"
-                        control={<Checkbox />}
-                        label="Business Analyst"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="fe"
-                        control={<Checkbox />}
-                        label="Front End Developer"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="full"
-                        control={<Checkbox />}
-                        label="Full Stack Web Developer"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="mb"
-                        control={<Checkbox />}
-                        label="Mobile Apps Developer"
-                        labelPlacement="end"
-                      />
-                      <FormControlLabel
-                        value="pm"
-                        control={<Checkbox />}
-                        label="Product Manager"
-                        labelPlacement="end"
-                      />
-                    </FormGroup>
-                  </FormControl>
-                </Box>
-
-                <Divider />
                 <Box margin="20px 0">
                   <LabelStyle>Date Posted</LabelStyle>
                   <FormControl>

@@ -23,28 +23,28 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <Navigate to="/certy-career/individual/jobs" replace />,
+      element: <Navigate to="/jobs" replace />,
     },
     {
-      path: '/certy-career',
+      path: '/',
       element: <DashboardLayout />,
       children: [
         {
-          element: <Navigate to="/certy-career/individual/jobs" replace />,
+          element: <Navigate to="/jobs" replace />,
           index: true,
         },
-        { path: 'individual/profile', element: <IndividualProfile /> },
+        { path: 'profile', element: <IndividualProfile /> },
         {
-          path: 'individual/profile/:id',
+          path: 'profile/:id',
           element: <IndividualProfileUser />,
         },
-        { path: 'individual/jobs', element: <FindJob /> },
-        { path: 'individual/jobs/:id', element: <JobDetail /> },
-        { path: 'individual/applied-job', element: <AppliedJob /> },
-        { path: 'recruiter/management-posted-job', element: <PostedJob /> },
+        { path: 'jobs', element: <FindJob /> },
+        { path: 'jobs/:id', element: <JobDetail /> },
+        { path: 'applied-job', element: <AppliedJob /> },
+        { path: 'management-posted-job', element: <PostedJob /> },
         // { path: 'recruiter/company-profile', element: <CompanyProfile /> },
         {
-          path: 'recruiter/applicant-management',
+          path: 'applicant-management',
           element: <ApplicantManagement />,
         },
       ],

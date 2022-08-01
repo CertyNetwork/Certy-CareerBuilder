@@ -58,16 +58,20 @@ const POSTED_JOB = gql`
       application_deadline
       work_location_country
       work_location_city
-      job_specialities
       salary_to
       salary_from
       reference_result
       reference_hash
       description
+      experience_level
+      job_specialities {
+        id
+        value
+      }
     }
   }
 `;
-
+// job_specialities
 const PostedJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
@@ -221,8 +225,7 @@ const PostedJob = memo((props: Props) => {
                                 <TableCell align="right">
                                   <Link
                                     to={{
-                                      pathname:
-                                        '/certy-career/recruiter/applicant-management',
+                                      pathname: '/applicant-management',
                                       search: `?position=${row?.id}`,
                                     }}
                                   >

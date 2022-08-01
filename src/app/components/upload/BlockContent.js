@@ -1,7 +1,7 @@
 // @mui
+// assets
 import { Box, Stack, Typography } from '@mui/material';
 
-// assets
 import { UploadIllustration } from '../../assets';
 
 // ----------------------------------------------------------------------

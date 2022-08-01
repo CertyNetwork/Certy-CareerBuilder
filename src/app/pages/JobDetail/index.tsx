@@ -62,14 +62,19 @@ const DETAIL_JOB = gql`
       reference_result
       salary_from
       salary_to
-      job_specialities
       title
       updated_at
       work_location_city
       work_location_country
+      experience_level
+      job_specialities {
+        id
+        value
+      }
     }
   }
 `;
+// job_specialities
 
 const AntTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
@@ -121,7 +126,7 @@ const JobDetail = memo((props: Props) => {
           {t('')}
           {/*  {t(...messages.someThing())}  */}
           <Box display="flex" columnGap="24px" alignItems="center">
-            <Link to="/certy-career/individual/jobs">
+            <Link to="/jobs">
               <IconButton aria-label="back">
                 <ArrowBackIosNewIcon />
               </IconButton>
@@ -186,9 +191,12 @@ const JobDetail = memo((props: Props) => {
                     <Card>
                       <Box px={8} py={4}>
                         <LabelStyle>Job Description</LabelStyle>
-                        <Typography variant="body1" component="div">
-                          {data?.job?.description}
-                        </Typography>
+                        <Typography
+                          component="div"
+                          dangerouslySetInnerHTML={{
+                            __html: data?.job?.description || '',
+                          }}
+                        />
                         {/* <Typography variant="body1" component="div">
                           We are a small team looking for a rockstar UX/UI
                           designer to build an easy and intuitive graphical

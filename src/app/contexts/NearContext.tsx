@@ -79,7 +79,7 @@ const NearProvider = ({ children }) => {
   const dispatchReset = () => {
     // setWallet(undefined);
     setAccount('');
-    return <Navigate to="/certy-career/individual/jobs" replace />;
+    return <Navigate to="/jobs" replace />;
   };
 
   return (
