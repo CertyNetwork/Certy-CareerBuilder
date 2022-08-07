@@ -25,8 +25,8 @@ export function fToNow(date) {
 }
 
 export function timeSince(date) {
-  const now = Math.floor(new Date().getTime() / 1000);
-  const seconds = Math.floor(now - date);
+  const now = new Date().getTime();
+  const seconds = Math.floor((now - date) / 1000);
 
   var interval = seconds / 31536000;
 

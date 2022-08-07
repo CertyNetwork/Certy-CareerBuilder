@@ -26,7 +26,7 @@ export default function CardJob({ app, applied }: Props) {
     id,
   } = app;
 
-  const nowDate = Math.floor(new Date().getTime() / 1000);
+  const nowDate = new Date().getTime();
 
   return (
     <Card>
