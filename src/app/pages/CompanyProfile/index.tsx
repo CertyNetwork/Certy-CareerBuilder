@@ -17,6 +17,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material';
+import CompanyCard from 'app/components/CompanyCard';
 // import { _appRelated } from 'app/_mock';
 // import CardExpire from 'app/components/CardExpire';
 // import CardList from 'app/components/CardList';
@@ -30,13 +31,18 @@ import { ContactForm } from '../ContactForm';
 
 // import { messages } from './messages';
 
-interface Props {}
+interface Props {
+  infoCompany: any;
+  avatar: any;
+  background: any;
+}
 
 const CompanyProfile = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const theme = useTheme();
+  const { infoCompany, background, avatar } = props;
 
   return (
     <Page title="Company Profile">
@@ -46,47 +52,41 @@ const CompanyProfile = memo((props: Props) => {
           {/*  {t(...messages.someThing())}  */}
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              <Card>
-                <Box m={3}>
-                  <Image
-                    disabledEffect
-                    src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-                    alt=""
-                    sx={{ borderRadius: 1.5, width: '100%', height: 273 }}
-                  />
-                </Box>
+              <CompanyCard
+                company={infoCompany}
+                avatar={avatar?.src}
+                bgImg={background?.src}
+              />
 
-                <Box px={8} py={4}>
-                  <LabelStyle>Company Description</LabelStyle>
-                  <Typography variant="body1" component="div">
-                    Snapshot Labs is dedicated to creating a voting framework to
-                    facilitate decision making for decentralized organizations.
-                    Currently, thousands of DAOs are using Snapshot, including
-                    leading Ethereum protocols.
-                  </Typography>
-                  <Typography variant="body1" component="div">
-                    We are a small team looking for a rockstar UX/UI designer to
-                    build an easy and intuitive graphical interface for digital
-                    governance. As a senior designer, you will work on the
-                    desktop version and the mobile application interfaces with
-                    minimal supervision.
-                  </Typography>
+              <Box mt={3}>
+                <Card>
+                  <Box px={8} py={4}>
+                    <LabelStyle>Company Description</LabelStyle>
+                    <Typography
+                      variant="body1"
+                      component="div"
+                      dangerouslySetInnerHTML={{
+                        __html: infoCompany?.about,
+                      }}
+                    />
 
-                  <Box>
-                    <LabelStyle>Images</LabelStyle>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      {[1, 2, 3, 4, 5].map(index => (
-                        <Image
-                          disabledEffect
-                          src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
-                          alt=""
-                          sx={{ borderRadius: 1.5, width: 112, height: 112 }}
-                        />
-                      ))}
-                    </Stack>
+                    <Box mt={3}>
+                      <LabelStyle>Images</LabelStyle>
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        {infoCompany?.images?.map((img, index) => (
+                          <Image
+                            key={index.toString()}
+                            disabledEffect
+                            src={img?.src}
+                            alt=""
+                            sx={{ borderRadius: 1.5, width: 112, height: 112 }}
+                          />
+                        ))}
+                      </Stack>
+                    </Box>
                   </Box>
-                </Box>
-              </Card>
+                </Card>
+              </Box>
 
               {/* <Box mt={3}>
                 <CardList title="Related Jobs">
@@ -105,12 +105,16 @@ const CompanyProfile = memo((props: Props) => {
                   <Stack direction="row" alignItems="center" spacing={2}>
                     <Image
                       disabledEffect
-                      src="https://minimal-assets-api-dev.vercel.app/assets/images/avatars/avatar_5.jpg"
+                      src={avatar?.src}
                       alt=""
                       sx={{ borderRadius: 1.5, width: 48, height: 48 }}
                     />
-                    <Typography variant="h6" component="div">
-                      Snapshot Labs
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {infoCompany?.info.companyName}
                     </Typography>
                   </Stack>
 
@@ -122,8 +126,12 @@ const CompanyProfile = memo((props: Props) => {
                     >
                       Location
                     </Typography>
-                    <Typography variant="subtitle2" component="div">
-                      Lotte Center, 54 Lieu Giai, Ba Dinh
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {infoCompany?.info?.location}
                     </Typography>
                   </Box>
                   <Box mt={2}>
@@ -134,8 +142,12 @@ const CompanyProfile = memo((props: Props) => {
                     >
                       Company Type
                     </Typography>
-                    <Typography variant="subtitle2" component="div">
-                      Product
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {infoCompany?.info?.organizationType}
                     </Typography>
                   </Box>
                   <Box mt={2}>
@@ -146,8 +158,12 @@ const CompanyProfile = memo((props: Props) => {
                     >
                       Size
                     </Typography>
-                    <Typography variant="subtitle2" component="div">
-                      150-300
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {infoCompany?.info?.organizationSize}
                     </Typography>
                   </Box>
                   <Box mt={2}>
@@ -158,8 +174,12 @@ const CompanyProfile = memo((props: Props) => {
                     >
                       Working Hours
                     </Typography>
-                    <Typography variant="subtitle2" component="div">
-                      Monday - Friday
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{ textTransform: 'capitalize' }}
+                    >
+                      {infoCompany?.info?.workingHours}
                     </Typography>
                   </Box>
                   <Box mt={2}>

@@ -37,6 +37,7 @@ import { NearContext } from 'app/contexts/NearContext';
 import { PostJobSchema } from 'app/schema/postJobSchema';
 import { upload } from 'app/services/uploadFileService';
 import { handleErrorResponse } from 'app/utils/until';
+import moment from 'moment';
 import { Contract } from 'near-api-js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -81,7 +82,9 @@ export const PostJob = memo((props: Props) => {
         description: jobData?.description || '',
         jobType: jobData?.job_type || '',
         deadline: jobData?.application_deadline
-          ? new Date(jobData?.application_deadline)
+          ? new Date(
+              moment.unix(jobData?.application_deadline / 1000).format('L'),
+            )
           : new Date(),
         salaryFrom: jobData?.salary_from?.toString() || '',
         salaryTo: jobData?.salary_to?.toString() || '',
@@ -107,7 +110,6 @@ export const PostJob = memo((props: Props) => {
   } = methods;
 
   const onSubmit = async data => {
-    console.log(data);
     const contract: any = new Contract(
       wallet.account(),
       'cecareer.certynetwork.testnet',
@@ -124,13 +126,11 @@ export const PostJob = memo((props: Props) => {
       work_location_country: data.location,
       description: data.description,
       job_type: data.jobType,
-      application_deadline: Math.floor(data.deadline.getTime() / 1000),
+      application_deadline: data.deadline.getTime(),
       job_specialities: data?.specialties || [],
       work_location_city: data?.locationCity,
       experience_level: data?.experiences,
     };
-
-    console.log(obj);
 
     if (isEdit) {
       try {

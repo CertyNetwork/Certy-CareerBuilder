@@ -3,7 +3,7 @@
  * FindJob
  *
  */
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { InView } from 'react-intersection-observer';
@@ -44,8 +44,14 @@ import _ from 'lodash';
 interface Props {}
 
 const FIND_JOB = gql`
-  query Job($first: Int!, $skip: Int!) {
-    jobs: jobs(first: $first, skip: $skip) {
+  query Job($first: Int!, $skip: Int!, $where: Job_filter) {
+    jobs: jobs(
+      first: $first
+      skip: $skip
+      where: $where
+      orderBy: updated_at
+      orderDirection: desc
+    ) {
       id
       owner_id
       extra
@@ -77,34 +83,52 @@ const FindJob = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
-  const [query, setQuery] = useState('');
-  const [searchQuery, setSearchQuery] = useState({});
+  const [value, setValue] = useState('');
+  const [whereJob, setWhereJob] = useState({});
   const { data, networkStatus, fetchMore, variables } = useQuery(FIND_JOB, {
     notifyOnNetworkStatusChange: true,
     variables: {
       skip: 0,
       first: 5,
+      where: whereJob,
     },
   });
 
-  const onChange = ({ target: { value } }) => {
-    setQuery(value);
-
-    const search = _.debounce(sendQuery, 300);
-
-    setSearchQuery((prevSearch: any) => {
-      if (prevSearch.cancel) {
-        prevSearch.cancel();
-      }
-      return search;
-    });
-
-    if (value) {
-      search(value);
+  const handleInput = e => {
+    const { value } = e.target;
+    const where: any = { ...whereJob };
+    if (!!value) {
+      setWhereJob({ ...whereJob, title_contains_nocase: value });
+      where.title_contains_nocase = value;
     }
+    setValue(value);
+    handleSearch(where);
   };
 
-  const sendQuery = async value => {};
+  const handleSearch = useCallback(
+    _.debounce(value => {
+      fetchMore({
+        variables: {
+          skip: 0,
+          first: 5,
+          where: value,
+        },
+      });
+    }, 800),
+    [],
+  );
+
+  const handleChangeJobType = e => {
+    const { value } = e.target;
+    setWhereJob({ ...whereJob, job_type: value });
+  };
+
+  const handleChangeCountry = e => {
+    const { value } = e.target;
+    setWhereJob({ ...whereJob, work_location_country: value });
+  };
+
+  const avatarForJob = useMemo(() => {}, [data]);
 
   if (networkStatus === NetworkStatus.loading) {
     return <h3>Loading ...</h3>;
@@ -121,8 +145,9 @@ const FindJob = memo((props: Props) => {
               <Card sx={{ p: 3 }}>
                 <TextField
                   fullWidth
-                  onChange={event => {}}
+                  onChange={handleInput}
                   placeholder="Search for Job"
+                  size="small"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -141,6 +166,7 @@ const FindJob = memo((props: Props) => {
                       labelId="demo-select-small"
                       id="demo-select-small"
                       label="Time"
+                      onChange={handleChangeJobType}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -161,6 +187,7 @@ const FindJob = memo((props: Props) => {
                       labelId="demo-select-small"
                       id="demo-select-small"
                       label="Country"
+                      onChange={handleChangeCountry}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -236,6 +263,7 @@ const FindJob = memo((props: Props) => {
                         const result = await fetchMore({
                           variables: {
                             skip: data.jobs.length,
+                            where: whereJob,
                           },
                         });
                         setFullyLoaded(!result.data.jobs.length);

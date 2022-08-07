@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as ReactDOM from 'react-dom';
 
 import 'react-app-polyfill/ie11';
@@ -36,7 +37,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-      staleTime: 60 * 1000,
+      staleTime: 60 * 1000
     },
   },
 });

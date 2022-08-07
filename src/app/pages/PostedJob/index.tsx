@@ -1,14 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 /**
  *
  * PostedJob
  *
  */
-import React, { memo, useContext, useState } from 'react';
+import React, { memo, useCallback, useContext, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { gql, useQuery } from '@apollo/client';
+import { NetworkStatus, gql, useQuery } from '@apollo/client';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -37,6 +39,7 @@ import { DialogAnimate } from 'app/components/animate';
 import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
 import { handleErrorResponse } from 'app/utils/until';
+import _ from 'lodash';
 import moment from 'moment';
 import { Contract } from 'near-api-js';
 
@@ -45,8 +48,12 @@ import { PostJob } from '../PostJob';
 interface Props {}
 
 const POSTED_JOB = gql`
-  query PostedJob($account: String!) {
-    postedJob: jobs(where: { owner_id: $account }) {
+  query PostedJob($account: String!, $search: String!) {
+    postedJob: jobs(
+      orderBy: updated_at
+      orderDirection: desc
+      where: { owner_id: $account, title_contains_nocase: $search }
+    ) {
       id
       job_type
       owner_id
@@ -81,13 +88,16 @@ const PostedJob = memo((props: Props) => {
   const [jobSelected, setJobSelected] = useState<any>();
   const [openDelete, setOpenDelete] = useState(false);
   const [id, setId] = useState('');
+  const [valueSearch, setValueSearch] = useState('');
 
-  const { data, loading } = useQuery(POSTED_JOB, {
+  const { data, loading, refetch, networkStatus } = useQuery(POSTED_JOB, {
     variables: {
       account: account,
+      search: '',
     },
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache',
+    notifyOnNetworkStatusChange: true,
   });
 
   const handleEditJob = data => {
@@ -103,6 +113,22 @@ const PostedJob = memo((props: Props) => {
   const handleCancelDelete = () => {
     setOpenDelete(false);
   };
+
+  const handleSearchJob = e => {
+    const { value } = e.target;
+    setValueSearch(value);
+    handleSearch(value);
+  };
+
+  const handleSearch = useCallback(
+    _.debounce(value => {
+      refetch({
+        account: account,
+        search: value,
+      });
+    }, 800),
+    [],
+  );
 
   const handleDelete = async data => {
     const contract: any = new Contract(
@@ -162,9 +188,10 @@ const PostedJob = memo((props: Props) => {
                   <Box>
                     <TextField
                       fullWidth
-                      onChange={event => {}}
+                      onChange={event => handleSearchJob(event)}
                       size="small"
                       placeholder="Search for Job"
+                      value={valueSearch}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -197,75 +224,84 @@ const PostedJob = memo((props: Props) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {loading
-                          ? [1, 2, 3, 4, 5].map(item => (
-                              <TableRow key={item}>
-                                <TableCell component="th" scope="row">
-                                  <Skeleton />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Skeleton />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Skeleton />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Skeleton />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Skeleton />
-                                </TableCell>
-                              </TableRow>
-                            ))
-                          : data?.postedJob?.map(row => (
-                              <TableRow key={row?.id}>
-                                <TableCell component="th" scope="row">
-                                  {row?.job_type ? row?.job_type : '__'}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Link
-                                    to={{
-                                      pathname: '/applicant-management',
-                                      search: `?position=${row?.id}`,
-                                    }}
-                                  >
-                                    <Typography component="h6">
-                                      {row.title ? row.title : '__'}
-                                    </Typography>
-                                  </Link>
-                                </TableCell>
-                                <TableCell align="right">
-                                  {moment(
-                                    new Date(row?.application_deadline),
-                                  ).format('DD/MM/YYYY')}
-                                </TableCell>
-                                <TableCell align="right">
-                                  0 Applicants
-                                </TableCell>
-                                <TableCell align="center">
-                                  <IconButton
-                                    aria-label="delete"
-                                    size="small"
-                                    sx={{
-                                      color: '#2A85FF',
-                                    }}
-                                    onClick={() => handleEditJob(row)}
-                                  >
-                                    <EditIcon fontSize="small" />
-                                  </IconButton>
-                                  <IconButton
-                                    aria-label="delete"
-                                    size="small"
-                                    sx={{
-                                      color: '#FF3A44',
-                                    }}
-                                    onClick={() => handleOpenDialog(row?.id)}
-                                  >
-                                    <DeleteIcon fontSize="small" />
-                                  </IconButton>
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                        {loading || networkStatus === NetworkStatus.refetch ? (
+                          [1, 2, 3, 4, 5].map(item => (
+                            <TableRow key={item}>
+                              <TableCell component="th" scope="row">
+                                <Skeleton />
+                              </TableCell>
+                              <TableCell align="right">
+                                <Skeleton />
+                              </TableCell>
+                              <TableCell align="right">
+                                <Skeleton />
+                              </TableCell>
+                              <TableCell align="right">
+                                <Skeleton />
+                              </TableCell>
+                              <TableCell align="right">
+                                <Skeleton />
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : data &&
+                          data?.postedJob &&
+                          data?.postedJob.length > 0 ? (
+                          data?.postedJob?.map(row => (
+                            <TableRow key={row?.id}>
+                              <TableCell component="th" scope="row">
+                                {row?.job_type ? row?.job_type : '__'}
+                              </TableCell>
+                              <TableCell align="right">
+                                <Link
+                                  to={{
+                                    pathname: '/applicant-management',
+                                    search: `?position=${row?.id}`,
+                                  }}
+                                >
+                                  <Typography component="h6">
+                                    {row.title ? row.title : '__'}
+                                  </Typography>
+                                </Link>
+                              </TableCell>
+                              <TableCell align="right">
+                                {moment(
+                                  new Date(row?.application_deadline),
+                                ).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell align="right">0 Applicants</TableCell>
+                              <TableCell align="center">
+                                <IconButton
+                                  aria-label="delete"
+                                  size="small"
+                                  sx={{
+                                    color: '#2A85FF',
+                                  }}
+                                  onClick={() => handleEditJob(row)}
+                                >
+                                  <EditIcon fontSize="small" />
+                                </IconButton>
+                                <IconButton
+                                  aria-label="delete"
+                                  size="small"
+                                  sx={{
+                                    color: '#FF3A44',
+                                  }}
+                                  onClick={() => handleOpenDialog(row?.id)}
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell align="center" colSpan={5}>
+                              {' '}
+                              No Data
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                   </TableContainer>

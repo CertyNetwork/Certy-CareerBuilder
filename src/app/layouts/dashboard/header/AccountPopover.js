@@ -1,6 +1,8 @@
 // components
 import { useContext, useState } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import {
   Avatar,
   Box,
@@ -84,9 +86,11 @@ export default function AccountPopover() {
         }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {account}
-          </Typography>
+          <Link to={`/profile/${account}`}>
+            <Typography variant="subtitle2" noWrap>
+              {account}
+            </Typography>
+          </Link>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {account}
           </Typography>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Box, Card, IconButton, Stack, Typography } from '@mui/material';
+import { timeSince } from 'app/utils/formatTime';
 
 import Image from '../Image';
 import Label from '../Label';
@@ -21,8 +22,11 @@ export default function CardJob({ app, applied }: Props) {
     work_location_city,
     work_location_country,
     description,
+    updated_at,
     id,
   } = app;
+
+  const nowDate = Math.floor(new Date().getTime() / 1000);
 
   return (
     <Card>
@@ -109,7 +113,7 @@ export default function CardJob({ app, applied }: Props) {
             )}
           </Box>
 
-          {!applied && (
+          {nowDate > updated_at && (
             <Typography
               component="div"
               sx={{
@@ -117,7 +121,7 @@ export default function CardJob({ app, applied }: Props) {
                 fontWeight: 400,
               }}
             >
-              Posted about 16 hours ago
+              Posted about {timeSince(updated_at)}
             </Typography>
           )}
         </Box>

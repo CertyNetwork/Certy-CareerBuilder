@@ -3,14 +3,13 @@
  * ApplicantManagement
  *
  */
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useContext, useMemo, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { gql, useQuery } from '@apollo/client';
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -60,23 +59,26 @@ const ApplicantManagement = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [searchParams] = useSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const { dataApplicant, loadingDataApplicant } = useApplicant();
+
+  const [newData, setNewData] = useState([]);
 
   const { account } = useContext(NearContext);
 
   const defaultValues = useMemo(
     () => {
       return {
-        position: searchParams ? searchParams.get('position') : '',
+        position: searchParams.get('position')
+          ? searchParams.get('position')
+          : '',
         search: '',
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchParams],
   );
-
-  console.log(defaultValues);
 
   const methods = useForm({
     defaultValues,
@@ -94,8 +96,114 @@ const ApplicantManagement = memo((props: Props) => {
   });
 
   const onSubmit = async data => {
-    console.log(data);
+    setLoading(true);
+    const resultData = dataApplicant.filter(
+      d =>
+        d.applicant_id.indexOf(data.search) > -1 &&
+        (data.position ? d.job_id === data.position : true),
+    );
+    setNewData(resultData);
+    setLoading(false);
   };
+
+  const dataRender = useMemo(() => {
+    if (newData.length > 0) {
+      return newData.map((data: any) => (
+        <TableRow key={data.applicant_id}>
+          <TableCell component="th" scope="row">
+            <Box>
+              <Box>
+                <Link to={`/profile/${data?.applicant_id}`}>
+                  <Typography component="h4">{data?.applicant_id}</Typography>
+                </Link>
+              </Box>
+            </Box>
+          </TableCell>
+          <TableCell align="right">
+            {data?.contact_email ? data?.contact_email : '--'}
+          </TableCell>
+          <TableCell align="right">
+            {data.contact_number ? data.contact_number : '--'}
+          </TableCell>
+
+          <TableCell align="center">
+            <Link to={`/profile/${data?.applicant_id}`}>
+              <IconButton
+                aria-label="delete"
+                size="small"
+                sx={{
+                  color: '#2A85FF',
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            {/* <IconButton
+                aria-label="delete"
+                size="small"
+                sx={{
+                  color: '#FF3A44',
+                }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton> */}
+          </TableCell>
+        </TableRow>
+      ));
+    }
+
+    return dataApplicant && dataApplicant.length > 0 ? (
+      dataApplicant.map(data => (
+        <TableRow key={data.applicant_id}>
+          <TableCell component="th" scope="row">
+            <Box>
+              <Box>
+                <Link to={`/profile/${data?.applicant_id}`}>
+                  <Typography component="h4">{data?.applicant_id}</Typography>
+                </Link>
+              </Box>
+            </Box>
+          </TableCell>
+          <TableCell align="right">
+            {data?.contact_email ? data?.contact_email : '--'}
+          </TableCell>
+          <TableCell align="right">
+            {data.contact_number ? data.contact_number : '--'}
+          </TableCell>
+
+          <TableCell align="center">
+            <Link to={`/profile/${data?.applicant_id}`}>
+              <IconButton
+                aria-label="delete"
+                size="small"
+                sx={{
+                  color: '#2A85FF',
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            </Link>
+            {/* <IconButton
+              aria-label="delete"
+              size="small"
+              sx={{
+                color: '#FF3A44',
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton> */}
+          </TableCell>
+        </TableRow>
+      ))
+    ) : (
+      <TableRow>
+        <TableCell align="center" colSpan={5}>
+          {' '}
+          No Data
+        </TableCell>
+      </TableRow>
+    );
+  }, [dataApplicant, newData]);
 
   return (
     <Page title="Applicant Management">
@@ -127,7 +235,7 @@ const ApplicantManagement = memo((props: Props) => {
                     <Box display="flex" columnGap={3}>
                       <Box>
                         <LabelStyle>Search</LabelStyle>
-                        <RHFTextField name="search" />
+                        <RHFTextField name="search" placeholder="Candidate" />
                       </Box>
 
                       <Box>
@@ -175,88 +283,33 @@ const ApplicantManagement = memo((props: Props) => {
                       <TableHead>
                         <TableRow>
                           <TableCell>Candidate</TableCell>
-                          <TableCell align="right">
-                            Position Applied For
-                          </TableCell>
-                          <TableCell align="right">Resume</TableCell>
-                          <TableCell align="right">Date</TableCell>
+                          <TableCell align="right">Email</TableCell>
+                          <TableCell align="right">Contact number</TableCell>
                           <TableCell align="center">Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {loadingDataApplicant ? (
-                          [1, 2, 3, 4, 5].map(item => (
-                            <TableRow key={item}>
-                              <TableCell component="th" scope="row">
-                                <Skeleton />
-                              </TableCell>
-                              <TableCell align="right">
-                                <Skeleton />
-                              </TableCell>
-                              <TableCell align="right">
-                                <Skeleton />
-                              </TableCell>
-                              <TableCell align="right">
-                                <Skeleton />
-                              </TableCell>
-                              <TableCell align="right">
-                                <Skeleton />
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : dataApplicant && dataApplicant.length > 0 ? (
-                          dataApplicant.map(data => (
-                            <TableRow key={data}>
-                              <TableCell component="th" scope="row">
-                                <Box>
-                                  <Box>
-                                    <Typography component="h4">
-                                      {data}
-                                    </Typography>
-                                  </Box>
-                                </Box>
-                              </TableCell>
-                              <TableCell align="right">
-                                {data.calories ? data.calories : '--'}
-                              </TableCell>
-                              <TableCell align="right">
-                                {data.fat ? data.fat : '--'}
-                              </TableCell>
-                              <TableCell align="right">
-                                {data.carbs ? data.carbs : '--'}
-                              </TableCell>
-                              <TableCell align="center">
-                                <Link to={`/profile/${data}`}>
-                                  <IconButton
-                                    aria-label="delete"
-                                    size="small"
-                                    sx={{
-                                      color: '#2A85FF',
-                                    }}
-                                  >
-                                    <VisibilityIcon fontSize="small" />
-                                  </IconButton>
-                                </Link>
-                                <IconButton
-                                  aria-label="delete"
-                                  size="small"
-                                  sx={{
-                                    color: '#FF3A44',
-                                  }}
-                                >
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell align="center" colSpan={5}>
-                              {' '}
-                              No Data
-                            </TableCell>
-                          </TableRow>
-                        )}
+                        {loadingDataApplicant || loading
+                          ? [1, 2, 3, 4, 5].map(item => (
+                              <TableRow key={item}>
+                                <TableCell component="th" scope="row">
+                                  <Skeleton />
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Skeleton />
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Skeleton />
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Skeleton />
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Skeleton />
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          : dataRender}
                       </TableBody>
                     </Table>
                   </TableContainer>

@@ -8,15 +8,19 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Box, Card, Typography, styled, useTheme } from '@mui/material';
+import moment from 'moment';
 
 // import { messages } from './messages';
 
-interface Props {}
+interface Props {
+  infoJob: any;
+}
 
 export const ViewDetailJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const theme = useTheme();
+  const { infoJob } = props;
 
   return (
     <Card sx={{ p: 3 }}>
@@ -44,7 +48,7 @@ export const ViewDetailJob = memo((props: Props) => {
             Work Location
           </Typography>
           <Typography variant="subtitle2" component="div">
-            Lotte Center, 54 Lieu Giai, Ba Dinh
+            {infoJob?.work_location_country}
           </Typography>
         </Box>
         <Box mt={2}>
@@ -56,19 +60,7 @@ export const ViewDetailJob = memo((props: Props) => {
             Level
           </Typography>
           <Typography variant="subtitle2" component="div">
-            Senior
-          </Typography>
-        </Box>
-        <Box mt={2}>
-          <Typography
-            variant="body2"
-            component="div"
-            sx={{ color: theme.palette.text.disabled }}
-          >
-            Qualification
-          </Typography>
-          <Typography variant="subtitle2" component="div">
-            Bacelor Degree
+            {infoJob?.experience_level ? infoJob?.experience_level : '--'}
           </Typography>
         </Box>
         <Box mt={2}>
@@ -80,7 +72,7 @@ export const ViewDetailJob = memo((props: Props) => {
             Experiences
           </Typography>
           <Typography variant="subtitle2" component="div">
-            3 Years+
+            {infoJob?.experience_level ? infoJob?.experience_level : '--'}
           </Typography>
         </Box>
         <Box mt={2}>
@@ -92,19 +84,9 @@ export const ViewDetailJob = memo((props: Props) => {
             Salary
           </Typography>
           <Typography variant="subtitle2" component="div">
-            Negotiation
-          </Typography>
-        </Box>
-        <Box mt={2}>
-          <Typography
-            variant="body2"
-            component="div"
-            sx={{ color: theme.palette.text.disabled }}
-          >
-            Department
-          </Typography>
-          <Typography variant="subtitle2" component="div">
-            Marketing
+            {infoJob?.salary_from || infoJob?.salary_to
+              ? `${infoJob?.salary_from} - ${infoJob?.salary_to}`
+              : '--'}
           </Typography>
         </Box>
         <Box mt={2}>
@@ -116,7 +98,9 @@ export const ViewDetailJob = memo((props: Props) => {
             Appliaction Deadline
           </Typography>
           <Typography variant="subtitle2" component="div">
-            16 July 2022
+            {infoJob?.application_deadline
+              ? moment(infoJob?.application_deadline).format('DD/MM/YYYY')
+              : '--'}
           </Typography>
         </Box>
       </Div>

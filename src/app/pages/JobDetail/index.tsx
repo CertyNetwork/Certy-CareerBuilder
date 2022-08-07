@@ -3,7 +3,7 @@
  * JobDetail
  *
  */
-import React, { memo, useContext, useState } from 'react';
+import React, { memo, useContext, useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -32,6 +32,12 @@ import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
 import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
+import {
+  getAvatarById,
+  getBackgroundByAccount,
+  getProfileByAccount,
+} from 'app/services/profile';
+import { handleErrorResponse } from 'app/utils/until';
 
 import { ApplyDialog } from '../ApplyDialog';
 import CompanyProfile from '../CompanyProfile';
@@ -98,6 +104,10 @@ const JobDetail = memo((props: Props) => {
 
   const { id } = useParams();
 
+  const [dataCompany, setDataCompany] = useState<any>({});
+  const [avatarCompany, setAvatarCompany] = useState<any>('');
+  const [bgCompany, setBgCompany] = useState<any>('');
+
   const { loading, error, data } = useQuery(DETAIL_JOB, {
     variables: { id },
   });
@@ -114,6 +124,26 @@ const JobDetail = memo((props: Props) => {
   const handleOpenApplyJob = () => {
     setOpenDialogAppJob(true);
   };
+
+  useEffect(() => {
+    if (data?.job?.owner_id) {
+      getProfileByAccount(data?.job?.owner_id)
+        .then(res => setDataCompany(res.data.data))
+        .catch(err => handleErrorResponse(err));
+
+      getBackgroundByAccount(data?.job?.owner_id)
+        .then(res => setBgCompany(res.data.data))
+        .catch(err => handleErrorResponse(err));
+
+      getAvatarById(data?.job?.owner_id)
+        .then(res => setAvatarCompany(res.data.data))
+        .catch(err => handleErrorResponse(err));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    handleErrorResponse(error);
+  }, [error]);
 
   if (loading) {
     return <h3>Loading ...</h3>;
@@ -302,7 +332,7 @@ const JobDetail = memo((props: Props) => {
                     </Box> */}
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <ViewDetailJob />
+                    <ViewDetailJob infoJob={data?.job} />
                     <Box mt={3}>
                       <ContactForm />
                     </Box>
@@ -312,7 +342,11 @@ const JobDetail = memo((props: Props) => {
             )}
             {value === 1 && (
               <Box mt={4}>
-                <CompanyProfile />
+                <CompanyProfile
+                  infoCompany={dataCompany?.companyProfile}
+                  avatar={avatarCompany}
+                  background={bgCompany}
+                />
               </Box>
             )}
             {/* {value === 2 && 'aaaa'} */}
