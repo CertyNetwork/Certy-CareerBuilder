@@ -85,34 +85,40 @@ const FindJob = memo((props: Props) => {
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [value, setValue] = useState('');
   const [whereJob, setWhereJob] = useState({});
-  const { data, networkStatus, fetchMore, variables } = useQuery(FIND_JOB, {
-    notifyOnNetworkStatusChange: true,
-    variables: {
-      skip: 0,
-      first: 5,
-      where: whereJob,
+  const { data, networkStatus, fetchMore, variables, refetch } = useQuery(
+    FIND_JOB,
+    {
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        skip: 0,
+        first: 5,
+        where: whereJob,
+      },
     },
-  });
+  );
 
   const handleInput = e => {
     const { value } = e.target;
     const where: any = { ...whereJob };
-    if (!!value) {
-      setWhereJob({ ...whereJob, title_contains_nocase: value });
-      where.title_contains_nocase = value;
+    where.title_contains_nocase = value;
+    setWhereJob(where);
+
+    if (!value) {
+      delete where.job_type;
+      setWhereJob(where);
+      setFullyLoaded(false);
     }
+
     setValue(value);
     handleSearch(where);
   };
 
   const handleSearch = useCallback(
     _.debounce(value => {
-      fetchMore({
-        variables: {
-          skip: 0,
-          first: 5,
-          where: value,
-        },
+      refetch({
+        skip: 0,
+        first: 5,
+        where: value,
       });
     }, 800),
     [],
@@ -120,12 +126,40 @@ const FindJob = memo((props: Props) => {
 
   const handleChangeJobType = e => {
     const { value } = e.target;
-    setWhereJob({ ...whereJob, job_type: value });
+    const where: any = { ...whereJob };
+    where.job_type = value;
+    setWhereJob(where);
+
+    if (!value) {
+      delete where.job_type;
+      setWhereJob(where);
+      setFullyLoaded(false);
+    }
+
+    refetch({
+      skip: 0,
+      first: 5,
+      where,
+    });
   };
 
   const handleChangeCountry = e => {
     const { value } = e.target;
-    setWhereJob({ ...whereJob, work_location_country: value });
+    const where: any = { ...whereJob };
+    where.work_location_country = value;
+    setWhereJob(where);
+
+    if (!value) {
+      delete where.work_location_country;
+      setWhereJob(where);
+      setFullyLoaded(false);
+    }
+
+    refetch({
+      skip: 0,
+      first: 5,
+      where,
+    });
   };
 
   const avatarForJob = useMemo(() => {}, [data]);

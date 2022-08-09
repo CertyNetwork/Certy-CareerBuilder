@@ -2,6 +2,8 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+// import { EmtypIcon as ReactComponent } from 'app/assets/illustration_empty_content.svg';
+
 const RootStyle = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
@@ -24,7 +26,7 @@ export default function EmptyContent(props: Props) {
   return (
     <RootStyle sx={{ ...sx } || {}}>
       <img
-        src="app/assets/illustration_empty_content.svg"
+        src="../assets/illustration_empty_content.svg"
         style={{ height: 240, marginBottom: 3 }}
         alt="empty content"
       />
