@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 /**
  *
  * FindJob
  *
  */
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { InView } from 'react-intersection-observer';
@@ -37,6 +39,7 @@ import Page from 'app/components/Page';
 import { COUNTRIES } from 'app/constant/country';
 import { JOB_TYPE } from 'app/constant/jobType';
 import useSettings from 'app/hooks/useSettings';
+import { getAvatarById } from 'app/services/profile';
 import _ from 'lodash';
 
 // import { messages } from './messages';
@@ -83,7 +86,7 @@ const FindJob = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
-  const [value, setValue] = useState('');
+  const [avatarJob, setAvatarJob] = useState<any>([]);
   const [whereJob, setWhereJob] = useState({});
   const { data, networkStatus, fetchMore, variables, refetch } = useQuery(
     FIND_JOB,
@@ -109,7 +112,6 @@ const FindJob = memo((props: Props) => {
       setFullyLoaded(false);
     }
 
-    setValue(value);
     handleSearch(where);
   };
 
@@ -162,7 +164,14 @@ const FindJob = memo((props: Props) => {
     });
   };
 
-  const avatarForJob = useMemo(() => {}, [data]);
+  useEffect(() => {
+    if (data && data.jobs && data.jobs.length > 0) {
+      const newArrRequest = data?.jobs?.map(d =>
+        getAvatarById(d.owner_id).then(res => res.data.data),
+      );
+      Promise.all(newArrRequest).then(res => setAvatarJob(res));
+    }
+  }, [data]);
 
   if (networkStatus === NetworkStatus.loading) {
     return <h3>Loading ...</h3>;
@@ -271,9 +280,9 @@ const FindJob = memo((props: Props) => {
               </Box>
 
               {data && data?.jobs?.length > 0 ? (
-                data?.jobs.map(d => (
+                data?.jobs.map((d, index) => (
                   <Box mb={3} key={d.id}>
-                    <CardJob app={d} />
+                    <CardJob app={d} avatar={avatarJob[index]} />
                   </Box>
                 ))
               ) : (

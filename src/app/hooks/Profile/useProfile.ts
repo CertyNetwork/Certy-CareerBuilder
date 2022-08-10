@@ -2,7 +2,9 @@ import { useQuery } from 'react-query';
 
 import {
   getAvatar,
+  getAvatarById,
   getBackground,
+  getBackgroundByAccount,
   getProfile,
   getProfileType,
   getProfileUser,
@@ -71,5 +73,33 @@ export const useProfileUser = (id: string) => {
     refetchDataUser: refetch,
     loadingDataUser: isLoading,
     errorDataUser: error,
+  };
+};
+
+export const useBackgroundAccount = (id: string) => {
+  const { data, refetch, error, isLoading } = useQuery(
+    ['getBackground'],
+    async () => await getBackgroundByAccount(id),
+    { enabled: !!id },
+  );
+  return {
+    dataBackground: data?.data?.data,
+    refetchDataBackground: refetch,
+    loadingDataBackground: isLoading,
+    errorDataBackground: error,
+  };
+};
+
+export const useAvatarAccount = (id: string) => {
+  const { data, refetch, error, isLoading } = useQuery(
+    ['getAvatar'],
+    async () => await getAvatarById(id),
+    { enabled: !!id },
+  );
+  return {
+    dataProfileAvatar: data?.data?.data,
+    refetchDataAvatar: refetch,
+    loadingDataAvatar: isLoading,
+    errorDataAvatar: error,
   };
 };

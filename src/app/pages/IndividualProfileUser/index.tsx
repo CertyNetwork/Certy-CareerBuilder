@@ -9,16 +9,25 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
 import { gql, useQuery } from '@apollo/client';
-import { Box, Container, Divider, Grid, styled } from '@mui/material';
+import {
+  Box,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+  styled,
+} from '@mui/material';
 import CardEducation from 'app/components/CardEducation';
 import CardExpire from 'app/components/CardExpire';
 import CardList from 'app/components/CardList';
+import Label from 'app/components/Label';
+import OtherProfileUser from 'app/components/OtherProfileUser';
 import Page from 'app/components/Page';
 import UserCard from 'app/components/UserCard';
 import { NearContext } from 'app/contexts/NearContext';
 import {
-  useProfileAvatar,
-  useProfileBackground,
+  useAvatarAccount,
+  useBackgroundAccount,
   useProfileUser,
 } from 'app/hooks/Profile/useProfile';
 import useSettings from 'app/hooks/useSettings';
@@ -57,15 +66,16 @@ const IndividualProfileUser = memo((props: Props) => {
   const { wallet, account } = useContext(NearContext);
   const token = localStorage.getItem('Near_token_bearer');
 
-  const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
-  const { dataProfileBackground, loadingDataProfileBackground } =
-    useProfileBackground();
+  const { dataProfileAvatar, loadingDataAvatar } = useAvatarAccount(id || '');
+  const { dataBackground, loadingDataBackground } = useBackgroundAccount(
+    id || '',
+  );
   // const { dataProfile, loadingDataProfile } = useProfile();
   const { dataProfileUser, loadingDataUser } = useProfileUser(id || '');
 
   const { data } = useQuery(CERTIFICATES, {
     variables: {
-      arrayId: dataProfileUser?.certificates?.map(c => c.id),
+      arrayId: dataProfileUser?.profile?.certificates?.map(c => c.id),
     },
   });
 
@@ -76,11 +86,7 @@ const IndividualProfileUser = memo((props: Props) => {
     );
   }
 
-  if (
-    loadingDataProfileAvatar ||
-    loadingDataUser ||
-    loadingDataProfileBackground
-  ) {
+  if (loadingDataBackground || loadingDataUser || loadingDataAvatar) {
     return <h3>Loading ...</h3>;
   }
 
@@ -92,18 +98,18 @@ const IndividualProfileUser = memo((props: Props) => {
         <Div>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              <UserCard
+              <OtherProfileUser
                 user={dataProfileUser}
                 avatar={dataProfileAvatar?.src}
-                bgImg={dataProfileBackground?.src}
+                bgImg={dataBackground?.src}
               />
 
               {dataProfileUser &&
-                dataProfileUser?.experiences &&
-                dataProfileUser?.experiences?.length > 0 && (
+                dataProfileUser?.profile?.experiences &&
+                dataProfileUser?.profile?.experiences?.length > 0 && (
                   <Box mt={3}>
                     <CardList title="Experience">
-                      {dataProfileUser?.experiences.map(exp => (
+                      {dataProfileUser?.profile?.experiences.map(exp => (
                         <Box key={exp.id}>
                           <CardExpire experience={exp} />
                           <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
@@ -114,16 +120,43 @@ const IndividualProfileUser = memo((props: Props) => {
                 )}
 
               {dataProfileUser &&
-                dataProfileUser?.educations &&
-                dataProfileUser?.educations?.length > 0 && (
+                dataProfileUser?.profile?.educations &&
+                dataProfileUser?.profile?.educations?.length > 0 && (
                   <Box mt={3}>
                     <CardList title="Education">
-                      {dataProfileUser?.educations.map(edu => (
+                      {dataProfileUser?.profile?.educations.map(edu => (
                         <Box key={edu.id}>
                           <CardEducation education={edu} certificates={data} />
                           <Divider sx={{ borderStyle: 'solid', mt: 3 }} />
                         </Box>
                       ))}
+                    </CardList>
+                  </Box>
+                )}
+
+              {dataProfileUser &&
+                dataProfileUser?.profile?.skills &&
+                dataProfileUser?.profile?.skills?.length > 0 && (
+                  <Box mt={3}>
+                    <CardList title="Skills">
+                      <Box display="flex" flexWrap="wrap" columnGap={2}>
+                        {dataProfileUser?.profile?.skills.map(skill => (
+                          <Box key={skill}>
+                            <Label>
+                              <Typography
+                                variant="subtitle2"
+                                sx={{
+                                  ml: 0.5,
+                                  mr: 1,
+                                  textTransform: 'capitalize',
+                                }}
+                              >
+                                {skill}
+                              </Typography>
+                            </Label>
+                          </Box>
+                        ))}
+                      </Box>
                     </CardList>
                   </Box>
                 )}

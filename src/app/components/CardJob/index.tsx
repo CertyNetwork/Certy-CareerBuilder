@@ -11,9 +11,10 @@ import Label from '../Label';
 interface Props {
   app: any;
   applied?: boolean;
+  avatar: any;
 }
 
-export default function CardJob({ app, applied }: Props) {
+export default function CardJob({ app, applied, avatar }: Props) {
   const {
     shortcut,
     system,
@@ -44,7 +45,11 @@ export default function CardJob({ app, applied }: Props) {
               bgcolor: 'background.neutral',
             }}
           >
-            <Image src={shortcut} alt={name} sx={{ width: 24, height: 24 }} />
+            <Image
+              src={avatar?.src ? avatar?.src : shortcut}
+              alt={name}
+              sx={{ width: 24, height: 24 }}
+            />
           </Box>
 
           <Box sx={{ flexGrow: 1, minWidth: 160 }}>

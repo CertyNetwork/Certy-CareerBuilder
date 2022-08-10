@@ -1,4 +1,4 @@
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +21,7 @@ import Page from 'app/components/Page';
 import { NearContext } from 'app/contexts/NearContext';
 import { useAppliedJob } from 'app/hooks/AppliedJob/useAppliedJob';
 import useSettings from 'app/hooks/useSettings';
+import { getAvatarById } from 'app/services/profile';
 
 // import { messages } from './messages';
 
@@ -59,6 +60,7 @@ const AppliedJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
+  const [avatarJob, setAvatarJob] = useState<any>([]);
 
   const { wallet, account } = useContext(NearContext);
   const token = localStorage.getItem('Near_token_bearer');
@@ -73,6 +75,15 @@ const AppliedJob = memo((props: Props) => {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache',
   });
+
+  useEffect(() => {
+    if (data && data.jobs && data.jobs.length > 0) {
+      const newArrRequest = data?.jobs?.map(d =>
+        getAvatarById(d.owner_id).then(res => res.data.data),
+      );
+      Promise.all(newArrRequest).then(res => setAvatarJob(res));
+    }
+  }, [data]);
 
   if (!token && !account) {
     return wallet?.requestSignIn(
@@ -105,9 +116,13 @@ const AppliedJob = memo((props: Props) => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
               {data && data.jobApply && data.jobApply.length > 0 ? (
-                data.jobApply.map(data => (
+                data.jobApply.map((data, index) => (
                   <Box mb={3} key={data.id}>
-                    <CardJob app={data} applied={true} />
+                    <CardJob
+                      app={data}
+                      applied={true}
+                      avatar={avatarJob[index]}
+                    />
                   </Box>
                 ))
               ) : (
