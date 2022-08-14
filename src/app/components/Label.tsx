@@ -28,7 +28,6 @@ const RootStyle = styled('span')(({ theme, ownerState }: PropsRootStyle) => {
   });
 
   return {
-    height: 22,
     minWidth: 22,
     lineHeight: 0,
     borderRadius: 6,
@@ -93,8 +92,8 @@ export default function Label({
   sx,
 }: Props) {
   const style = {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
     '& svg, img': { width: 1, height: 1, objectFit: 'cover' },
   };
 

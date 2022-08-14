@@ -2,6 +2,8 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import { NoDataSvg } from './Svg/NoData';
+
 // import { EmtypIcon as ReactComponent } from 'app/assets/illustration_empty_content.svg';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -25,12 +27,7 @@ export default function EmptyContent(props: Props) {
   const { title, description, img, sx } = props;
   return (
     <RootStyle sx={{ ...sx } || {}}>
-      <img
-        src="../assets/illustration_empty_content.svg"
-        style={{ height: 240, marginBottom: 3 }}
-        alt="empty content"
-      />
-
+      <NoDataSvg />
       <Typography variant="h5" gutterBottom>
         {title}
       </Typography>

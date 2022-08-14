@@ -111,7 +111,7 @@ const COMMON = {
   },
 };
 
-const palette = {
+const palette: any = {
   light: {
     ...COMMON,
     mode: 'light',
@@ -120,6 +120,7 @@ const palette = {
       secondary: GREY[600],
       disabled: GREY[500],
       active: '#2A85FF',
+      title: '#1C1F27',
     },
     background: {
       paper: '#fff',
@@ -137,6 +138,7 @@ const palette = {
       secondary: GREY[500],
       disabled: GREY[600],
       active: '#2A85FF',
+      title: '#1C1F27',
     },
     background: {
       paper: GREY[800],

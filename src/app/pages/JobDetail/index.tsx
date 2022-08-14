@@ -193,12 +193,12 @@ const JobDetail = memo((props: Props) => {
               <IconButton aria-label="delete">
                 <IconOutSvg fill="currentcolor" />
               </IconButton>
-              <IconButton aria-label="delete">
+              {/* <IconButton aria-label="delete">
                 <FavoriteBorderIcon />
-              </IconButton>
-              <IconButton aria-label="delete">
+              </IconButton> */}
+              {/* <IconButton aria-label="delete">
                 <MoreHorizIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Box>
 
@@ -333,9 +333,9 @@ const JobDetail = memo((props: Props) => {
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <ViewDetailJob infoJob={data?.job} />
-                    <Box mt={3}>
+                    {/* <Box mt={3}>
                       <ContactForm />
-                    </Box>
+                    </Box> */}
                   </Grid>
                 </Grid>
               </Box>

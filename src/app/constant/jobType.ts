@@ -4,3 +4,10 @@ export const JOB_TYPE = [
   { name: 'Remote', code: 'REMOTE' },
   { name: 'Freelance', code: 'FREELANCE' },
 ];
+
+export const SHOW_JOB_TYPE = {
+  FULLTIME: 'Full-time',
+  PARTTIME: 'Part-time',
+  REMOTE: 'Remote',
+  FREELANCE: 'Freelance',
+};

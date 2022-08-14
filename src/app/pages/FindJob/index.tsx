@@ -40,7 +40,9 @@ import { COUNTRIES } from 'app/constant/country';
 import { JOB_TYPE } from 'app/constant/jobType';
 import useSettings from 'app/hooks/useSettings';
 import { getAvatarById } from 'app/services/profile';
+import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
+import moment from 'moment';
 
 // import { messages } from './messages';
 
@@ -87,7 +89,8 @@ const FindJob = memo((props: Props) => {
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [avatarJob, setAvatarJob] = useState<any>([]);
-  const [whereJob, setWhereJob] = useState({});
+  const [whereJob, setWhereJob] = useState({ updated_at_gt: 0 });
+  const [arrLevel, setArrLevel] = useState<any>([]);
   const { data, networkStatus, fetchMore, variables, refetch } = useQuery(
     FIND_JOB,
     {
@@ -156,6 +159,67 @@ const FindJob = memo((props: Props) => {
       setWhereJob(where);
       setFullyLoaded(false);
     }
+
+    refetch({
+      skip: 0,
+      first: 5,
+      where,
+    });
+  };
+
+  const handleChangeTime = e => {
+    const { value } = e.target;
+    const day = moment(new Date())
+      .subtract(Number(value), 'days')
+      .format('MM-DD-YYYY');
+
+    const timeStamp = new Date(day).getTime();
+    const where: any = { ...whereJob };
+    where.updated_at_gt = new BigNumber(timeStamp);
+    setWhereJob(where);
+
+    if (Number(value) === 0) {
+      where.updated_at_gt = 0;
+      setWhereJob(where);
+      setFullyLoaded(false);
+    }
+
+    refetch({
+      skip: 0,
+      first: 5,
+      where,
+    });
+  };
+
+  const hangdleChangeLevel = e => {
+    const { checked, value } = e.target;
+    const where: any = { ...whereJob };
+
+    if (!checked && value) {
+      const newArr = arrLevel.filter(level => level !== value);
+      where.experience_level_in = newArr;
+      setArrLevel(newArr);
+      setWhereJob(where);
+
+      if (newArr.length === 0) {
+        delete where.experience_level_in;
+        setWhereJob(where);
+        setFullyLoaded(false);
+      }
+
+      refetch({
+        skip: 0,
+        first: 5,
+        where,
+      });
+
+      return false;
+    }
+
+    const arrConcatLevel: any = [...arrLevel, value];
+    where.experience_level_in = arrConcatLevel;
+    setArrLevel(arrConcatLevel);
+    setWhereJob(where);
 
     refetch({
       skip: 0,
@@ -322,26 +386,27 @@ const FindJob = memo((props: Props) => {
                   <FormControl>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
+                      defaultValue="0"
                       name="radio-buttons-group"
+                      onChange={handleChangeTime}
                     >
                       <FormControlLabel
-                        value="any"
+                        value="0"
                         control={<Radio />}
                         label="Any Time"
                       />
                       <FormControlLabel
-                        value="month"
+                        value="30"
                         control={<Radio />}
                         label="Past Month"
                       />
                       <FormControlLabel
-                        value="week"
+                        value="7"
                         control={<Radio />}
                         label="Past Week"
                       />
                       <FormControlLabel
-                        value="day"
+                        value="1"
                         control={<Radio />}
                         label="Past 24 hours"
                       />
@@ -357,31 +422,31 @@ const FindJob = memo((props: Props) => {
                     <FormGroup aria-label="position">
                       <FormControlLabel
                         value="entry"
-                        control={<Checkbox />}
+                        control={<Checkbox onChange={hangdleChangeLevel} />}
                         label="Entry"
                         labelPlacement="end"
                       />
                       <FormControlLabel
                         value="junior"
-                        control={<Checkbox />}
+                        control={<Checkbox onChange={hangdleChangeLevel} />}
                         label="Junior"
                         labelPlacement="end"
                       />
                       <FormControlLabel
                         value="middle"
-                        control={<Checkbox />}
+                        control={<Checkbox onChange={hangdleChangeLevel} />}
                         label="Middle"
                         labelPlacement="end"
                       />
                       <FormControlLabel
                         value="senior"
-                        control={<Checkbox />}
+                        control={<Checkbox onChange={hangdleChangeLevel} />}
                         label="Senior"
                         labelPlacement="end"
                       />
                       <FormControlLabel
                         value="director"
-                        control={<Checkbox />}
+                        control={<Checkbox onChange={hangdleChangeLevel} />}
                         label="Director"
                         labelPlacement="end"
                       />
