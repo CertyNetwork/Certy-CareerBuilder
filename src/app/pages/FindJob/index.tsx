@@ -81,7 +81,6 @@ const FIND_JOB = gql`
     }
   }
 `;
-// job_specialities
 
 const FindJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

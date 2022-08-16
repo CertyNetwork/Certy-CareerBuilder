@@ -3,7 +3,7 @@
  * ApplicantManagement
  *
  */
-import React, { memo, useContext, useMemo, useState } from 'react';
+import React, { memo, useContext, useEffect, useMemo, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +40,7 @@ import {
 import { NearContext } from 'app/contexts/NearContext';
 import { useApplicant } from 'app/hooks/Applicant';
 import useSettings from 'app/hooks/useSettings';
+import { getFile } from 'app/services/jobs';
 
 // import { messages } from './messages';
 
@@ -62,6 +63,7 @@ const ApplicantManagement = memo((props: Props) => {
   const [loading, setLoading] = useState(false);
 
   const { dataApplicant, loadingDataApplicant } = useApplicant();
+  const [documentJob, setDocumentJob] = useState<any>([]);
 
   const [newData, setNewData] = useState([]);
 
@@ -106,16 +108,30 @@ const ApplicantManagement = memo((props: Props) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (dataApplicant && dataApplicant?.length > 0) {
+      const newArrRequest = dataApplicant.map(data =>
+        getFile({ jobId: data.job_id }).then(res => res.data.data),
+      );
+      Promise.all(newArrRequest).then(res => setDocumentJob(res));
+    }
+  }, [dataApplicant]);
+
   const dataRender = useMemo(() => {
     if (newData.length > 0) {
-      return newData.map((data: any) => (
+      return newData.map((data: any, index: number) => (
         <TableRow key={data.applicant_id}>
           <TableCell component="th" scope="row">
             <Box>
               <Box>
-                <Link to={`/profile/${data?.applicant_id}`}>
+                <a
+                  href={`https://certy-profile-app.vercel.app/accounts/${data?.applicant_id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="custom-uri"
+                >
                   <Typography component="h4">{data?.applicant_id}</Typography>
-                </Link>
+                </a>
               </Box>
             </Box>
           </TableCell>
@@ -125,6 +141,8 @@ const ApplicantManagement = memo((props: Props) => {
           <TableCell align="right">
             {data.contact_number ? data.contact_number : '--'}
           </TableCell>
+          <TableCell align="right">{documentJob[index]?.resume}</TableCell>
+          <TableCell align="right">{documentJob[index]?.coverLetter}</TableCell>
 
           <TableCell align="center">
             <Link to={`/profile/${data?.applicant_id}`}>
@@ -153,14 +171,26 @@ const ApplicantManagement = memo((props: Props) => {
     }
 
     return dataApplicant && dataApplicant.length > 0 ? (
-      dataApplicant.map(data => (
+      dataApplicant.map((data, index) => (
         <TableRow key={data.applicant_id}>
           <TableCell component="th" scope="row">
             <Box>
               <Box>
-                <Link to={`/profile/${data?.applicant_id}`}>
-                  <Typography component="h4">{data?.applicant_id}</Typography>
-                </Link>
+                <a
+                  href={`https://certy-profile-app.vercel.app/accounts/${data?.applicant_id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="custom-uri"
+                >
+                  <Typography
+                    component="h4"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    {data?.applicant_id}
+                  </Typography>
+                </a>
               </Box>
             </Box>
           </TableCell>
@@ -169,6 +199,26 @@ const ApplicantManagement = memo((props: Props) => {
           </TableCell>
           <TableCell align="right">
             {data.contact_number ? data.contact_number : '--'}
+          </TableCell>
+          <TableCell align="right">
+            <a
+              href={documentJob[index]?.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="custom-uri"
+            >
+              View resume
+            </a>
+          </TableCell>
+          <TableCell align="right">
+            <a
+              href={documentJob[index]?.coverLetter}
+              target="_blank"
+              rel="noreferrer"
+              className="custom-uri"
+            >
+              View cover letter
+            </a>
           </TableCell>
 
           <TableCell align="center">
@@ -285,6 +335,8 @@ const ApplicantManagement = memo((props: Props) => {
                           <TableCell>Candidate</TableCell>
                           <TableCell align="right">Email</TableCell>
                           <TableCell align="right">Contact number</TableCell>
+                          <TableCell align="right">Resume</TableCell>
+                          <TableCell align="right">Cover letter</TableCell>
                           <TableCell align="center">Action</TableCell>
                         </TableRow>
                       </TableHead>
@@ -324,4 +376,13 @@ const ApplicantManagement = memo((props: Props) => {
 });
 export default ApplicantManagement;
 
-const Div = styled('div')({});
+const Div = styled('div')(({ theme }: any) => ({
+  '.custom-uri': {
+    textDecoration: 'none',
+    color: theme.palette.text.title,
+    fontWeight: 600,
+    '&:hover': {
+      color: '#2A85FF',
+    },
+  },
+}));

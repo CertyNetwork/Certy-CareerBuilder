@@ -8,11 +8,11 @@ import React, { memo, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import { FacebookShareButton, TwitterShareButton } from 'react-share';
+import { FacebookIcon, TwitterIcon } from 'react-share';
 
 import { gql, useQuery } from '@apollo/client';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
   Box,
   Button,
@@ -20,6 +20,8 @@ import {
   Container,
   Grid,
   IconButton,
+  Menu,
+  MenuItem,
   Stack,
   Tab,
   Tabs,
@@ -27,10 +29,13 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ReactComponent as IconOutSvg } from 'app/assets//button/out_going.svg';
+import CardJob from 'app/components/CardJob';
+import EmptyContent from 'app/components/EmptyContent';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
 import { NearContext } from 'app/contexts/NearContext';
+import { useGetJobByAccount } from 'app/hooks/AppliedJob/useGetJobByAccount';
 import useSettings from 'app/hooks/useSettings';
 import {
   getAvatarById,
@@ -41,7 +46,6 @@ import { handleErrorResponse } from 'app/utils/until';
 
 import { ApplyDialog } from '../ApplyDialog';
 import CompanyProfile from '../CompanyProfile';
-import { ContactForm } from '../ContactForm';
 import { ViewDetailJob } from '../ViewDetailJob';
 
 // import { messages } from './messages';
@@ -80,7 +84,6 @@ const DETAIL_JOB = gql`
     }
   }
 `;
-// job_specialities
 
 const AntTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
@@ -107,9 +110,14 @@ const JobDetail = memo((props: Props) => {
   const [dataCompany, setDataCompany] = useState<any>({});
   const [avatarCompany, setAvatarCompany] = useState<any>('');
   const [bgCompany, setBgCompany] = useState<any>('');
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const { loading, error, data } = useQuery(DETAIL_JOB, {
     variables: { id },
+  });
+  const { dataJob, loadingJob } = useGetJobByAccount({
+    owner_id_contains: 'binh93.testnet',
   });
 
   const { account } = useContext(NearContext);
@@ -123,6 +131,13 @@ const JobDetail = memo((props: Props) => {
 
   const handleOpenApplyJob = () => {
     setOpenDialogAppJob(true);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -190,15 +205,54 @@ const JobDetail = memo((props: Props) => {
                 </Button>
               )}
 
-              <IconButton aria-label="delete">
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? 'long-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+              >
                 <IconOutSvg fill="currentcolor" />
               </IconButton>
-              {/* <IconButton aria-label="delete">
-                <FavoriteBorderIcon />
-              </IconButton> */}
-              {/* <IconButton aria-label="delete">
-                <MoreHorizIcon />
-              </IconButton> */}
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  'aria-labelledby': 'long-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: 40 * 4.5,
+                    width: '20ch',
+                  },
+                }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <FacebookShareButton
+                    url={
+                      'https://dev-cecareer.certy.network/jobs/65d1cc37-70c4-4d25-9139-922eae0b0167'
+                    }
+                    quote="test thu"
+                  >
+                    <FacebookIcon size={32} round /> Facebook
+                  </FacebookShareButton>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <TwitterShareButton
+                    title={'test'}
+                    url={
+                      'https://dev-cecareer.certy.network/jobs/65d1cc37-70c4-4d25-9139-922eae0b0167'
+                    }
+                    hashtags={['Certy', 'Certy-Career']}
+                  >
+                    <TwitterIcon size={32} round />
+                    Twitter
+                  </TwitterShareButton>
+                </MenuItem>
+              </Menu>
             </Box>
           </Box>
 
@@ -211,7 +265,7 @@ const JobDetail = memo((props: Props) => {
               >
                 <AntTab label="Job Detail" value={0} />
                 <AntTab label="About Company" value={1} />
-                {/* <AntTab label="All Jobs From This Company" value={2} /> */}
+                <AntTab label="All Jobs From This Company" value={2} />
               </Tabs>
             </Box>
             {value === 0 && (
@@ -227,115 +281,11 @@ const JobDetail = memo((props: Props) => {
                             __html: data?.job?.description || '',
                           }}
                         />
-                        {/* <Typography variant="body1" component="div">
-                          We are a small team looking for a rockstar UX/UI
-                          designer to build an easy and intuitive graphical
-                          interface for digital governance. As a senior
-                          designer, you will work on the desktop version and the
-                          mobile application interfaces with minimal
-                          supervision.
-                        </Typography>
-
-                        {[1, 2].map(index => (
-                          <Box key={index.toString()}>
-                            <Typography variant="h4" component="div">
-                              What we offer
-                            </Typography>
-                            <Box px={3}>
-                              <ul>
-                                <li>
-                                  {' '}
-                                  <Typography variant="body1" component="div">
-                                    We offer flexible work hours and a
-                                    competitive salary. As long as you are
-                                    committed to Snapshot's success and you
-                                    contribute in a meaningful way, everything
-                                    can be accommodated.
-                                  </Typography>{' '}
-                                </li>
-                                <li>
-                                  {' '}
-                                  <Typography variant="body1" component="div">
-                                    You’ll work 100% remotely.
-                                  </Typography>{' '}
-                                </li>
-                                <li>
-                                  {' '}
-                                  <Typography variant="body1" component="div">
-                                    This is a long-term full-time contract role.
-                                    We care about job security for our team and
-                                    we’re looking for people who can grow with
-                                    our products for years to come.
-                                  </Typography>{' '}
-                                </li>
-                                <li>
-                                  {' '}
-                                  <Typography variant="body1" component="div">
-                                    You'll be given the opportunity to work with
-                                    the best projects in the Ethereum community,
-                                    from the largest DAOs to the most innovative
-                                    protocols.
-                                  </Typography>{' '}
-                                </li>
-                                <li>
-                                  {' '}
-                                  <Typography variant="body1" component="div">
-                                    Your personal growth in the crypto space
-                                    will be a high priority for Snapshot, you
-                                    can expect to learn a lot from your time
-                                    here.
-                                  </Typography>{' '}
-                                </li>
-                              </ul>
-                            </Box>
-                          </Box>
-                        ))}
-
-                        <Box display="flex" columnGap={2}>
-                          <Label>
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ ml: 0.5, mr: 1 }}
-                            >
-                              English
-                            </Typography>
-                          </Label>
-                          <Label>
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ ml: 0.5, mr: 1 }}
-                            >
-                              User Interface Design
-                            </Typography>
-                          </Label>
-                          <Label>
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ ml: 0.5, mr: 1 }}
-                            >
-                              User Experience Design (UED)
-                            </Typography>
-                          </Label>
-                        </Box> */}
                       </Box>
                     </Card>
-
-                    {/* <Box mt={3}>
-                      <CardList title="Related Jobs">
-                        {_appRelated.map(app => (
-                          <>
-                            <CardExpire key={app.id} app={app} />
-                            <Divider sx={{ borderStyle: 'solid' }} />
-                          </>
-                        ))}
-                      </CardList>
-                    </Box> */}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <ViewDetailJob infoJob={data?.job} />
-                    {/* <Box mt={3}>
-                      <ContactForm />
-                    </Box> */}
                   </Grid>
                 </Grid>
               </Box>
@@ -349,7 +299,26 @@ const JobDetail = memo((props: Props) => {
                 />
               </Box>
             )}
-            {/* {value === 2 && 'aaaa'} */}
+            {value === 2 && (
+              <Box mt={4}>
+                {dataJob && dataJob.length > 0 ? (
+                  dataJob.map((d, index) => (
+                    <Box mb={3} key={d.id}>
+                      <CardJob app={d} avatar={avatarCompany} />
+                    </Box>
+                  ))
+                ) : (
+                  <Box>
+                    <EmptyContent
+                      title="No Data"
+                      sx={{
+                        '& span.MuiBox-root': { height: 160 },
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
+            )}
           </Box>
         </Div>
 

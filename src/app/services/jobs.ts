@@ -17,3 +17,7 @@ export const applyJob = params => {
 export const getCandidates = () => {
   return BaseApi.get('job/candidates');
 };
+
+export const getFile = params => {
+  return BaseApi.post('job/get-applicant-documents', params);
+};
