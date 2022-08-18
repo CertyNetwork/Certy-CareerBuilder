@@ -141,8 +141,26 @@ const ApplicantManagement = memo((props: Props) => {
           <TableCell align="right">
             {data.contact_number ? data.contact_number : '--'}
           </TableCell>
-          <TableCell align="right">{documentJob[index]?.resume}</TableCell>
-          <TableCell align="right">{documentJob[index]?.coverLetter}</TableCell>
+          <TableCell align="right">
+            <a
+              href={documentJob[index]?.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="custom-uri"
+            >
+              View resume
+            </a>
+          </TableCell>
+          <TableCell align="right">
+            <a
+              href={documentJob[index]?.coverLetter}
+              target="_blank"
+              rel="noreferrer"
+              className="custom-uri"
+            >
+              View cover letter
+            </a>
+          </TableCell>
 
           <TableCell align="center">
             <Link to={`/profile/${data?.applicant_id}`}>
