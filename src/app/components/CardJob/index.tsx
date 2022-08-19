@@ -44,7 +44,7 @@ export default function CardJob({ app, applied, avatar }: Props) {
               borderRadius: 1.5,
               alignItems: 'center',
               justifyContent: 'center',
-              bgcolor: 'background.neutral',
+              backgroundColor: 'background.neutral',
             }}
           >
             <Image

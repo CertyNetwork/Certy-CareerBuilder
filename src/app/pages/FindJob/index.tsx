@@ -88,7 +88,10 @@ const FindJob = memo((props: Props) => {
   const { themeStretch } = useSettings();
   const [fullyLoaded, setFullyLoaded] = useState(false);
   const [avatarJob, setAvatarJob] = useState<any>([]);
-  const [whereJob, setWhereJob] = useState({ updated_at_gt: 0 });
+  const [whereJob, setWhereJob] = useState({
+    updated_at_gt: 0,
+    application_deadline_gt: new BigNumber(new Date().getTime()),
+  });
   const [arrLevel, setArrLevel] = useState<any>([]);
   const { data, networkStatus, fetchMore, variables, refetch } = useQuery(
     FIND_JOB,
