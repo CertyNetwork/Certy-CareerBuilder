@@ -1,6 +1,6 @@
 import { useDropzone } from 'react-dropzone';
 
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
