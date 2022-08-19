@@ -27,7 +27,7 @@ import Page from 'app/components/Page';
 import SocialsButton from 'app/components/SocialsButton';
 import useSettings from 'app/hooks/useSettings';
 
-import { ContactForm } from '../ContactForm';
+// import { ContactForm } from '../ContactForm';
 
 // import { messages } from './messages';
 
@@ -196,9 +196,9 @@ const CompanyProfile = memo((props: Props) => {
                   </Box>
                 </Box>
               </Card>
-              <Box mt={3}>
+              {/* <Box mt={3}>
                 <ContactForm />
-              </Box>
+              </Box> */}
             </Grid>
           </Grid>
         </Div>

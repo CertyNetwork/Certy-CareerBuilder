@@ -1,6 +1,6 @@
 import { useDropzone } from 'react-dropzone';
 
-import { Box } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -38,6 +38,7 @@ export default function UploadSingleFile({
   file,
   helperText,
   sx,
+  onRemove,
   ...other
 }) {
   const {
@@ -53,39 +54,72 @@ export default function UploadSingleFile({
 
   return (
     <Box sx={{ width: '100%', ...sx }}>
-      <DropZoneStyle
-        {...getRootProps()}
-        sx={{
-          ...(isDragActive && { opacity: 0.72 }),
-          ...((isDragReject || error) && {
-            color: 'error.main',
-            borderColor: 'error.light',
-            bgcolor: 'error.lighter',
-          }),
-          ...(file && {
-            padding: '12% 0',
-          }),
-        }}
-      >
-        <input {...getInputProps()} />
+      {!file && (
+        <DropZoneStyle
+          {...getRootProps()}
+          sx={{
+            ...(isDragActive && { opacity: 0.72 }),
+            ...((isDragReject || error) && {
+              color: 'error.main',
+              borderColor: 'error.light',
+              bgcolor: 'error.lighter',
+            }),
+            ...(file && {
+              padding: '12% 0',
+            }),
+          }}
+        >
+          <input {...getInputProps()} />
 
-        <BlockContent />
+          <BlockContent />
+        </DropZoneStyle>
+      )}
 
-        {file && (
+      {file && file?.type?.split('/')[0] === 'image' && (
+        <Box display="flex" justifyContent="center">
           <Image
             alt="file preview"
             src={typeof file === 'string' ? file : file.preview}
             sx={{
-              top: 8,
-              left: 8,
-              borderRadius: 1,
-              position: 'absolute',
-              width: 'calc(100% - 16px)',
-              height: 'calc(100% - 16px)',
+              width: '300px',
+              height: 'auto',
             }}
           />
-        )}
-      </DropZoneStyle>
+        </Box>
+      )}
+
+      {file && file?.type?.split('/')[0] === 'application' && (
+        <Box display="flex">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              backgroundColor: 'rgba(42, 133, 255, 0.05)',
+              width: '78px',
+            }}
+          >
+            <Typography
+              sx={{
+                ml: 0.5,
+                mr: 1,
+                color: '#2A85FF',
+                fontWeight: 700,
+                fontSize: '15px',
+              }}
+            >
+              PDF
+            </Typography>
+          </Box>
+          <Box py={3}>
+            <Typography
+              sx={{ ml: 0.5, mr: 1, fontWeight: 700, fontSize: '15px' }}
+            >
+              {file?.name}
+            </Typography>
+          </Box>
+        </Box>
+      )}
 
       {fileRejections.length > 0 && (
         <RejectionFiles fileRejections={fileRejections} />

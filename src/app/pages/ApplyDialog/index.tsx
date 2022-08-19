@@ -3,7 +3,7 @@
  * ApplyDialog
  *
  */
-import React, { memo, useCallback, useContext, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -12,21 +12,15 @@ import { useParams } from 'react-router';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Backdrop,
-  CircularProgress,
-  IconButton,
-  TextField,
-  styled,
-} from '@mui/material';
+import { Backdrop, CircularProgress, IconButton, styled } from '@mui/material';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import ResumeFile from 'app/components/ReumeFile';
+import { alpha } from '@mui/material/styles';
+import Iconify from 'app/components/Iconify';
 import {
   FormProvider,
   RHFTextField,
   RHFUploadSingleFile,
 } from 'app/components/hook-form';
-import { NearContext } from 'app/contexts/NearContext';
 import { ApplyJobSchema } from 'app/schema/applyJobSchema';
 import { applyJob } from 'app/services/jobs';
 import { handleErrorResponse, handleSuccessResponse } from 'app/utils/until';
@@ -47,29 +41,22 @@ export const ApplyDialog = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { onClose, recruiter } = props;
   const { id } = useParams();
-  const { account } = useContext(NearContext);
   const [loading, setLoading] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+  const [showCover, setShowCover] = useState(false);
 
   const methods = useForm({
     resolver: yupResolver(ApplyJobSchema),
   });
 
-  const {
-    reset,
-    // watch,
-    // control,
-    setValue,
-    // getValues,
-    register,
-    handleSubmit,
-    // formState: { isSubmitting },
-  } = methods;
+  const { reset, setValue, handleSubmit } = methods;
 
-  const handleDropResum = useCallback(
+  const handleDropResume = useCallback(
     acceptedFiles => {
       const file = acceptedFiles[0];
 
       if (file) {
+        setShowResume(true);
         setValue(
           'resume',
           Object.assign(file, {
@@ -81,11 +68,21 @@ export const ApplyDialog = memo((props: Props) => {
     [setValue],
   );
 
+  const resetFileResume = () => {
+    setValue('resume', '');
+    setShowResume(false);
+  };
+  const resetFileCoverLetter = () => {
+    setValue('coverLetter', '');
+    setShowCover(false);
+  };
+
   const handleDropCoverLetter = useCallback(
     acceptedFiles => {
       const file = acceptedFiles[0];
 
       if (file) {
+        setShowCover(true);
         setValue(
           'coverLetter',
           Object.assign(file, {
@@ -183,12 +180,35 @@ export const ApplyDialog = memo((props: Props) => {
               <Typography variant="subtitle2" component="div">
                 Resume
               </Typography>
-              <RHFUploadSingleFile
-                name="resume"
-                accept="image/*,application/pdf"
-                maxSize={3145728}
-                onDrop={handleDropResum}
-              />
+              <Box position="relative">
+                {showResume && (
+                  <Box position="absolute" top={0} right={0}>
+                    <IconButton
+                      color="inherit"
+                      sx={{
+                        color: '#00AAEC',
+                        '&:hover': {
+                          bgcolor: alpha('#00AAEC', 0.08),
+                        },
+                      }}
+                      onClick={resetFileResume}
+                    >
+                      <Iconify
+                        icon={'carbon:close-filled'}
+                        sx={{ width: 30, height: 30 }}
+                      />
+                    </IconButton>
+                  </Box>
+                )}
+
+                <RHFUploadSingleFile
+                  name="resume"
+                  accept="image/*,application/pdf"
+                  maxSize={3145728}
+                  onDrop={handleDropResume}
+                  // onRemove={resetFileResume}
+                />
+              </Box>
             </Box>
 
             <Box mt={2}>
@@ -199,12 +219,33 @@ export const ApplyDialog = memo((props: Props) => {
               >
                 Cover Letter
               </Typography>
-              <RHFUploadSingleFile
-                name="coverLetter"
-                accept="image/*,application/pdf"
-                maxSize={3145728}
-                onDrop={handleDropCoverLetter}
-              />
+              <Box position="relative">
+                {showCover && (
+                  <Box position="absolute" top={0} right={0}>
+                    <IconButton
+                      color="inherit"
+                      sx={{
+                        color: '#00AAEC',
+                        '&:hover': {
+                          bgcolor: alpha('#00AAEC', 0.08),
+                        },
+                      }}
+                      onClick={resetFileCoverLetter}
+                    >
+                      <Iconify
+                        icon={'carbon:close-filled'}
+                        sx={{ width: 30, height: 30 }}
+                      />
+                    </IconButton>
+                  </Box>
+                )}
+                <RHFUploadSingleFile
+                  name="coverLetter"
+                  accept="image/*,application/pdf"
+                  maxSize={3145728}
+                  onDrop={handleDropCoverLetter}
+                />
+              </Box>
             </Box>
           </Box>
         </StyledScrollBar>

@@ -23,7 +23,6 @@ import CardList from 'app/components/CardList';
 import Label from 'app/components/Label';
 import OtherProfileUser from 'app/components/OtherProfileUser';
 import Page from 'app/components/Page';
-import UserCard from 'app/components/UserCard';
 import { NearContext } from 'app/contexts/NearContext';
 import {
   useAvatarAccount,
@@ -31,8 +30,6 @@ import {
   useProfileUser,
 } from 'app/hooks/Profile/useProfile';
 import useSettings from 'app/hooks/useSettings';
-
-import { ContactForm } from '../ContactForm';
 
 // import { messages } from './messages';
 
@@ -162,9 +159,9 @@ const IndividualProfileUser = memo((props: Props) => {
                 )}
             </Grid>
 
-            <Grid item xs={12} md={4}>
+            {/* <Grid item xs={12} md={4}>
               <ContactForm />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Div>
       </Container>

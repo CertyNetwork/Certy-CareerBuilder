@@ -74,17 +74,38 @@ export default function UserCard(props: Props) {
         />
       </Box>
 
-      <Typography variant="h6" sx={{ mt: 6 }}>
-        {user?.info?.displayName}
-      </Typography>
+      {user?.info?.displayName && user?.info?.location && user?.info?.email ? (
+        <Box>
+          <Typography variant="h6" sx={{ mt: 6 }}>
+            {user?.info?.displayName}
+          </Typography>
 
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {`${user?.info?.location} | ${user?.info?.email}`}
-      </Typography>
+          <Typography
+            variant="body2"
+            sx={{ color: 'text.secondary', marginBottom: '24px' }}
+          >
+            {`${user?.info?.location} | ${user?.info?.email}`}
+          </Typography>
+        </Box>
+      ) : (
+        <Typography variant="h6" sx={{ mt: 6 }}>
+          No Info
+        </Typography>
+      )}
 
-      <Stack alignItems="center">
-        <SocialsButton initialColor sx={{ my: 2.5 }} />
-      </Stack>
+      {(user?.info?.linkedInLink || user?.info?.githubLink) && (
+        <Stack alignItems="center">
+          <SocialsButton
+            links={{
+              github: user?.info?.githubLink,
+              linkedin: user?.info?.linkedInLink,
+            }}
+            initialColor
+            sx={{ my: 2.5 }}
+          />
+        </Stack>
+      )}
+
       <Box sx={{ px: 3, textAlign: 'left' }}>
         <Divider sx={{ borderStyle: 'dashed' }} />
       </Box>

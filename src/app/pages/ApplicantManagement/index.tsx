@@ -240,7 +240,12 @@ const ApplicantManagement = memo((props: Props) => {
           </TableCell>
 
           <TableCell align="center">
-            <Link to={`/profile/${data?.applicant_id}`}>
+            <a
+              href={`https://certy-profile-app.vercel.app/accounts/${data?.applicant_id}`}
+              target="_blank"
+              rel="noreferrer"
+              className="custom-uri"
+            >
               <IconButton
                 aria-label="delete"
                 size="small"
@@ -250,7 +255,7 @@ const ApplicantManagement = memo((props: Props) => {
               >
                 <VisibilityIcon fontSize="small" />
               </IconButton>
-            </Link>
+            </a>
             {/* <IconButton
               aria-label="delete"
               size="small"
@@ -271,7 +276,7 @@ const ApplicantManagement = memo((props: Props) => {
         </TableCell>
       </TableRow>
     );
-  }, [dataApplicant, newData]);
+  }, [dataApplicant, newData, documentJob]);
 
   return (
     <Page title="Applicant Management">
