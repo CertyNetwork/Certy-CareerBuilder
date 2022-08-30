@@ -36,6 +36,7 @@ import { DialogConfirm } from 'app/components/DialogConfirm';
 import Iconify from 'app/components/Iconify';
 import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
+import { SHOW_JOB_TYPE } from 'app/constant/jobType';
 import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
 import { handleErrorResponse } from 'app/utils/until';
@@ -146,7 +147,7 @@ const PostedJob = memo((props: Props) => {
           job_id: id,
         },
         '300000000000000',
-        '1000000000000000000000000',
+        '000000000000000000000001',
       );
 
       setOpenDelete(false);
@@ -250,7 +251,9 @@ const PostedJob = memo((props: Props) => {
                           data?.postedJob?.map(row => (
                             <TableRow key={row?.id}>
                               <TableCell component="th" scope="row">
-                                {row?.job_type ? row?.job_type : '__'}
+                                {row?.job_type
+                                  ? SHOW_JOB_TYPE[row?.job_type]
+                                  : '__'}
                               </TableCell>
                               <TableCell align="right">
                                 <Link
@@ -265,9 +268,9 @@ const PostedJob = memo((props: Props) => {
                                 </Link>
                               </TableCell>
                               <TableCell align="right">
-                                {moment(
-                                  new Date(row?.application_deadline),
-                                ).format('DD/MM/YYYY')}
+                                {moment(new Date(+row?.updated_at)).format(
+                                  'DD/MM/YYYY',
+                                )}
                               </TableCell>
                               <TableCell align="right">0 Applicants</TableCell>
                               <TableCell align="center">

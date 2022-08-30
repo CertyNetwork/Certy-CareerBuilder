@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -16,20 +16,23 @@ import {
   styled,
 } from '@mui/material';
 import CardJob from 'app/components/CardJob';
+import CardSkeleton from 'app/components/CardSkeleton';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import { NearContext } from 'app/contexts/NearContext';
 import { useAppliedJob } from 'app/hooks/AppliedJob/useAppliedJob';
 import useSettings from 'app/hooks/useSettings';
 import { getAvatarById } from 'app/services/profile';
+import { BigNumber } from 'bignumber.js';
+import moment from 'moment';
 
 // import { messages } from './messages';
 
 interface Props {}
 
 const FIND_JOB_APPLY = gql`
-  query JobApply($arrayId: [ID]) {
-    jobApply: jobs(where: { id_in: $arrayId }) {
+  query JobApply($arrayId: [ID], $time: BigInt) {
+    jobApply: jobs(where: { id_in: $arrayId, updated_at_gt: $time }) {
       id
       owner_id
       extra
@@ -61,24 +64,43 @@ const AppliedJob = memo((props: Props) => {
   const { t, i18n } = useTranslation();
   const { themeStretch } = useSettings();
   const [avatarJob, setAvatarJob] = useState<any>([]);
-
   const { wallet, account } = useContext(NearContext);
   const token = localStorage.getItem('Near_token_bearer');
-
+  const [whereJob, setWhereJob] = useState<any>(0);
   const { dataAppliedJob, loadingDataAppliedJob } = useAppliedJob();
 
-  const { data, loading } = useQuery(FIND_JOB_APPLY, {
+  const { data, loading, refetch } = useQuery(FIND_JOB_APPLY, {
     notifyOnNetworkStatusChange: true,
     variables: {
       arrayId: dataAppliedJob,
+      time: whereJob,
     },
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache',
   });
 
+  const handleChangeTime = e => {
+    const { value } = e.target;
+    const day = moment(new Date())
+      .subtract(Number(value), 'days')
+      .format('MM-DD-YYYY');
+
+    const timeStamp = new Date(day).getTime();
+    setWhereJob(new BigNumber(timeStamp));
+
+    if (Number(value) === 0) {
+      setWhereJob(0);
+    }
+
+    refetch({
+      arrayId: dataAppliedJob,
+      time: whereJob,
+    });
+  };
+
   useEffect(() => {
-    if (data && data.jobs && data.jobs.length > 0) {
-      const newArrRequest = data?.jobs?.map(d =>
+    if (data && data.jobApply && data.jobApply.length > 0) {
+      const newArrRequest = data?.jobApply?.map(d =>
         getAvatarById(d.owner_id).then(res => res.data.data),
       );
       Promise.all(newArrRequest).then(res => setAvatarJob(res));
@@ -90,10 +112,6 @@ const AppliedJob = memo((props: Props) => {
       'cecareer.certynetwork.testnet', // contract requesting access
       'Certify',
     );
-  }
-
-  if (loadingDataAppliedJob || loading) {
-    return <h3>Loading ...</h3>;
   }
 
   return (
@@ -115,7 +133,10 @@ const AppliedJob = memo((props: Props) => {
           </Box>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-              {data && data.jobApply && data.jobApply.length > 0 ? (
+              {!(loadingDataAppliedJob || loading) &&
+                data &&
+                data.jobApply &&
+                data.jobApply.length > 0 &&
                 data.jobApply.map((data, index) => (
                   <Box mb={3} key={data.id}>
                     <CardJob
@@ -124,17 +145,20 @@ const AppliedJob = memo((props: Props) => {
                       avatar={avatarJob[index]}
                     />
                   </Box>
-                ))
-              ) : (
-                <Box
-                  mb={3}
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <h3>No Data</h3>
-                </Box>
-              )}
+                ))}{' '}
+              {!(loadingDataAppliedJob || loading) &&
+                (!data || data.jobApply.length === 0) && (
+                  <Box
+                    mb={3}
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <h3>No Data</h3>
+                  </Box>
+                )}
+              {(loadingDataAppliedJob || loading) &&
+                [1, 2, 3, 4, 5].map(i => <CardSkeleton key={i} />)}
             </Grid>
 
             <Grid item xs={12} md={4}>
@@ -144,26 +168,27 @@ const AppliedJob = memo((props: Props) => {
                   <FormControl>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
+                      defaultValue="0"
                       name="radio-buttons-group"
+                      onChange={handleChangeTime}
                     >
                       <FormControlLabel
-                        value="any"
+                        value="0"
                         control={<Radio />}
                         label="Any Time"
                       />
                       <FormControlLabel
-                        value="month"
+                        value="30"
                         control={<Radio />}
                         label="Past Month"
                       />
                       <FormControlLabel
-                        value="week"
+                        value="7"
                         control={<Radio />}
                         label="Past Week"
                       />
                       <FormControlLabel
-                        value="day"
+                        value="1"
                         control={<Radio />}
                         label="Past 24 hours"
                       />

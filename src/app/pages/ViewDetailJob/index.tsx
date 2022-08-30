@@ -8,6 +8,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Box, Card, Typography, styled, useTheme } from '@mui/material';
+import { SHOW_COUNTRY } from 'app/constant/country';
 import moment from 'moment';
 
 // import { messages } from './messages';
@@ -48,7 +49,7 @@ export const ViewDetailJob = memo((props: Props) => {
             Work Location
           </Typography>
           <Typography variant="subtitle2" component="div">
-            {infoJob?.work_location_country}
+            {SHOW_COUNTRY[infoJob?.work_location_country]}
           </Typography>
         </Box>
         <Box mt={2}>
@@ -59,7 +60,13 @@ export const ViewDetailJob = memo((props: Props) => {
           >
             Level
           </Typography>
-          <Typography variant="subtitle2" component="div">
+          <Typography
+            variant="subtitle2"
+            component="div"
+            sx={{
+              textTransform: 'capitalize',
+            }}
+          >
             {infoJob?.experience_level ? infoJob?.experience_level : '--'}
           </Typography>
         </Box>
@@ -71,7 +78,13 @@ export const ViewDetailJob = memo((props: Props) => {
           >
             Experiences
           </Typography>
-          <Typography variant="subtitle2" component="div">
+          <Typography
+            variant="subtitle2"
+            component="div"
+            sx={{
+              textTransform: 'capitalize',
+            }}
+          >
             {infoJob?.experience_level ? infoJob?.experience_level : '--'}
           </Typography>
         </Box>
@@ -99,7 +112,7 @@ export const ViewDetailJob = memo((props: Props) => {
           </Typography>
           <Typography variant="subtitle2" component="div">
             {infoJob?.application_deadline
-              ? moment(infoJob?.application_deadline).format('DD/MM/YYYY')
+              ? moment(+infoJob?.application_deadline).format('DD/MM/YYYY')
               : '--'}
           </Typography>
         </Box>

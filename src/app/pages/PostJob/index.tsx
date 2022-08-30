@@ -8,6 +8,7 @@ import { memo, useContext, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router';
 
 import { gql, useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -67,6 +68,7 @@ const SPECIALTIES = gql`
 export const PostJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   const { close, jobData, isEdit } = props;
 
@@ -175,6 +177,7 @@ export const PostJob = memo((props: Props) => {
         '300000000000000',
         '1000000000000000000000000',
       );
+      navigate('/jobs');
       reset();
     } catch (error) {
       handleErrorResponse(error);

@@ -97,8 +97,8 @@ export default function CardJob({ app, applied, avatar }: Props) {
           }}
         />
 
-        <Box display="flex" justifyContent="space-between">
-          <Box display="flex" columnGap={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" columnGap={2} alignItems="center">
             {SHOW_JOB_TYPE[job_type] && (
               <Label>
                 <Typography variant="subtitle2" sx={{ margin: '8px 16px' }}>

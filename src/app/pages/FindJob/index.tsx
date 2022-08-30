@@ -32,6 +32,7 @@ import {
   styled,
 } from '@mui/material';
 import CardJob from 'app/components/CardJob';
+import CardSkeleton from 'app/components/CardSkeleton';
 import EmptyContent from 'app/components/EmptyContent';
 import Iconify from 'app/components/Iconify';
 import { LabelStyle } from 'app/components/LabelStyle';
@@ -93,17 +94,15 @@ const FindJob = memo((props: Props) => {
     application_deadline_gt: new BigNumber(new Date().getTime()),
   });
   const [arrLevel, setArrLevel] = useState<any>([]);
-  const { data, networkStatus, fetchMore, variables, refetch } = useQuery(
-    FIND_JOB,
-    {
+  const { data, networkStatus, fetchMore, variables, refetch, loading } =
+    useQuery(FIND_JOB, {
       notifyOnNetworkStatusChange: true,
       variables: {
         skip: 0,
         first: 5,
         where: whereJob,
       },
-    },
-  );
+    });
 
   const handleInput = e => {
     const { value } = e.target;
@@ -239,10 +238,6 @@ const FindJob = memo((props: Props) => {
     }
   }, [data]);
 
-  if (networkStatus === NetworkStatus.loading) {
-    return <h3>Loading ...</h3>;
-  }
-
   return (
     <Page title="Find Job">
       <Container maxWidth={themeStretch ? false : 'xl'}>
@@ -344,14 +339,14 @@ const FindJob = memo((props: Props) => {
                   Based on your profile and search history
                 </Typography>
               </Box>
-
-              {data && data?.jobs?.length > 0 ? (
+              {data &&
+                data?.jobs?.length > 0 &&
                 data?.jobs.map((d, index) => (
                   <Box mb={3} key={d.id}>
                     <CardJob app={d} avatar={avatarJob[index]} />
                   </Box>
-                ))
-              ) : (
+                ))}{' '}
+              {!loading && (!data || data?.jobs?.length === 0) && (
                 <Box>
                   <EmptyContent
                     title="No Data"
@@ -361,10 +356,13 @@ const FindJob = memo((props: Props) => {
                   />
                 </Box>
               )}
-
+              {(networkStatus === NetworkStatus.refetch ||
+                loading ||
+                networkStatus === NetworkStatus.fetchMore) &&
+                [1, 2, 3, 4, 5].map(i => <CardSkeleton key={i} />)}
               {networkStatus !== NetworkStatus.fetchMore &&
                 variables &&
-                data.jobs.length % variables.first === 0 &&
+                data?.jobs?.length % variables.first === 0 &&
                 !fullyLoaded && (
                   <InView
                     onChange={async inView => {
