@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { AppBar, Box, Button, Stack, Toolbar } from '@mui/material';
 // @mui
@@ -17,7 +17,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import { PostJob } from '../../../pages/PostJob';
 import cssStyles from '../../../utils/cssStyles';
 import AccountPopover from './AccountPopover';
-import Searchbar from './Searchbar';
+import OurProductsPopover from './OurProductsPopover';
 
 const RootStyle = styled(AppBar, {
   shouldForwardProp: prop =>
@@ -99,7 +99,7 @@ export default function DashboardHeader({
           </IconButtonAnimate>
         )}
 
-        <Searchbar />
+        {/* <Searchbar /> */}
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack
@@ -110,6 +110,7 @@ export default function DashboardHeader({
           {/* <LanguagePopover /> */}
           {/* <NotificationsPopover /> */}
           {/* <ContactsPopover /> */}
+          <OurProductsPopover />
           {account ? (
             <>
               <AccountPopover infoAccount={account} />

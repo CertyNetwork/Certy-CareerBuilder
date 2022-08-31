@@ -5,7 +5,13 @@
  * PostedJob
  *
  */
-import React, { memo, useCallback, useContext, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -39,6 +45,7 @@ import { DialogAnimate } from 'app/components/animate';
 import { SHOW_JOB_TYPE } from 'app/constant/jobType';
 import { NearContext } from 'app/contexts/NearContext';
 import useSettings from 'app/hooks/useSettings';
+import { getCandidatesById } from 'app/services/jobs';
 import { handleErrorResponse } from 'app/utils/until';
 import _ from 'lodash';
 import moment from 'moment';
@@ -90,6 +97,7 @@ const PostedJob = memo((props: Props) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [id, setId] = useState('');
   const [valueSearch, setValueSearch] = useState('');
+  const [documentJob, setDocumentJob] = useState<any>([]);
 
   const { data, loading, refetch, networkStatus } = useQuery(POSTED_JOB, {
     variables: {
@@ -155,6 +163,15 @@ const PostedJob = memo((props: Props) => {
       handleErrorResponse(error);
     }
   };
+
+  useEffect(() => {
+    if (data && data?.postedJob?.length > 0) {
+      const newArrRequest = data?.postedJob?.map(item =>
+        getCandidatesById(item.id).then(res => res.data.data),
+      );
+      Promise.all(newArrRequest).then(res => setDocumentJob(res));
+    }
+  }, [data]);
 
   return (
     <Page title="Posted Job">
@@ -248,7 +265,7 @@ const PostedJob = memo((props: Props) => {
                         ) : data &&
                           data?.postedJob &&
                           data?.postedJob.length > 0 ? (
-                          data?.postedJob?.map(row => (
+                          data?.postedJob?.map((row, index) => (
                             <TableRow key={row?.id}>
                               <TableCell component="th" scope="row">
                                 {row?.job_type
@@ -261,6 +278,7 @@ const PostedJob = memo((props: Props) => {
                                     pathname: '/applicant-management',
                                     search: `?position=${row?.id}`,
                                   }}
+                                  className="custom-uri"
                                 >
                                   <Typography component="h6">
                                     {row.title ? row.title : '__'}
@@ -272,7 +290,11 @@ const PostedJob = memo((props: Props) => {
                                   'DD/MM/YYYY',
                                 )}
                               </TableCell>
-                              <TableCell align="right">0 Applicants</TableCell>
+                              <TableCell align="right">
+                                {documentJob[index]?.length > 1
+                                  ? `${documentJob[index]?.length} Applicants`
+                                  : `${documentJob[index]?.length} Applicant`}
+                              </TableCell>
                               <TableCell align="center">
                                 <IconButton
                                   aria-label="delete"
@@ -337,4 +359,13 @@ const PostedJob = memo((props: Props) => {
 });
 export default PostedJob;
 
-const Div = styled('div')({});
+const Div = styled('div')(({ theme }: any) => ({
+  '.custom-uri': {
+    textDecoration: 'none',
+    color: theme.palette.text.title,
+    fontWeight: 600,
+    '&:hover': {
+      color: '#2A85FF',
+    },
+  },
+}));

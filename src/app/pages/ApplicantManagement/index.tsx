@@ -61,6 +61,7 @@ const ApplicantManagement = memo((props: Props) => {
   const { themeStretch } = useSettings();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [jobName, setJobName] = useState({});
 
   const { dataApplicant, loadingDataApplicant } = useApplicant();
   const [documentJob, setDocumentJob] = useState<any>([]);
@@ -109,6 +110,17 @@ const ApplicantManagement = memo((props: Props) => {
   };
 
   useEffect(() => {
+    if (data && data?.jobs?.length > 0) {
+      const newReduce = data?.jobs?.reduce((acc, item) => {
+        acc[item.id] = item.title;
+        return acc;
+      }, {});
+
+      setJobName(newReduce);
+    }
+  }, [data]);
+
+  useEffect(() => {
     if (dataApplicant && dataApplicant?.length > 0) {
       const newArrRequest = dataApplicant.map(data =>
         getFile({ jobId: data.job_id }).then(res => res.data.data),
@@ -120,7 +132,7 @@ const ApplicantManagement = memo((props: Props) => {
   const dataRender = useMemo(() => {
     if (newData.length > 0) {
       return newData.map((data: any, index: number) => (
-        <TableRow key={data.applicant_id}>
+        <TableRow key={index.toString()}>
           <TableCell component="th" scope="row">
             <Box>
               <Box>
@@ -130,10 +142,20 @@ const ApplicantManagement = memo((props: Props) => {
                   rel="noreferrer"
                   className="custom-uri"
                 >
-                  <Typography component="h4">{data?.applicant_id}</Typography>
+                  <Typography
+                    component="h4"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    {data?.applicant_id}
+                  </Typography>
                 </a>
               </Box>
             </Box>
+          </TableCell>
+          <TableCell align="right">
+            {data?.job_id && jobName ? jobName[data?.job_id] : '--'}
           </TableCell>
           <TableCell align="right">
             {data?.contact_email ? data?.contact_email : '--'}
@@ -190,7 +212,7 @@ const ApplicantManagement = memo((props: Props) => {
 
     return dataApplicant && dataApplicant.length > 0 ? (
       dataApplicant.map((data, index) => (
-        <TableRow key={data.applicant_id}>
+        <TableRow key={index.toString()}>
           <TableCell component="th" scope="row">
             <Box>
               <Box>
@@ -211,6 +233,9 @@ const ApplicantManagement = memo((props: Props) => {
                 </a>
               </Box>
             </Box>
+          </TableCell>
+          <TableCell align="right">
+            {data?.job_id && jobName ? jobName[data?.job_id] : '--'}
           </TableCell>
           <TableCell align="right">
             {data?.contact_email ? data?.contact_email : '--'}
@@ -276,7 +301,7 @@ const ApplicantManagement = memo((props: Props) => {
         </TableCell>
       </TableRow>
     );
-  }, [dataApplicant, newData, documentJob]);
+  }, [dataApplicant, newData, documentJob, jobName]);
 
   return (
     <Page title="Applicant Management">
@@ -356,11 +381,12 @@ const ApplicantManagement = memo((props: Props) => {
                       <TableHead>
                         <TableRow>
                           <TableCell>Candidate</TableCell>
+                          <TableCell align="right">Job Title</TableCell>
                           <TableCell align="right">Email</TableCell>
-                          <TableCell align="right">Contact number</TableCell>
+                          <TableCell align="right">Contact Number</TableCell>
                           <TableCell align="right">Resume</TableCell>
-                          <TableCell align="right">Cover letter</TableCell>
-                          <TableCell align="center">Action</TableCell>
+                          <TableCell align="right">Cover Letter</TableCell>
+                          <TableCell align="center"> View Profile</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

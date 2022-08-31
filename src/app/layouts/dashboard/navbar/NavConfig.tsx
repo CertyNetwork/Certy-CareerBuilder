@@ -21,7 +21,7 @@ const navConfig = [
     subheader: 'Individual Features',
     items: [
       {
-        title: 'Individual Profile',
+        title: 'Profile',
         path: '/profile',
         icon: ICONS.dashboard,
       },

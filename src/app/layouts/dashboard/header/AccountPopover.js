@@ -111,11 +111,17 @@ export default function AccountPopover() {
           </MenuItem>
           <Divider sx={{ borderStyle: 'dashed' }} />
           <MenuItem>
-            <Typography component="p">Edit Individiual Profile</Typography>
-          </MenuItem>
-          <Divider sx={{ borderStyle: 'dashed' }} />
-          <MenuItem>
-            <Typography component="p">Edit Company Profile</Typography>
+            <a
+              href={`https://certy-profile-app.vercel.app/accounts/${account}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                textDecoration: 'none',
+                color: 'unset',
+              }}
+            >
+              <Typography component="p">Edit Profile</Typography>
+            </a>
           </MenuItem>
           <Divider sx={{ borderStyle: 'dashed' }} />
           <MenuItem onClick={handleLogout}>
