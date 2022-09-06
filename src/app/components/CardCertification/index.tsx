@@ -19,6 +19,7 @@ export default function CardCertification(props: Props) {
       sx={{
         backgroundColor: theme.palette.background.certificate,
         borderRadius: '12px',
+        width: '100%',
       }}
     >
       <Stack direction="row" alignItems="center" spacing={2}>
@@ -41,7 +42,7 @@ export default function CardCertification(props: Props) {
           />
         </Box>
 
-        <Box sx={{ flexGrow: 1, minWidth: 160 }}>
+        <Box sx={{ flexGrow: 1, width: '100%' }}>
           <Typography variant="subtitle1">{dataCert?.title}</Typography>
           <Stack
             direction="row"
@@ -49,18 +50,7 @@ export default function CardCertification(props: Props) {
             sx={{ mt: 0.5, color: 'text.secondary' }}
           >
             <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-              Full-time
-            </Typography>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ mt: 0.5, color: 'text.secondary' }}
-          >
-            <Typography
-              sx={{ ml: 0.5, mr: 1, fontSize: '12px', fontWeight: 400 }}
-            >
-              Full-time
+              {dataCert?.title}
             </Typography>
           </Stack>
         </Box>

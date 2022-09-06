@@ -73,14 +73,21 @@ export default function OtherProfileUser(props: Props) {
           ratio="16/9"
         />
       </Box>
-
-      <Typography variant="h6" sx={{ mt: 6 }}>
-        {user?.profile?.info?.displayName}
-      </Typography>
-
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {`${user?.profile?.info?.location} | ${user?.profile?.info?.email}`}
-      </Typography>
+      {user?.profile?.info?.displayName && user?.profile?.info?.location ? (
+        <>
+          {' '}
+          <Typography variant="h6" sx={{ mt: 6 }}>
+            {user?.profile?.info?.displayName}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {`${user?.profile?.info?.location}`}
+          </Typography>
+        </>
+      ) : (
+        <Typography variant="h6" sx={{ mt: 6 }}>
+          No Info
+        </Typography>
+      )}
 
       <Stack alignItems="center">
         <SocialsButton initialColor sx={{ my: 2.5 }} />

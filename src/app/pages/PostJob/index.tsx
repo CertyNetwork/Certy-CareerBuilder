@@ -237,7 +237,7 @@ export const PostJob = memo((props: Props) => {
                 component="div"
                 sx={{ mb: '10px' }}
               >
-                Specialties
+                Skills
               </Typography>
             </Box>
             <RHFAutocomplete

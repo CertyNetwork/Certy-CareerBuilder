@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from '@mui/lab';
@@ -12,6 +14,7 @@ interface Props {
 export default function RHFAutocomplete(props: Props) {
   const { control } = useFormContext();
   const { name, data, defaultValue } = props;
+  const [limit, setLimit] = useState(0);
 
   return (
     <Controller
@@ -23,6 +26,7 @@ export default function RHFAutocomplete(props: Props) {
           id="tags-outlined"
           freeSolo
           size="small"
+          disabled={limit === 5}
           defaultValue={defaultValue}
           options={
             data && data?.jobSpecialities.length > 0
@@ -41,12 +45,17 @@ export default function RHFAutocomplete(props: Props) {
           renderInput={params => (
             <TextField
               {...params}
-              placeholder="Specialties"
+              placeholder="Skills"
               error={!!error}
               helperText={error?.message}
             />
           )}
           onChange={(event, data) => {
+            if (data.length > 5) {
+              return false;
+            }
+
+            setLimit(data.length);
             onChange(data);
             return data;
           }}

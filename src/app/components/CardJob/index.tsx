@@ -67,23 +67,21 @@ export default function CardJob({ app, applied, avatar }: Props) {
             <Stack
               direction="row"
               alignItems="center"
-              sx={{ mt: 0.5, color: 'text.secondary' }}
+              sx={{ color: 'text.title' }}
             >
-              {/* <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
-                {system}
-              </Typography> */}
-              {/* <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-                {work_location_city}
-              </Typography> */}
-              <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+              <Typography variant="subtitle2" sx={{ mr: 1 }}>
                 {SHOW_COUNTRY[work_location_country]}
               </Typography>
-              <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+              <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
                 {SHOW_JOB_TYPE[job_type]}
               </Typography>
-              <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
-                Up to {salary_to}$
-              </Typography>
+              {salary_to ? (
+                <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
+                  Up to {salary_to}$
+                </Typography>
+              ) : (
+                'Negotiation'
+              )}
             </Stack>
           </Box>
 
@@ -137,7 +135,7 @@ export default function CardJob({ app, applied, avatar }: Props) {
                 fontWeight: 400,
               }}
             >
-              Posted about {timeSince(updated_at)}
+              {timeSince(updated_at)}
             </Typography>
           )}
         </Box>

@@ -98,7 +98,7 @@ export const ViewDetailJob = memo((props: Props) => {
           </Typography>
           <Typography variant="subtitle2" component="div">
             {infoJob?.salary_from || infoJob?.salary_to
-              ? `${infoJob?.salary_from} - ${infoJob?.salary_to}`
+              ? `${infoJob?.salary_from}$ - ${infoJob?.salary_to}$`
               : '--'}
           </Typography>
         </Box>

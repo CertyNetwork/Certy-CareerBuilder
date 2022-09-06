@@ -16,6 +16,7 @@ import {
   Typography,
   styled,
 } from '@mui/material';
+import CardCertification from 'app/components/CardCertification';
 import CardEducation from 'app/components/CardEducation';
 import CardExpire from 'app/components/CardExpire';
 import CardList from 'app/components/CardList';
@@ -156,6 +157,20 @@ const IndividualProfile = memo((props: Props) => {
                     </CardList>
                   </Box>
                 )}
+
+              {data && data?.certs && data?.certs?.length > 0 && (
+                <Box mt={3}>
+                  <CardList title="Certificates">
+                    <Box display="flex" flexWrap="wrap" columnGap={2}>
+                      {data?.certs?.map(cert => (
+                        <Box mt={2} key={cert.id} width="100%">
+                          <CardCertification dataCert={cert} />
+                        </Box>
+                      ))}
+                    </Box>
+                  </CardList>
+                </Box>
+              )}
             </Grid>
 
             {/* <Grid item xs={12} md={4}>
