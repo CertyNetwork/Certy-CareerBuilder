@@ -28,7 +28,7 @@ export const ViewDetailJob = memo((props: Props) => {
       <Div>
         {t('')}
         {/*  {t(...messages.someThing())}  */}
-        <Box display="flex" columnGap={2}>
+        {/* <Box display="flex" columnGap={2}>
           <Box
             sx={{
               width: '12px',
@@ -38,9 +38,9 @@ export const ViewDetailJob = memo((props: Props) => {
             }}
           ></Box>
           <Typography component="p">Contact Form</Typography>
-        </Box>
+        </Box> */}
 
-        <Box mt={2}>
+        <Box>
           <Typography
             variant="body2"
             component="div"
@@ -108,7 +108,7 @@ export const ViewDetailJob = memo((props: Props) => {
             component="div"
             sx={{ color: theme.palette.text.disabled }}
           >
-            Appliaction Deadline
+            Application Deadline
           </Typography>
           <Typography variant="subtitle2" component="div">
             {infoJob?.application_deadline

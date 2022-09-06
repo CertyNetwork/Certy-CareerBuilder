@@ -87,7 +87,7 @@ const IndividualProfile = memo((props: Props) => {
   }
 
   return (
-    <Page title="Individual Profile">
+    <Page title="Profile - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         {t('')}
         {/*  {t(...messages.someThing())}  */}

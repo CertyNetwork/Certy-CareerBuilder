@@ -72,20 +72,48 @@ export default function CompanyCard(props: Props) {
         />
       </Box>
 
-      <Typography variant="h6" sx={{ mt: 6 }}>
-        {company?.info?.companyName}
-      </Typography>
+      {company?.info?.companyName ||
+      company?.info?.organizationType ||
+      company?.info?.location ? (
+        <>
+          <Typography variant="h6" sx={{ mt: 6 }}>
+            {company?.info?.companyName}
+          </Typography>
 
-      <Typography
-        variant="body2"
-        sx={{
-          color: 'text.secondary',
-          textTransform: 'capitalize',
-          marginBottom: '24px',
-        }}
-      >
-        {`${company?.info?.organizationType} | ${company?.info?.location}`}
-      </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'capitalize',
+              marginBottom: '24px',
+            }}
+          >
+            {company?.info?.organizationType}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'capitalize',
+              marginBottom: '24px',
+            }}
+          >
+            {company?.info?.location}
+          </Typography>
+        </>
+      ) : (
+        <Box mt={5} mb={3}>
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'capitalize',
+            }}
+          >
+            No Info
+          </Typography>
+        </Box>
+      )}
     </Card>
   );
 }

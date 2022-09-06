@@ -239,7 +239,7 @@ const FindJob = memo((props: Props) => {
   }, [data]);
 
   return (
-    <Page title="Find Job">
+    <Page title="Find Job - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Div>
           {t('')}

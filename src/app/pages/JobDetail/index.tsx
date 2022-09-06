@@ -31,12 +31,16 @@ import { styled } from '@mui/material/styles';
 import { ReactComponent as IconOutSvg } from 'app/assets//button/out_going.svg';
 import CardJob from 'app/components/CardJob';
 import EmptyContent from 'app/components/EmptyContent';
+import Image from 'app/components/Image';
 import { LabelStyle } from 'app/components/LabelStyle';
 import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
+import { SHOW_COUNTRY } from 'app/constant/country';
+import { SHOW_JOB_TYPE } from 'app/constant/jobType';
 import { NearContext } from 'app/contexts/NearContext';
 import { useGetJobByAccount } from 'app/hooks/AppliedJob/useGetJobByAccount';
 import useSettings from 'app/hooks/useSettings';
+import { getCandidatesById } from 'app/services/jobs';
 import {
   getAvatarById,
   getBackgroundByAccount,
@@ -110,6 +114,7 @@ const JobDetail = memo((props: Props) => {
   const [dataCompany, setDataCompany] = useState<any>({});
   const [avatarCompany, setAvatarCompany] = useState<any>('');
   const [bgCompany, setBgCompany] = useState<any>('');
+  const [candidates, setCandidates] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -141,6 +146,12 @@ const JobDetail = memo((props: Props) => {
   };
 
   useEffect(() => {
+    if (id) {
+      getCandidatesById(id).then(res => setCandidates(res.data.data));
+    }
+  }, [id]);
+
+  useEffect(() => {
     if (data?.job?.owner_id) {
       getProfileByAccount(data?.job?.owner_id)
         .then(res => setDataCompany(res.data.data))
@@ -165,7 +176,7 @@ const JobDetail = memo((props: Props) => {
   }
 
   return (
-    <Page title="Job Detail">
+    <Page title="Job Detail - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Div>
           {t('')}
@@ -177,26 +188,43 @@ const JobDetail = memo((props: Props) => {
               </IconButton>
             </Link>
 
-            <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-              <Typography variant="h3">{data?.job?.title}</Typography>
-              <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ mt: 0.5, color: 'text.secondary' }}
-              >
-                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                  Snapshot Labs
-                </Typography>
-                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                  Hanoi
-                </Typography>
-                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                  Negotiation
-                </Typography>
-                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                  19 applicants
-                </Typography>
-              </Stack>
+            <Box
+              sx={{ flexGrow: 1, minWidth: 160 }}
+              display="flex"
+              alignItems="center"
+              columnGap={2}
+            >
+              <Box>
+                <Image
+                  disabledEffect
+                  src={avatarCompany?.src}
+                  alt=""
+                  sx={{ borderRadius: 1.5, width: 50, height: 50 }}
+                />
+              </Box>
+              <Box>
+                <Typography variant="h3">{data?.job?.title}</Typography>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  sx={{ mt: 0.5, color: 'text.secondary' }}
+                >
+                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+                    {SHOW_COUNTRY[data?.job?.work_location_country]}
+                  </Typography>
+                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+                    {SHOW_JOB_TYPE[data?.job?.job_type]}
+                  </Typography>
+                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+                    Up to {data?.job?.salary_to}$
+                  </Typography>
+                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+                    {candidates.length === 0 || candidates.length === 1
+                      ? `${candidates.length} applicant`
+                      : `${candidates.length} applicants`}
+                  </Typography>
+                </Stack>
+              </Box>
             </Box>
             <Box display="flex" columnGap="12px" alignItems="center">
               {data?.job?.owner_id !== account && (

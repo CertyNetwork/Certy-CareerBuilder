@@ -174,7 +174,7 @@ const PostedJob = memo((props: Props) => {
   }, [data]);
 
   return (
-    <Page title="Posted Job">
+    <Page title="Posted Job - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Div>
           {t('')}

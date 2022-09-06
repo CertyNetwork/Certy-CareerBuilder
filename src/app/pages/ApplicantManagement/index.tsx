@@ -304,7 +304,7 @@ const ApplicantManagement = memo((props: Props) => {
   }, [dataApplicant, newData, documentJob, jobName]);
 
   return (
-    <Page title="Applicant Management">
+    <Page title="Applicant Management - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Div>
           {t('')}

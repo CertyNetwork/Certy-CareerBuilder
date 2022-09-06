@@ -115,7 +115,7 @@ const AppliedJob = memo((props: Props) => {
   }
 
   return (
-    <Page title="Applied Job">
+    <Page title="Applied Job - CeCareer">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Div>
           {t('')}

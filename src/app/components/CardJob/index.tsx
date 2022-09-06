@@ -1,6 +1,5 @@
 // @mui
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Box, Card, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Typography } from '@mui/material';
 import { SHOW_COUNTRY } from 'app/constant/country';
 import { SHOW_JOB_TYPE } from 'app/constant/jobType';
 import { timeSince } from 'app/utils/formatTime';
@@ -18,15 +17,14 @@ interface Props {
 export default function CardJob({ app, applied, avatar }: Props) {
   const {
     shortcut,
-    system,
     name,
     title,
-    work_location_city,
     work_location_country,
-    description,
     updated_at,
     id,
     job_type,
+    job_specialities,
+    salary_to,
   } = app;
 
   const nowDate = new Date().getTime();
@@ -80,6 +78,12 @@ export default function CardJob({ app, applied, avatar }: Props) {
               <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
                 {SHOW_COUNTRY[work_location_country]}
               </Typography>
+              <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+                {SHOW_JOB_TYPE[job_type]}
+              </Typography>
+              <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
+                Up to {salary_to}$
+              </Typography>
             </Stack>
           </Box>
 
@@ -90,22 +94,24 @@ export default function CardJob({ app, applied, avatar }: Props) {
           </Box> */}
         </Stack>
 
-        <Typography
-          component="div"
-          dangerouslySetInnerHTML={{
-            __html: description?.substr(0, 186) + '...' || '',
-          }}
-        />
-
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Box display="flex" columnGap={2} alignItems="center">
-            {SHOW_JOB_TYPE[job_type] && (
-              <Label>
-                <Typography variant="subtitle2" sx={{ margin: '8px 16px' }}>
-                  {SHOW_JOB_TYPE[job_type]}
-                </Typography>
-              </Label>
-            )}
+            {job_specialities &&
+              job_specialities.length > 0 &&
+              job_specialities.map((specialistic, index) => {
+                return index < 5 ? (
+                  <Label key={index.toString()}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ margin: '8px 16px', textTransform: 'capitalize' }}
+                    >
+                      {specialistic?.value}
+                    </Typography>
+                  </Label>
+                ) : (
+                  ''
+                );
+              })}
 
             {/* <Label>
               <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
