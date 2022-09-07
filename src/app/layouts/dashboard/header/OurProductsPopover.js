@@ -17,7 +17,14 @@ export default function OurProductsPopover() {
 
   return (
     <>
-      <Button onClick={handleOpen} size="small" startIcon={<GridViewIcon />}>
+      <Button
+        onClick={handleOpen}
+        size="small"
+        startIcon={<GridViewIcon />}
+        sx={{
+          color: 'text.primary',
+        }}
+      >
         Our Products
       </Button>
 

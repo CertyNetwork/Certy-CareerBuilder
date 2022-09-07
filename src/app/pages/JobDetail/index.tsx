@@ -207,7 +207,7 @@ const JobDetail = memo((props: Props) => {
                 <Stack
                   direction="row"
                   alignItems="center"
-                  sx={{ mt: 0.5, color: 'text.secondary' }}
+                  sx={{ color: 'text.secondary' }}
                 >
                   <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
                     {SHOW_COUNTRY[data?.job?.work_location_country]}

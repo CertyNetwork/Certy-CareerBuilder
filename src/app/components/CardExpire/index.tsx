@@ -33,13 +33,13 @@ export default function CardExpire(props: Props) {
       </Box>
 
       <Box sx={{ flexGrow: 1, minWidth: 160 }}>
-        <Typography variant="h6">{experience?.companyName}</Typography>
+        <Typography variant="h6">{experience?.title}</Typography>
         <Stack
           direction="row"
           alignItems="center"
           sx={{ mt: 0.5, color: 'text.secondary' }}
         >
-          <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
+          <Typography variant="subtitle2" sx={{ mr: 1 }}>
             {experience?.companyName}
           </Typography>
           <Typography

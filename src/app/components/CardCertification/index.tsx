@@ -35,11 +35,7 @@ export default function CardCertification(props: Props) {
             bgcolor: 'background.neutral',
           }}
         >
-          <Image
-            src={dataCert?.media}
-            alt={dataCert?.title}
-            sx={{ width: 24, height: 24 }}
-          />
+          <Image src={dataCert?.media} alt={dataCert?.title} />
         </Box>
 
         <Box sx={{ flexGrow: 1, width: '100%' }}>

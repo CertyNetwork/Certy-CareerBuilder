@@ -40,7 +40,7 @@ export default function CardEducation(props: Props) {
             alignItems="center"
             sx={{ mt: 0.5, color: 'text.secondary' }}
           >
-            <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
+            <Typography variant="subtitle2" sx={{ mr: 1 }}>
               {education?.degree}
             </Typography>
             <Typography variant="body2" sx={{ ml: 0.5, mr: 1 }}>
@@ -52,7 +52,7 @@ export default function CardEducation(props: Props) {
           </Stack>
         </Box>
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 0.5 }}>
         <Box
           sx={{
             width: 48,

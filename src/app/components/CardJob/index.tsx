@@ -67,16 +67,16 @@ export default function CardJob({ app, applied, avatar }: Props) {
             <Stack
               direction="row"
               alignItems="center"
-              sx={{ color: 'text.title' }}
+              sx={{ color: 'text.secondary' }}
             >
-              <Typography variant="subtitle2" sx={{ mr: 1 }}>
+              <Typography variant="caption" sx={{ mr: 1 }}>
                 {SHOW_COUNTRY[work_location_country]}
               </Typography>
-              <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
+              <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
                 {SHOW_JOB_TYPE[job_type]}
               </Typography>
               {salary_to ? (
-                <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
+                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
                   Up to {salary_to}$
                 </Typography>
               ) : (
@@ -84,12 +84,6 @@ export default function CardJob({ app, applied, avatar }: Props) {
               )}
             </Stack>
           </Box>
-
-          {/* <Box>
-            <IconButton color="primary" aria-label="add to shopping cart">
-              <FavoriteBorderIcon />
-            </IconButton>
-          </Box> */}
         </Stack>
 
         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -110,21 +104,6 @@ export default function CardJob({ app, applied, avatar }: Props) {
                   ''
                 );
               })}
-
-            {/* <Label>
-              <Typography variant="subtitle2" sx={{ ml: 0.5, mr: 1 }}>
-                Remote Friendly
-              </Typography>
-            </Label> */}
-            {applied && (
-              <Typography
-                component="div"
-                variant="caption"
-                sx={{ color: '#2DA771' }}
-              >
-                Application viewed
-              </Typography>
-            )}
           </Box>
 
           {nowDate > updated_at && (
