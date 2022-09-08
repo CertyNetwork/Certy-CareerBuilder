@@ -7,7 +7,8 @@ import React, { memo } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { Box, Card, Typography, styled, useTheme } from '@mui/material';
+import { Box, Card, Stack, Typography, styled, useTheme } from '@mui/material';
+import Image from 'app/components/Image';
 import { SHOW_COUNTRY } from 'app/constant/country';
 import moment from 'moment';
 
@@ -15,32 +16,40 @@ import moment from 'moment';
 
 interface Props {
   infoJob: any;
+  infoCompany: any;
+  avatar: any;
+  background: any;
 }
 
 export const ViewDetailJob = memo((props: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const { infoJob } = props;
+  const { infoJob, infoCompany, avatar, background } = props;
 
   return (
     <Card sx={{ p: 3 }}>
       <Div>
         {t('')}
         {/*  {t(...messages.someThing())}  */}
-        {/* <Box display="flex" columnGap={2}>
-          <Box
-            sx={{
-              width: '12px',
-              height: '24px',
-              background: '#2A85FF',
-              borderRadius: '4px',
-            }}
-          ></Box>
-          <Typography component="p">Contact Form</Typography>
-        </Box> */}
-
         <Box>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Image
+              disabledEffect
+              src={avatar?.src}
+              alt=""
+              sx={{ borderRadius: 1.5, width: 48, height: 48 }}
+            />
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ textTransform: 'capitalize' }}
+            >
+              {infoCompany?.info.companyName}
+            </Typography>
+          </Stack>
+        </Box>
+        <Box mt={2}>
           <Typography
             variant="body2"
             component="div"

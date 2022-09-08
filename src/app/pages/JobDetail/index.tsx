@@ -313,7 +313,12 @@ const JobDetail = memo((props: Props) => {
                     </Card>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <ViewDetailJob infoJob={data?.job} />
+                    <ViewDetailJob
+                      infoJob={data?.job}
+                      infoCompany={dataCompany?.companyProfile}
+                      avatar={avatarCompany}
+                      background={bgCompany}
+                    />
                   </Grid>
                 </Grid>
               </Box>

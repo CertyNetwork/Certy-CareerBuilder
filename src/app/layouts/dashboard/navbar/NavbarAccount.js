@@ -4,7 +4,7 @@ import { Avatar, Box, Link, Skeleton, Typography } from '@mui/material';
 // @mui
 import { styled } from '@mui/material/styles';
 import { NearContext } from 'app/contexts/NearContext';
-import { useProfileAvatar } from 'app/hooks/Profile/useProfile';
+import { useProfile, useProfileAvatar } from 'app/hooks/Profile/useProfile';
 import PropTypes from 'prop-types';
 
 // ----------------------------------------------------------------------
@@ -29,6 +29,7 @@ NavbarAccount.propTypes = {
 export default function NavbarAccount({ isCollapse }) {
   const { account } = useContext(NearContext);
   const { dataProfileAvatar, loadingDataProfileAvatar } = useProfileAvatar();
+  const { dataProfile, loadingDataProfile } = useProfile();
 
   return (
     <Link underline="none" color="inherit">
@@ -39,7 +40,7 @@ export default function NavbarAccount({ isCollapse }) {
           }),
         }}
       >
-        {loadingDataProfileAvatar ? (
+        {loadingDataProfileAvatar || loadingDataProfile ? (
           <Skeleton variant="circular" width={40} height={40} />
         ) : (
           <Avatar src={dataProfileAvatar?.src} alt={account} />
@@ -62,7 +63,9 @@ export default function NavbarAccount({ isCollapse }) {
             {account}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            user
+            {dataProfile?.info?.displayName
+              ? dataProfile?.info?.displayName
+              : 'user'}
           </Typography>
         </Box>
       </RootStyle>

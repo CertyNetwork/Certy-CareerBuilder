@@ -355,16 +355,6 @@ export const PostJob = memo((props: Props) => {
                 component="div"
                 sx={{ mb: '10px' }}
               >
-                Department
-              </Typography>
-              <RHFTextField name="locationCity" />
-            </Box>
-            <Box mt={2}>
-              <Typography
-                variant="subtitle2"
-                component="div"
-                sx={{ mb: '10px' }}
-              >
                 Application Deadline
               </Typography>
               {/* <RHFTextField name="deadline" /> */}
