@@ -144,7 +144,7 @@ export const ApplyDialog = memo((props: Props) => {
               }}
             ></Box>
             <Typography variant="h6" component="div">
-              Apply to Snapshot Labs
+              Apply Job
             </Typography>
           </Box>
           <IconButton color="primary" aria-label="close" onClick={onClose}>
