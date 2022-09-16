@@ -8,7 +8,9 @@ const FIND_JOB = gql`
       orderDirection: desc
     ) {
       id
-      owner_id
+      owner_id {
+        id
+      }
       extra
       reference
       reference_hash

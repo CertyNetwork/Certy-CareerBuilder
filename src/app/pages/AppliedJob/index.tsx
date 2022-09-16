@@ -34,7 +34,9 @@ const FIND_JOB_APPLY = gql`
   query JobApply($arrayId: [ID], $time: BigInt) {
     jobApply: jobs(where: { id_in: $arrayId, updated_at_gt: $time }) {
       id
-      owner_id
+      owner_id {
+        id
+      }
       extra
       reference
       reference_hash
@@ -101,7 +103,7 @@ const AppliedJob = memo((props: Props) => {
   useEffect(() => {
     if (data && data.jobApply && data.jobApply.length > 0) {
       const newArrRequest = data?.jobApply?.map(d =>
-        getAvatarById(d.owner_id).then(res => res.data.data),
+        getAvatarById(d.owner_id.id).then(res => res.data.data),
       );
       Promise.all(newArrRequest).then(res => setAvatarJob(res));
     }

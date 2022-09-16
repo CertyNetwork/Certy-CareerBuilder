@@ -78,7 +78,10 @@ export const allLangs = [
 
 export const defaultLang = allLangs[0]; // English
 
-const CONTRACT_NAME = process.env.REACT_APP_CONTRACT_NAME;
+const CONTRACT_NAME: any = process.env.REACT_APP_CONTRACT_NAME;
+export const CONTACT_URI =
+  'https://api.thegraph.com/subgraphs/name/edricngo/certy-network-dev';
+export const CONTACT_NAME_SETUP = 'dev-cecareer.certynetwork.testnet';
 
 const getConfig: any = env => {
   switch (env) {

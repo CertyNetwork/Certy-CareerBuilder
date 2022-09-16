@@ -5,7 +5,7 @@
  * FindJob
  *
  */
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { InView } from 'react-intersection-observer';
@@ -59,7 +59,9 @@ const FIND_JOB = gql`
       orderDirection: desc
     ) {
       id
-      owner_id
+      owner_id {
+        id
+      }
       extra
       reference
       reference_hash
@@ -232,7 +234,7 @@ const FindJob = memo((props: Props) => {
   useEffect(() => {
     if (data && data.jobs && data.jobs.length > 0) {
       const newArrRequest = data?.jobs?.map(d =>
-        getAvatarById(d.owner_id).then(res => res.data.data),
+        getAvatarById(d.owner_id.id).then(res => res.data.data),
       );
       Promise.all(newArrRequest).then(res => setAvatarJob(res));
     }

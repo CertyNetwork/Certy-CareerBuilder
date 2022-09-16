@@ -71,7 +71,9 @@ const DETAIL_JOB = gql`
       issued_at
       job_type
       reference
-      owner_id
+      owner_id {
+        id
+      }
       reference_hash
       reference_result
       salary_from
@@ -117,15 +119,14 @@ const JobDetail = memo((props: Props) => {
   const [candidates, setCandidates] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { account } = useContext(NearContext);
 
   const { loading, error, data } = useQuery(DETAIL_JOB, {
     variables: { id },
   });
-  const { dataJob, loadingJob } = useGetJobByAccount({
-    owner_id_contains: 'binh93.testnet',
+  const { dataJob } = useGetJobByAccount({
+    owner_id_contains: account,
   });
-
-  const { account } = useContext(NearContext);
 
   const [value, setValue] = React.useState(0);
   const [openDialogAppJob, setOpenDialogAppJob] = useState(false);
@@ -152,16 +153,16 @@ const JobDetail = memo((props: Props) => {
   }, [id]);
 
   useEffect(() => {
-    if (data?.job?.owner_id) {
-      getProfileByAccount(data?.job?.owner_id)
+    if (data?.job?.owner_id?.id) {
+      getProfileByAccount(data?.job?.owner_id?.id)
         .then(res => setDataCompany(res.data.data))
         .catch(err => handleErrorResponse(err));
 
-      getBackgroundByAccount(data?.job?.owner_id)
+      getBackgroundByAccount(data?.job?.owner_id?.id)
         .then(res => setBgCompany(res.data.data))
         .catch(err => handleErrorResponse(err));
 
-      getAvatarById(data?.job?.owner_id)
+      getAvatarById(data?.job?.owner_id?.id)
         .then(res => setAvatarCompany(res.data.data))
         .catch(err => handleErrorResponse(err));
     }
@@ -360,7 +361,7 @@ const JobDetail = memo((props: Props) => {
           onClose={() => setOpenDialogAppJob(false)}
         >
           <ApplyDialog
-            recruiter={data?.job?.owner_id}
+            recruiter={data?.job?.owner_id?.id}
             onClose={() => setOpenDialogAppJob(false)}
           />
         </DialogAnimate>

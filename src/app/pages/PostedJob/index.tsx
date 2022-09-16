@@ -64,7 +64,9 @@ const POSTED_JOB = gql`
     ) {
       id
       job_type
-      owner_id
+      owner_id {
+        id
+      }
       reference
       updated_at
       title

@@ -40,7 +40,9 @@ const CERTIFICATES = gql`
     certs(where: { id_in: $arrayId }) {
       id
       title
-      owner_id
+      owner_id {
+        id
+      }
       media
       media_hash
       issued_at

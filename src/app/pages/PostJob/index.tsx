@@ -31,6 +31,7 @@ import {
   RHFSelect,
   RHFTextField,
 } from 'app/components/hook-form';
+import { CONTACT_NAME_SETUP } from 'app/config';
 import { COUNTRIES } from 'app/constant/country';
 import { EXPERIENCES } from 'app/constant/experience';
 import { JOB_TYPE } from 'app/constant/jobType';
@@ -112,14 +113,10 @@ export const PostJob = memo((props: Props) => {
   } = methods;
 
   const onSubmit = async data => {
-    const contract: any = new Contract(
-      wallet.account(),
-      'cecareer.certynetwork.testnet',
-      {
-        viewMethods: ['getJob'],
-        changeMethods: ['job_create', 'job_update'],
-      },
-    );
+    const contract: any = new Contract(wallet.account(), CONTACT_NAME_SETUP, {
+      viewMethods: ['getJob'],
+      changeMethods: ['job_create', 'job_update'],
+    });
 
     const obj = {
       title: data.title,

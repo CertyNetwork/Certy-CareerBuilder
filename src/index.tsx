@@ -29,6 +29,7 @@ import 'sanitize.css/sanitize.css';
 import { configureAppStore } from 'store/configureStore';
 
 import './locales/i18n';
+import { CONTACT_URI } from 'app/config';
 
 
 const queryClient = new QueryClient({
@@ -60,7 +61,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/edricngo/certy-network-dev',
+  uri: CONTACT_URI,
   cache,
 });
 
