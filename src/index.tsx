@@ -60,7 +60,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/edricngo/certy-network',
+  uri: 'https://api.thegraph.com/subgraphs/name/edricngo/certy-network-dev',
   cache,
 });
 
