@@ -80,7 +80,9 @@ export default function CardJob({ app, applied, avatar }: Props) {
                   Up to {salary_to}$
                 </Typography>
               ) : (
-                'Negotiation'
+                <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
+                  Negotiation
+                </Typography>
               )}
             </Stack>
           </Box>
