@@ -133,7 +133,7 @@ export default function DashboardHeader({
           )}
         </Stack>
 
-        <DialogAnimate open={openDialogPostJob}>
+        <DialogAnimate open={openDialogPostJob} onClose={() => {}}>
           <PostJob close={() => setOpenDialogPostJob(false)} />
         </DialogAnimate>
       </Toolbar>

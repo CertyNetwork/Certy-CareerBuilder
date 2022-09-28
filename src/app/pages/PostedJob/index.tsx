@@ -38,7 +38,7 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { DialogConfirm } from 'app/components/DialogConfirm';
+import Confirm from 'app/components/Confirm';
 import Iconify from 'app/components/Iconify';
 import Page from 'app/components/Page';
 import { DialogAnimate } from 'app/components/animate';
@@ -338,10 +338,7 @@ const PostedJob = memo((props: Props) => {
           </Grid>
         </Div>
 
-        <DialogAnimate
-          open={openDialogPostJob}
-          onClose={() => setOpenDialogPostJob(false)}
-        >
+        <DialogAnimate open={openDialogPostJob} onClose={() => {}}>
           <PostJob
             close={() => setOpenDialogPostJob(false)}
             jobData={jobSelected}
@@ -350,9 +347,10 @@ const PostedJob = memo((props: Props) => {
         </DialogAnimate>
 
         {openDelete && (
-          <DialogConfirm
-            handleNo={handleCancelDelete}
-            handleYes={handleDelete}
+          <Confirm
+            confirmNo={handleCancelDelete}
+            confirmYes={handleDelete}
+            title="Pending work! Are you sure you want to delete?"
           />
         )}
       </Container>

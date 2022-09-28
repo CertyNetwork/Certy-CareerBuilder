@@ -182,7 +182,7 @@ const JobDetail = memo((props: Props) => {
         <Div>
           {t('')}
           {/*  {t(...messages.someThing())}  */}
-          <Box display="flex" columnGap="24px" alignItems="center">
+          <Box className="wrap-title">
             <Link to="/jobs">
               <IconButton aria-label="back">
                 <ArrowBackIosNewIcon />
@@ -209,21 +209,32 @@ const JobDetail = memo((props: Props) => {
                   direction="row"
                   alignItems="center"
                   sx={{ color: 'text.secondary' }}
+                  mt={2}
                 >
-                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                    {SHOW_COUNTRY[data?.job?.work_location_country]}
-                  </Typography>
-                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                    {SHOW_JOB_TYPE[data?.job?.job_type]}
-                  </Typography>
-                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                    Up to {data?.job?.salary_to}$
-                  </Typography>
-                  <Typography variant="caption" sx={{ ml: 0.5, mr: 1 }}>
-                    {candidates.length === 0 || candidates.length === 1
-                      ? `${candidates.length} applicant`
-                      : `${candidates.length} applicants`}
-                  </Typography>
+                  <Grid container spacing={2} ml={0}>
+                    <Grid xs={12} md={3}>
+                      <Typography variant="caption" sx={{ mr: 1 }}>
+                        {SHOW_COUNTRY[data?.job?.work_location_country]}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={12} md={3}>
+                      <Typography variant="caption" sx={{ mr: 1 }}>
+                        {SHOW_JOB_TYPE[data?.job?.job_type]}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={12} md={3}>
+                      <Typography variant="caption" sx={{ mr: 1 }}>
+                        Up to {data?.job?.salary_to}$
+                      </Typography>
+                    </Grid>
+                    <Grid xs={12} md={3}>
+                      <Typography variant="caption" sx={{ mr: 1 }}>
+                        {candidates.length === 0 || candidates.length === 1
+                          ? `${candidates.length} applicant`
+                          : `${candidates.length} applicants`}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Stack>
               </Box>
             </Box>
@@ -372,4 +383,16 @@ const JobDetail = memo((props: Props) => {
 
 export default JobDetail;
 
-const Div = styled('div')({});
+const Div = styled('div')({
+  '.wrap-title': {
+    display: 'flex',
+    columnGap: '24px',
+    alignItems: 'center',
+  },
+
+  '@media only screen and (max-width: 768px)': {
+    '.wrap-title': {
+      flexDirection: 'column',
+    },
+  },
+});

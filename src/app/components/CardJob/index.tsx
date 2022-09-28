@@ -88,7 +88,7 @@ export default function CardJob({ app, applied, avatar }: Props) {
           </Box>
         </Stack>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box>
           <Box display="flex" columnGap={2} alignItems="center">
             {job_specialities &&
               job_specialities.length > 0 &&
@@ -114,6 +114,8 @@ export default function CardJob({ app, applied, avatar }: Props) {
               sx={{
                 fontSize: '12px',
                 fontWeight: 400,
+                textAlign: 'right',
+                marginTop: '10px',
               }}
             >
               {timeSince(updated_at)}

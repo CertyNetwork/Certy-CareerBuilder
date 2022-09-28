@@ -444,6 +444,7 @@ export const PostJob = memo(
           <Confirm
             confirmNo={() => setOpenConfirm(false)}
             confirmYes={() => handleConfirmYes()}
+            title="Pending work! Are you sure you want to leave?"
           />
         )}
       </Div>
