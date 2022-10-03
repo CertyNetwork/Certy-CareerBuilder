@@ -89,7 +89,7 @@ export default function CardJob({ app, applied, avatar }: Props) {
         </Stack>
 
         <Box>
-          <Box display="flex" columnGap={2} alignItems="center">
+          <Box display="flex" columnGap={1} alignItems="center" flexWrap="wrap">
             {job_specialities &&
               job_specialities.length > 0 &&
               job_specialities.map((specialistic, index) => {

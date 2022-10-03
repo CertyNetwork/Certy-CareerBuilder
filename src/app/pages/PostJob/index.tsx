@@ -3,14 +3,7 @@
  * PostJob
  *
  */
-import {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { memo, useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -125,19 +118,20 @@ export const PostJob = memo(
     } = methods;
 
     const onSubmit = async data => {
+      console.log(new Date(data?.deadline).getTime(), 11);
       const contract: any = new Contract(wallet.account(), CONTACT_NAME_SETUP, {
         viewMethods: ['getJob'],
         changeMethods: ['job_create', 'job_update'],
       });
 
       const obj = {
-        title: data.title,
+        title: data?.title,
         salary_from: Number(data?.salaryFrom),
         salary_to: Number(data?.salaryTo),
-        work_location_country: data.location,
-        description: data.description,
-        job_type: data.jobType,
-        application_deadline: data.deadline.getTime(),
+        work_location_country: data?.location,
+        description: data?.description,
+        job_type: data?.jobType,
+        application_deadline: new Date(data?.deadline).getTime(),
         job_specialities: data?.specialties || [],
         work_location_city: data?.locationCity,
         experience_level: data?.experiences,
